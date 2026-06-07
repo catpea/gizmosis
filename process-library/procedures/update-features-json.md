@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Keep the compiler, process library, and AI agents synchronized about the supported Gizmo XML language.
+Keep the compiler, process library, and AI agents synchronized about the supported Gizmosis language.
 
 ## Required reading
 

@@ -1,6 +1,6 @@
 # Gizmo Procedure Library
 
-This repository ships a procedure library because Gizmo XML is designed for the age of AI-assisted programming. Agents are real maintainers of this project, and they need a searchable cookbook of procedures, feature translations, quality gates, and anti-escape-hatch rules.
+This repository ships a procedure library because Gizmosis is designed for the age of AI-assisted programming. Agents are real maintainers of this project, and they need a searchable cookbook of procedures, feature translations, quality gates, and anti-escape-hatch rules.
 
 The library follows the same broad principle as process-library systems: reusable processes should name their inputs, steps, quality checks, and approval points. Keep procedures in git because they are institutional knowledge for humans and agents.
 

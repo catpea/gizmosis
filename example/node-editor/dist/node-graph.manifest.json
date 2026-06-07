@@ -38,8 +38,8 @@
     }
   ],
   "about": {
-    "summary": "SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates. The viewport applies pan and zoom. The component coordinates generated node-card and node-cable Web Components. Browser mechanics are compiled from declarative Gizmo XML and supported by the gizmo/node-editor helper library.",
-    "text": "SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates. The viewport applies pan and zoom. The component coordinates generated node-card and node-cable Web Components. Browser mechanics are compiled from declarative Gizmo XML and supported by the gizmo/node-editor helper library."
+    "summary": "SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates. The viewport applies pan and zoom. The component coordinates generated node-card and node-cable Web Components. Browser mechanics are compiled from declarative Gizmosis and supported by the gizmo/node-editor helper library.",
+    "text": "SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates. The viewport applies pan and zoom. The component coordinates generated node-card and node-cable Web Components. Browser mechanics are compiled from declarative Gizmosis and supported by the gizmo/node-editor helper library."
   },
   "terms": [
     {
@@ -3941,7 +3941,7 @@
   "features": {
     "version": "0.5",
     "supported": {
-      "name": "Gizmo XML",
+      "name": "Gizmosis",
       "version": "0.5",
       "classification": "contract-first component capsule language for declarative Web Components and AI-assisted UI development",
       "principles": [

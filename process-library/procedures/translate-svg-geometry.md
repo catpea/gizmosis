@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Convert SVG creation, path math, transforms, hit tests, port measurements, and coordinate conversions into Gizmo XML.
+Convert SVG creation, path math, transforms, hit tests, port measurements, and coordinate conversions into Gizmosis.
 
 ## JavaScript features covered
 

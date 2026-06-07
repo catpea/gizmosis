@@ -1,6 +1,6 @@
-# Gizmo XML
+# Gizmosis
 
-Gizmo XML is an XML-first compiler for modern Web Components.
+Gizmosis is an XML-first compiler for modern Web Components.
 
 `<gizmo/>` creates Web Components from declarative XML. The compiler washes away the declarative source and emits clean ESM components for the browser. Humans should work in XML contracts, views, interactions, probes, and tests; imperative JavaScript is generated because machines are now better at repetitive browser plumbing.
 
@@ -19,7 +19,7 @@ The node editor example is split into real Web Components:
 
 ## Full language memory
 
-`features.json` is the canonical catalog of supported Gizmo XML features. The compiler also exports the same catalog from `src/compiler/features.js` and the process library mirrors it at `process-library/features.json` so local agents can search without guessing.
+`features.json` is the canonical catalog of supported Gizmosis features. The compiler also exports the same catalog from `src/compiler/features.js` and the process library mirrors it at `process-library/features.json` so local agents can search without guessing.
 
 New Gizmos should use the contract-first component capsule:
 
@@ -65,7 +65,7 @@ process-library/reference/js-to-gizmo-feature-map.md
 ## Directory Layout
 
 ```text
-src/                         reusable Gizmo XML package code
+src/                         reusable Gizmosis package code
   compiler/                  no-dependency XML compiler CLI/API
   core/                      small DOM/XML helpers
   runtime/                   diagnostics and frame helpers
@@ -163,7 +163,7 @@ import { createFrameScheduler } from 'gizmo-xml/runtime';
 
 ## Lowering Model
 
-In Gizmo XML, “lowering” means turning a high-level XML construct into executable JavaScript.
+In Gizmosis, “lowering” means turning a high-level XML construct into executable JavaScript.
 
 - View lowering turns `<view>`, `{bindings}`, `each`, `key`, `class.*`, `style.*`, `svg.*`, `bind.*`, and `on.*` into DOM creation and update code owned by the generated component.
 - Interaction lowering turns `<drag>`, `<pan>`, `<zoom>`, `<resize>`, and package tags such as `<connect/>` into generated listener wiring plus calls to generic support helpers.

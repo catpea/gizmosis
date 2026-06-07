@@ -1,4 +1,4 @@
-# Procedure: Translate Existing Web Component to Gizmo XML
+# Procedure: Translate Existing Web Component to Gizmosis
 
 ## Purpose
 

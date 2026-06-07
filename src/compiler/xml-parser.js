@@ -1,4 +1,4 @@
-// Gizmo XML compiler: tiny dependency-free XML parser.
+// Gizmosis compiler: tiny dependency-free XML parser.
 // It intentionally supports the XML subset used by Gizmo source files:
 // elements, attributes, comments, CDATA, processing instructions, text, and self-closing tags.
 

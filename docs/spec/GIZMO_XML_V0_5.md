@@ -1,6 +1,6 @@
-# Gizmo XML v0.5 Specification
+# Gizmosis v0.5 Specification
 
-Gizmo XML is a compiler-oriented XML language for creating Web Components.
+Gizmosis is a compiler-oriented XML language for creating Web Components.
 
 `<gizmo/>` source is written for humans and AI agents. The compiler washes away declarative XML and emits browser-ready ESM Web Components. Generated `dist/` files are distribution artifacts, not the source of truth.
 

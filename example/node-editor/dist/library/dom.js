@@ -1,4 +1,4 @@
-// Core DOM and math helpers used by Gizmo XML runtime prototypes.
+// Core DOM and math helpers used by Gizmosis runtime prototypes.
 
 export function edgePath(from, to) {
   const dx = Math.max(36, Math.abs(to.x - from.x) * 0.45);

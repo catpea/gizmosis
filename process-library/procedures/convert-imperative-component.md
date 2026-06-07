@@ -1,4 +1,4 @@
-# Procedure: Convert Imperative Web Component to Gizmo XML
+# Procedure: Convert Imperative Web Component to Gizmosis
 
 ## Purpose
 

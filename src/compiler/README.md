@@ -1,4 +1,4 @@
-# Gizmo XML Compiler
+# Gizmosis Compiler
 
 The compiler is a no-dependency Node.js tool for `.gizmo.xml` files.
 

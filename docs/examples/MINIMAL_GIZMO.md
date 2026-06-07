@@ -1,4 +1,4 @@
-# Minimal Gizmo XML Example
+# Minimal Gizmosis Example
 
 ```xml
 <gizmo name="Hello Button" tag="hello-button">

@@ -1,7 +1,7 @@
 {
   "name": "gizmo-process-library",
   "version": "0.3.0",
-  "description": "Repository-local procedures for programming and translating Gizmo XML Web Components with AI agents.",
+  "description": "Repository-local procedures for programming and translating Gizmosis Web Components with AI agents.",
   "discovery": {
     "readFirst": [
       "SKILL.md",
@@ -21,7 +21,7 @@
     {
       "id": "translate-existing-web-component",
       "path": "procedures/translate-existing-web-component.md",
-      "purpose": "Full process for converting existing JavaScript Web Components into Gizmo XML."
+      "purpose": "Full process for converting existing JavaScript Web Components into Gizmosis."
     },
     {
       "id": "convert-imperative-component",

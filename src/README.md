@@ -1,6 +1,6 @@
 # src layout
 
-This directory contains only reusable Gizmo XML package code.
+This directory contains only reusable Gizmosis package code.
 
 - `compiler/` contains the no-dependency `.gizmo.xml` parser, IR builder, validator, generator, and CLI.
 - `core/` contains small DOM/XML helpers used by the prototype runtime.

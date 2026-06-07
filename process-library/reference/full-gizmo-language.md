@@ -1,10 +1,10 @@
-# Full Gizmo XML Language Map
+# Full Gizmosis Language Map
 
 ## Purpose
 
-This reference is the agent-facing memory of the full Gizmo XML language. Read it with `features.json` before converting JavaScript Web Components.
+This reference is the agent-facing memory of the full Gizmosis language. Read it with `features.json` before converting JavaScript Web Components.
 
-Gizmo XML is a **contract-first component capsule** language. It creates Web Components from declarative XML and lets the compiler wash away the XML into clean ESM output.
+Gizmosis is a **contract-first component capsule** language. It creates Web Components from declarative XML and lets the compiler wash away the XML into clean ESM output.
 
 ## Canonical component capsule
 

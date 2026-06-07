@@ -106,4 +106,4 @@ assert.equal(graphIr.contract.props.length > 0, true, 'graph should parse contra
 assert.equal(graphIr.requires.components.some(item => item.attrs.tag === 'fox-ve-node-card'), true, 'graph should parse required card component');
 assert.equal(graphIr.model.state.length > 0, true, 'graph should parse model state');
 
-console.log('All Gizmo XML tests passed.');
+console.log('All Gizmosis tests passed.');

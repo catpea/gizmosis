@@ -1,4 +1,4 @@
-# Gizmo XML Agent Skill
+# Gizmosis Agent Skill
 
 Use this skill when creating, converting, compiling, or reviewing `<gizmo/>` Web Components.
 

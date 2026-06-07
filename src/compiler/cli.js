@@ -71,7 +71,7 @@ function printDiagnostics(diagnostics) {
 }
 
 function printHelp() {
-  console.log(`Gizmo XML compiler v0.5\n\nUsage:\n  gizmo check <file.gizmo.xml>\n  gizmo inspect <file.gizmo.xml>\n  gizmo compile <file.gizmo.xml> --out <file.js> --manifest <file.json> --dts <file.d.ts> [--node-editor-import <module>] [--source-label <label>]\n  gizmo init-example [file.gizmo.xml]\n`);
+  console.log(`Gizmosis compiler v0.5\n\nUsage:\n  gizmo check <file.gizmo.xml>\n  gizmo inspect <file.gizmo.xml>\n  gizmo compile <file.gizmo.xml> --out <file.js> --manifest <file.json> --dts <file.d.ts> [--node-editor-import <module>] [--source-label <label>]\n  gizmo init-example [file.gizmo.xml]\n`);
 }
 
 function exampleXml() {

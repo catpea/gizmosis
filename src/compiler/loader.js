@@ -22,7 +22,7 @@ async function resolveIncludes(node, baseDir, stack) {
 
   if (next.attrs?.src && INCLUDEABLE.has(next.name)) {
     const includeFile = resolve(baseDir, next.attrs.src);
-    if (stack.has(includeFile)) throw new Error(`Circular Gizmo XML include: ${[...stack, includeFile].join(' -> ')}`);
+    if (stack.has(includeFile)) throw new Error(`Circular Gizmosis include: ${[...stack, includeFile].join(' -> ')}`);
     const source = await readFile(includeFile, 'utf8');
     const doc = parseXml(source, { filename: includeFile });
     const included = await resolveIncludes(doc.root, dirname(includeFile), new Set([...stack, includeFile]));
