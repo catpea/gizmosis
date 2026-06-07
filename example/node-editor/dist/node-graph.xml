@@ -166,31 +166,31 @@
   </types>
 
   <view>
-    <div ref="viewport" class="fox-ve-node-graph-viewport" tabindex="0" role="application" aria-label="Node graph">
+    <div ref="viewport" class="{{css-prefix}}-node-graph-viewport" tabindex="0" role="application" aria-label="Node graph">
       <div class="status-strip">
         <span class="pill"><span class="dot"/><span data-readout="zoom">zoom {view.zoom}</span></span>
         <span class="pill"><span data-readout="mode">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span></span>
       </div>
 
-      <svg ref="svg" class="fox-ve-node-graph-edges" aria-hidden="true">
-        <g ref="edgeLayer" class="fox-ve-node-graph-edge-layer" svg.transform="translate({view.panX} {view.panY}) scale({view.zoom})"/>
-        <path ref="ghost" class="fox-ve-node-graph-ghost-edge" hidden="{!connection}" svg.d="{ghostEdgePath(connection)}"/>
+      <svg ref="svg" class="{{css-prefix}}-node-graph-edges" aria-hidden="true">
+        <g ref="edgeLayer" class="{{css-prefix}}-node-graph-edge-layer" svg.transform="translate({view.panX} {view.panY}) scale({view.zoom})"/>
+        <path ref="ghost" class="{{css-prefix}}-node-graph-ghost-edge" hidden="{!connection}" svg.d="{ghostEdgePath(connection)}"/>
       </svg>
 
-      <div ref="cableLayer" class="fox-ve-node-graph-cables" hidden="true">
+      <div ref="cableLayer" class="{{css-prefix}}-node-graph-cables" hidden="true">
         <fox-ve-node-cable each="edges as edge"
                             key="{edge.id}"
                             edge-id="{edge.id}"
-                            svg-selector=".fox-ve-node-graph-edge-layer"
+                            svg-selector=".{{css-prefix}}-node-graph-edge-layer"
                             bind.from="{portWorld(edge.from.nodeId, edge.from.portId, 'output')}"
                             bind.to="{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"/>
       </div>
 
-      <div ref="nodeLayer" class="fox-ve-node-graph-nodes" style.transform="translate({view.panX}px, {view.panY}px) scale({view.zoom})" on.fox-node-port-down="port-connect" on.fox-node-port-up="port-connect">
+      <div ref="nodeLayer" class="{{css-prefix}}-node-graph-nodes" style.transform="translate({view.panX}px, {view.panY}px) scale({view.zoom})" on.fox-node-port-down="port-connect" on.fox-node-port-up="port-connect">
         <fox-ve-node-card each="nodes as node" key="{node.id}" data-id="{node.id}" data-type="{node.type}" node-label="{node.label}" color="{node.color}" status="{node.status}" selected="{selected includes node.id}" expanded="{node.expanded}" style.left="{node.x}px" style.top="{node.y}px" bind.inputs="{node.inputs}" bind.outputs="{node.outputs}"/>
       </div>
 
-      <div class="fox-ve-node-graph-empty" hidden="{nodes.length !== 0}">Double-click empty space to add a node.</div>
+      <div class="{{css-prefix}}-node-graph-empty" hidden="{nodes.length !== 0}">Double-click empty space to add a node.</div>
     </div>
   </view>
 
@@ -281,7 +281,7 @@
         <note priority="critical">Do not mutate edges during node dragging.</note>
         <note priority="high">Keep direct card positioning during drag for responsiveness.</note>
       </agent-notes>
-      <drag name="node-drag" from="nodeLayer" handle="fox-ve-node-card" ignore=".fox-ve-node-card-port, button, input, textarea, select, [contenteditable]" button="primary" capture="true" threshold="1" space="world" when="!readonly">
+      <drag name="node-drag" from="nodeLayer" handle="fox-ve-node-card" ignore=".{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]" button="primary" capture="true" threshold="1" space="world" when="!readonly">
         <start action="node-drag-start"/>
         <move action="node-drag-move"/>
         <end action="node-drag-end"/>
@@ -309,7 +309,7 @@
         <note priority="critical">Always clear connection and remove connection-mode in finally.</note>
         <note priority="high">Draw the ghost in viewport coordinates.</note>
       </agent-notes>
-      <connect name="port-connect" from="nodeLayer" handle=".fox-ve-node-card-port" start-event="fox-node-port-down" end-event="fox-node-port-up" mode-prop="connection-mode" ghost="ghost" space="viewport" when="!readonly">
+      <connect name="port-connect" from="nodeLayer" handle=".{{css-prefix}}-node-card-port" start-event="fox-node-port-down" end-event="fox-node-port-up" mode-prop="connection-mode" ghost="ghost" space="viewport" when="!readonly">
         <start action="port-connect-start"/>
         <move action="port-connect-move"/>
         <end action="port-connect-end"/>
@@ -337,12 +337,12 @@
 
   <dev>
     <probes>
-      <layout-probe name="collapse-button-alignment" subject=".fox-ve-node-card-expand" relation="center-y" target=".fox-ve-node-card-title" tolerance="2" severity="error">
+      <layout-probe name="collapse-button-alignment" subject=".{{css-prefix}}-node-card-expand" relation="center-y" target=".{{css-prefix}}-node-card-title" tolerance="2" severity="error">
         Collapse button must be vertically centered with the node title.
       </layout-probe>
 
       <probe name="ghost-edge-clears" select="fox-ve-node-graph" when="after-interaction" severity="error"><![CDATA[
-        const ghost = one(".fox-ve-node-graph-ghost-edge");
+        const ghost = one(".{{css-prefix}}-node-graph-ghost-edge");
         if (!state.connection) {
           expect(
             ghost.hidden && !ghost.getAttribute("d"),

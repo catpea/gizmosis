@@ -1,16 +1,16 @@
 import { GIZMO_FEATURES } from './features.js';
 
 const CORE_INTERACTIONS = new Set(GIZMO_FEATURES.interactionTags.core.concat(['interaction']));
-const NODE_EDITOR_INTERACTIONS = new Set(GIZMO_FEATURES.interactionTags.nodeEditorPackage);
 const KNOWN_KINDS = new Set(GIZMO_FEATURES.dataKinds);
 const KNOWN_ROOT_SECTIONS = new Set([...GIZMO_FEATURES.canonicalRoot, ...GIZMO_FEATURES.compatibilityRoot]);
 const KNOWN_BINDING_PREFIXES = ['class.', 'style.', 'svg.', 'bind.', 'on.'];
 const KNOWN_COMMANDS = new Set(GIZMO_FEATURES.commandTags);
 
-export function validateIr(ir) {
+export function validateIr(ir, options = {}) {
   const diagnostics = [];
   const error = (message, detail = {}) => diagnostics.push({ severity: 'error', message, detail });
   const warning = (message, detail = {}) => diagnostics.push({ severity: 'warning', message, detail });
+  const packageValidation = packageInteractionValidation(ir, options);
 
   if (!ir.name) warning('<gizmo> should have a name attribute.');
   if (!ir.tag) error('<gizmo> must have a tag attribute.');
@@ -57,12 +57,13 @@ export function validateIr(ir) {
   for (const subscription of ir.model.subscriptions || []) if (!subscription.name) warning('<subscription> should have name="...".', subscription);
   for (const store of ir.model.stores || []) if (!store.name) warning('<store> should have name="...".', store);
 
-  const usesNodeEditor = ir.uses.some(use => use.library === 'gizmo/node-editor');
   for (const interaction of flattenInteractions(ir.interactions)) {
-    if (!CORE_INTERACTIONS.has(interaction.kind) && !NODE_EDITOR_INTERACTIONS.has(interaction.kind)) warning(`Unknown interaction <${interaction.kind}>.`, { interaction: interaction.name || interaction.kind });
-    if (NODE_EDITOR_INTERACTIONS.has(interaction.kind) && !usesNodeEditor) error(`<${interaction.kind}> requires <use library="gizmo/node-editor"/>.`, { interaction: interaction.name || interaction.kind });
-    if ((interaction.kind === 'drag' || interaction.kind === 'connect') && !interaction.attrs.from) error(`<${interaction.kind}> requires from="...".`, { interaction: interaction.name });
-    if (interaction.kind === 'connect') for (const required of ['start-event', 'end-event', 'mode-prop', 'ghost']) if (!interaction.attrs[required]) error('<connect> requires all node-editor connection attributes.', { required, interaction: interaction.name });
+    const packageGenerator = packageValidation.usedByTag.get(interaction.kind);
+    if (!CORE_INTERACTIONS.has(interaction.kind) && !packageValidation.allTags.has(interaction.kind)) warning(`Unknown interaction <${interaction.kind}>.`, { interaction: interaction.name || interaction.kind });
+    if (packageValidation.allTags.has(interaction.kind) && !packageGenerator) error(`<${interaction.kind}> requires a matching <use library="..."/> package.`, { interaction: interaction.name || interaction.kind });
+    if (interaction.kind === 'drag' && !interaction.attrs.from) error(`<${interaction.kind}> requires from="...".`, { interaction: interaction.name });
+    if (packageGenerator && !interaction.attrs.from && interaction.kind !== 'node' && interaction.kind !== 'port' && interaction.kind !== 'edge') error(`<${interaction.kind}> requires from="...".`, { interaction: interaction.name });
+    packageGenerator?.validateInteraction?.(interaction, { error, warning });
   }
 
   if (ir.view) {
@@ -130,3 +131,26 @@ export function validateIr(ir) {
 export function hasErrors(diagnostics) { return diagnostics.some(item => item.severity === 'error'); }
 function flattenInteractions(interactions, out = []) { for (const interaction of interactions || []) { out.push(interaction); flattenInteractions(interaction.nested || [], out); } return out; }
 function isPrimitiveOf(value) { return ['text', 'number', 'boolean', 'css-color', 'url', 'string', 'unknown'].includes(String(value).toLowerCase()) || ['String', 'Number', 'Boolean', 'URL'].includes(value); }
+
+function packageInteractionValidation(ir, options) {
+  const generators = options.packageGenerators || {};
+  const allTags = new Set();
+  const usedByTag = new Map();
+  const usedLibraries = new Set((ir.uses || []).map(use => use.library));
+
+  for (const [library, generator] of Object.entries(generators)) {
+    const tags = interactionTagsFor(generator);
+    for (const tag of tags) {
+      allTags.add(tag);
+      if (usedLibraries.has(library)) usedByTag.set(tag, generator);
+    }
+  }
+
+  return { allTags, usedByTag };
+}
+
+function interactionTagsFor(generator) {
+  if (Array.isArray(generator?.interactionTags)) return generator.interactionTags;
+  if (generator?.features?.interactionTags && Array.isArray(generator.features.interactionTags)) return generator.features.interactionTags;
+  return [];
+}

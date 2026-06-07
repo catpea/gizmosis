@@ -10,7 +10,9 @@ node src/compiler/cli.js inspect <file.gizmo.xml>
 node src/compiler/cli.js compile <file.gizmo.xml> \
   --out <file.generated.js> \
   --manifest <file.manifest.json> \
-  --dts <file.generated.d.ts>
+  --dts <file.generated.d.ts> \
+  --package-generator <library=module> \
+  --package-import <library=module>
 ```
 
 For the bundled node-editor example:
@@ -19,8 +21,10 @@ For the bundled node-editor example:
 npm run compile
 ```
 
-The `--node-editor-import` option controls the generated import for components that use:
+The `--package-generator` option loads package-owned behavior lowering and validation metadata for components that use:
 
 ```xml
 <use library="gizmo/node-editor"/>
 ```
+
+The `--package-import` option controls the generated browser import specifier for that same package.

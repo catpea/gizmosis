@@ -3,6 +3,7 @@ import { mkdir, rm, cp, copyFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeCompilation } from '../src/compiler/index.js';
+import { nodeEditorPackageGenerator } from '../example/node-editor/src/library/compiler/index.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const example = join(root, 'example/node-editor');
@@ -12,7 +13,11 @@ const dist = join(example, 'dist');
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 
-await cp(join(src, 'library'), join(dist, 'library'), { recursive: true });
+await cp(join(root, 'src/core'), join(dist, 'core'), { recursive: true });
+await cp(join(src, 'library'), join(dist, 'library'), {
+  recursive: true,
+  filter: source => !source.includes(`${join(src, 'library/compiler')}`)
+});
 await cp(join(src, 'app'), join(dist, 'app'), { recursive: true });
 await copyFile(join(src, 'node-graph.css'), join(dist, 'node-graph.css'));
 
@@ -28,7 +33,8 @@ for (const [xml, js, manifest, dts] of components) {
     out: join(dist, js),
     manifest: join(dist, manifest),
     dts: join(dist, dts),
-    nodeEditorImport: 'gizmo/node-editor',
+    packageImports: { 'gizmo/node-editor': 'gizmo/node-editor' },
+    packageGenerators: { 'gizmo/node-editor': nodeEditorPackageGenerator },
     sourceLabel: `example/node-editor/src/${xml}`
   });
 }

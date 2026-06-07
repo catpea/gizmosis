@@ -8,7 +8,7 @@
 import { SVG_NS, edgePath, installNodeEditorStyles } from "gizmo/node-editor";
 
 export const gizmoManifest = {
-  "$schema": "https://gizmo-xml.local/schemas/gizmo-manifest-v0.5.json",
+  "$schema": "https://gizmosis.local/schemas/gizmo-manifest-v0.5.json",
   "version": "0.5",
   "source": "example/node-editor/src/node-cable.xml",
   "name": "Node Cable",
@@ -94,7 +94,7 @@ export const gizmoManifest = {
         "type": "",
         "of": "",
         "values": [],
-        "default": ".fox-ve-node-graph-edge-layer",
+        "default": ".{{css-prefix}}-node-graph-edge-layer",
         "reflect": false,
         "readonly": false,
         "required": false,
@@ -104,7 +104,7 @@ export const gizmoManifest = {
           "name": "svg-selector",
           "field": "svgSelector",
           "kind": "text",
-          "default": ".fox-ve-node-graph-edge-layer"
+          "default": ".{{css-prefix}}-node-graph-edge-layer"
         }
       },
       {
@@ -348,7 +348,7 @@ export const gizmoManifest = {
       "type": "",
       "of": "",
       "values": [],
-      "default": ".fox-ve-node-graph-edge-layer",
+      "default": ".{{css-prefix}}-node-graph-edge-layer",
       "reflect": false,
       "readonly": false,
       "required": false,
@@ -358,7 +358,7 @@ export const gizmoManifest = {
         "name": "svg-selector",
         "field": "svgSelector",
         "kind": "text",
-        "default": ".fox-ve-node-graph-edge-layer"
+        "default": ".{{css-prefix}}-node-graph-edge-layer"
       }
     },
     {
@@ -603,7 +603,7 @@ export const gizmoManifest = {
         "<gizmo/> creates Web Components from declarative XML.",
         "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
         "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-        "Support libraries provide reusable mechanics only; they must never hide component-specific implementations.",
+        "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
         "Agents must read features.json and process-library before changing components or compiler behavior."
       ],
       "canonicalRoot": [
@@ -665,7 +665,7 @@ export const gizmoManifest = {
           ]
         },
         "use": {
-          "purpose": "import a Gizmo package such as gizmo/node-editor",
+          "purpose": "import a Gizmo package such as gizmo/package-name",
           "attributes": [
             "library"
           ]
@@ -769,12 +769,6 @@ export const gizmoManifest = {
           "press",
           "resize",
           "pointer"
-        ],
-        "nodeEditorPackage": [
-          "connect",
-          "node",
-          "port",
-          "edge"
         ]
       },
       "resourceTags": [
@@ -828,7 +822,7 @@ export const gizmoManifest = {
       ],
       "compilerStatus": {
         "recognized": "all entries in this file are parsed/manifested/validated by v0.5 compiler",
-        "lowered": "node-card, node-cable, node-graph example components are lowered for demo; generic full lowering is incremental",
+        "lowered": "generic view lowering handles static markup, bindings, and repeat fragments; package-specific behavior lowering remains incremental",
         "manifest": "compiler emits the full semantic IR for agents and future lowerers"
       }
     }

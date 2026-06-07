@@ -17,6 +17,7 @@ An escape hatch is code that should be generated from `<gizmo/>` but is instead 
 5. Move component-specific code from support libraries into XML or compiler lowering.
 6. Keep only reusable mechanics in support libraries.
 7. Add tests that fail if the escape hatch returns.
+8. Keep package-specific generated component JavaScript in package-owned `.js` template assets. Component view markup should come from XML `<view/>` lowering, not package or compiler HTML blobs.
 
 ## Good support library examples
 
@@ -31,10 +32,14 @@ An escape hatch is code that should be generated from `<gizmo/>` but is instead 
 - `defineNodeGraph()`.
 - `.querySelector('.fox-ve-node-card-port')` hardcoded in generic helpers.
 - View templates embedded as strings.
+- Project-specific class prefixes such as `fox-ve-*` embedded directly in package or compiler templates instead of `{{css-prefix}}`.
 - Event listeners that know concrete graph/card/cable internals.
 
 ## Quality gates
 
 - Generated component owns selectors and event wiring.
-- Support library contains no component-specific implementation.
+- Runtime support files contain no component-specific implementation.
+- Runtime support library dist contains no package compiler templates.
+- Package-owned node-editor generator source does not duplicate XML view markup in HTML templates.
+- `src/compiler/` does not contain escaped node-editor implementation strings, graph/card/cable templates, or node-editor HTML markup.
 - Tests reject bridge classes and src imports from dist.

@@ -6,7 +6,7 @@ export const GIZMO_FEATURES = {
     "<gizmo/> creates Web Components from declarative XML.",
     "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
     "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-    "Support libraries provide reusable mechanics only; they must never hide component-specific implementations.",
+    "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
     "Agents must read features.json and process-library before changing components or compiler behavior."
   ],
   "canonicalRoot": [
@@ -74,7 +74,7 @@ export const GIZMO_FEATURES = {
       ]
     },
     "use": {
-      "purpose": "import a Gizmo package such as gizmo/node-editor",
+      "purpose": "import a Gizmo package such as gizmo/package-name",
       "attributes": [
         "library"
       ]
@@ -174,8 +174,7 @@ export const GIZMO_FEATURES = {
         "tap",
         "press",
         "resize",
-        "pointer",
-        "connect"
+        "pointer"
       ],
       "purpose": "luxury browser gestures"
     },
@@ -261,12 +260,6 @@ export const GIZMO_FEATURES = {
       "press",
       "resize",
       "pointer"
-    ],
-    "nodeEditorPackage": [
-      "connect",
-      "node",
-      "port",
-      "edge"
     ]
   },
   "resourceTags": [
@@ -320,7 +313,7 @@ export const GIZMO_FEATURES = {
   ],
   "compilerStatus": {
     "recognized": "all entries in this file are parsed/manifested/validated by v0.5 compiler",
-    "lowered": "node-card, node-cable, node-graph example components are lowered for demo; generic full lowering is incremental",
+    "lowered": "generic view lowering handles static markup, bindings, and repeat fragments; package-specific behavior lowering remains incremental",
     "manifest": "compiler emits the full semantic IR for agents and future lowerers"
   }
 };

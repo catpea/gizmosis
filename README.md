@@ -125,7 +125,8 @@ node src/compiler/cli.js compile example/node-editor/src/node-graph.xml \
   --out example/node-editor/dist/node-graph.generated.js \
   --manifest example/node-editor/dist/node-graph.manifest.json \
   --dts example/node-editor/dist/node-graph.generated.d.ts \
-  --node-editor-import gizmo/node-editor
+  --package-generator gizmo/node-editor=./example/node-editor/src/library/compiler/index.js \
+  --package-import gizmo/node-editor=gizmo/node-editor
 ```
 
 ## Check and Test
@@ -139,7 +140,7 @@ npm test
 
 ## Compiler Status
 
-The compiler parses XML, builds IR, validates it, and emits JS, manifest JSON, and `.d.ts`. For `<use library="gizmo/node-editor"/>`, generated output imports the `gizmo/node-editor` support package for generic card, geometry, stylesheet, and browser-resource helpers. The generated file owns the concrete graph Web Component, element names, refs, selectors, and interaction wiring. The example page maps `gizmo/node-editor` to `./dist/library/index.js`, so the distribution is self-contained.
+The compiler parses XML, builds IR, validates it, lowers `<view/>` markup through generic compiler infrastructure, and emits JS, manifest JSON, and `.d.ts`. Package-specific behavior lowering and package interaction validation are supplied through explicit package generators, such as `gizmo/node-editor=./example/node-editor/src/library/compiler/index.js`. For `<use library="gizmo/node-editor"/>`, generated output imports the `gizmo/node-editor` runtime support package for generic geometry, stylesheet, and browser-resource helpers. The generated file owns the concrete graph Web Component, element names, refs, selectors, and interaction wiring. The example page maps `gizmo/node-editor` to `./dist/library/index.js`, so the browser distribution is self-contained.
 
 ## v0.5 Highlight: Development Probes
 
@@ -157,16 +158,16 @@ A probe is an application-layer diagnostic. It measures rendered DOM reality and
 ## Package Exports
 
 ```js
-import { compileGizmo } from 'gizmo-xml/compiler';
-import { createFrameScheduler } from 'gizmo-xml/runtime';
+import { compileGizmo } from 'gizmosis/compiler';
+import { createFrameScheduler } from 'gizmosis/runtime';
 ```
 
 ## Lowering Model
 
 In Gizmosis, “lowering” means turning a high-level XML construct into executable JavaScript.
 
-- View lowering turns `<view>`, `{bindings}`, `each`, `key`, `class.*`, `style.*`, `svg.*`, `bind.*`, and `on.*` into DOM creation and update code owned by the generated component.
+- View lowering turns `<view>`, `{bindings}`, `each`, `key`, `class.*`, `style.*`, `svg.*`, `bind.*`, and `on.*` into generated static markup, repeat fragments, and binding metadata. Live DOM update plans are the next expansion of this lowerer.
 - Interaction lowering turns `<drag>`, `<pan>`, `<zoom>`, `<resize>`, and package tags such as `<connect/>` into generated listener wiring plus calls to generic support helpers.
-- Support libraries must not contain component-specific graph wiring. They may provide reusable mechanics: card elements, math helpers, frame schedulers, observers, and diagnostics utilities.
+- Runtime support libraries must not contain component-specific graph wiring. Package compiler generators may live beside an example package under `src/library/compiler/`; they are build-time source for that package, not browser runtime escape hatches.
 
 This keeps the XML as the source of truth and prevents `src/library/` from becoming an escape hatch.

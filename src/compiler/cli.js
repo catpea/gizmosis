@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { compileGizmo, writeCompilation } from './index.js';
 import { hasErrors } from './validate.js';
 
@@ -11,7 +13,9 @@ try {
     printHelp();
   } else if (command === 'check') {
     const entry = requireArg(args.shift(), 'Missing .gizmo.xml file.');
-    const result = await compileGizmo(entry);
+    const options = parseOptions(args);
+    await loadPackageGenerators(options);
+    const result = await compileGizmo(entry, options);
     printDiagnostics(result.diagnostics);
     process.exit(hasErrors(result.diagnostics) ? 1 : 0);
   } else if (command === 'features') {
@@ -19,11 +23,14 @@ try {
     console.log(JSON.stringify(GIZMO_FEATURES, null, 2));
   } else if (command === 'inspect') {
     const entry = requireArg(args.shift(), 'Missing .gizmo.xml file.');
-    const result = await compileGizmo(entry);
+    const options = parseOptions(args);
+    await loadPackageGenerators(options);
+    const result = await compileGizmo(entry, options);
     console.log(JSON.stringify(result.manifest, null, 2));
   } else if (command === 'compile') {
     const entry = requireArg(args.shift(), 'Missing .gizmo.xml file.');
     const options = parseOptions(args);
+    await loadPackageGenerators(options);
     const result = await writeCompilation(entry, options);
     printDiagnostics(result.diagnostics);
     if (!options.out && !options.manifest && !options.dts) console.log(result.js);
@@ -47,11 +54,43 @@ function parseOptions(args) {
     if (flag === '--out' || flag === '-o') options.out = requireArg(args.shift(), `${flag} requires a file.`);
     else if (flag === '--manifest') options.manifest = requireArg(args.shift(), `${flag} requires a file.`);
     else if (flag === '--dts') options.dts = requireArg(args.shift(), `${flag} requires a file.`);
-    else if (flag === '--node-editor-import') options.nodeEditorImport = requireArg(args.shift(), `${flag} requires a module specifier.`);
+    else if (flag === '--package-generator') (options.packageGeneratorSpecs ||= []).push(requireArg(args.shift(), `${flag} requires library=module.`));
+    else if (flag === '--package-import') addPackageImport(options, requireArg(args.shift(), `${flag} requires library=module.`));
+    else if (flag === '--css-prefix') options.cssPrefix = requireArg(args.shift(), `${flag} requires a CSS prefix.`);
     else if (flag === '--source-label') options.sourceLabel = requireArg(args.shift(), `${flag} requires a label.`);
     else throw new Error(`Unknown option: ${flag}`);
   }
   return options;
+}
+
+async function loadPackageGenerators(options) {
+  if (!options.packageGeneratorSpecs?.length) return;
+  const packageGenerators = { ...(options.packageGenerators || {}) };
+  for (const spec of options.packageGeneratorSpecs) {
+    const separator = spec.indexOf('=');
+    if (separator <= 0 || separator === spec.length - 1) throw new Error(`Invalid package generator spec: ${spec}`);
+    const library = spec.slice(0, separator);
+    const moduleName = spec.slice(separator + 1);
+    const module = await import(moduleSpecifier(moduleName));
+    const generator = module.default || module.packageGenerator;
+    if (!generator?.generateJavaScript) throw new Error(`Package generator ${moduleName} must export generateJavaScript.`);
+    packageGenerators[library] = generator;
+  }
+  options.packageGenerators = packageGenerators;
+  delete options.packageGeneratorSpecs;
+}
+
+function addPackageImport(options, spec) {
+  const separator = spec.indexOf('=');
+  if (separator <= 0 || separator === spec.length - 1) throw new Error(`Invalid package import spec: ${spec}`);
+  const library = spec.slice(0, separator);
+  const moduleName = spec.slice(separator + 1);
+  (options.packageImports ||= {})[library] = moduleName;
+}
+
+function moduleSpecifier(value) {
+  if (value.startsWith('.') || value.startsWith('/')) return pathToFileURL(resolve(value)).href;
+  return value;
 }
 
 function requireArg(value, message) {
@@ -71,7 +110,7 @@ function printDiagnostics(diagnostics) {
 }
 
 function printHelp() {
-  console.log(`Gizmosis compiler v0.5\n\nUsage:\n  gizmo check <file.gizmo.xml>\n  gizmo inspect <file.gizmo.xml>\n  gizmo compile <file.gizmo.xml> --out <file.js> --manifest <file.json> --dts <file.d.ts> [--node-editor-import <module>] [--source-label <label>]\n  gizmo init-example [file.gizmo.xml]\n`);
+  console.log(`Gizmosis compiler v0.5\n\nUsage:\n  gizmo check <file.gizmo.xml> [--package-generator <library=module>]\n  gizmo inspect <file.gizmo.xml> [--package-generator <library=module>]\n  gizmo compile <file.gizmo.xml> --out <file.js> --manifest <file.json> --dts <file.d.ts> [--package-generator <library=module>] [--package-import <library=module>] [--css-prefix <prefix>] [--source-label <label>]\n  gizmo init-example [file.gizmo.xml]\n`);
 }
 
 function exampleXml() {

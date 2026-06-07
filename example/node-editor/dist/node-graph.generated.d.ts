@@ -2,7 +2,7 @@
 // Source: example/node-editor/src/node-graph.xml
 // Component: Node Graph <fox-ve-node-graph>
 // Do not edit generated output by hand.
-export interface FoxVeNodeGraphCompiledProps {
+export interface FoxVeNodeGraphProps {
   zoom: number;
   panX: number;
   panY: number;
@@ -17,7 +17,7 @@ export interface FoxVeNodeGraphCompiledProps {
 
 export declare const gizmoManifest: Record<string, unknown>;
 export declare const gizmoDiagnostics: Array<Record<string, unknown>>;
-export declare class FoxVeNodeGraphCompiled extends HTMLElement {
+export declare class FoxVeNodeGraph extends HTMLElement {
   zoom: number;
   panX: number;
   panY: number;
@@ -30,5 +30,5 @@ export declare class FoxVeNodeGraphCompiled extends HTMLElement {
   selected: text[];
 }
 
-export declare function defineFoxVeNodeGraphCompiled(tag?: string): CustomElementConstructor | typeof FoxVeNodeGraphCompiled;
-export default FoxVeNodeGraphCompiled;
+export declare function defineFoxVeNodeGraph(tag?: string): CustomElementConstructor | typeof FoxVeNodeGraph;
+export default FoxVeNodeGraph;

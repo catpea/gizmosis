@@ -57,21 +57,21 @@
     <type name="PortDetail"><prop name="id" kind="text"/><prop name="label" kind="text"/><prop name="type" kind="text"/><prop name="side" kind="choice" values="input output"/></type>
   </types>
 
-  <view class="fox-ve-node-card-root" class.is-selected="{selected}" class.is-disabled="{status === 'disabled'}" style.--node-color="{color}">
-    <div class="fox-ve-node-card-header">
-      <span class="fox-ve-node-card-status" data-status="{status}"/>
-      <span class="fox-ve-node-card-title">{nodeLabel}</span>
-      <button type="button" class="fox-ve-node-card-expand" aria-label="Toggle node details" aria-expanded="{expanded}" click="toggle-expanded"><i aria-hidden="true">⌄</i></button>
+  <view class="{{css-prefix}}-node-card-root" class.is-selected="{selected}" class.is-disabled="{status === 'disabled'}" style.--node-color="{color}">
+    <div class="{{css-prefix}}-node-card-header">
+      <span class="{{css-prefix}}-node-card-status" data-status="{status}"/>
+      <span class="{{css-prefix}}-node-card-title">{nodeLabel}</span>
+      <button type="button" class="{{css-prefix}}-node-card-expand" aria-label="Toggle node details" aria-expanded="{expanded}" click="toggle-expanded"><i aria-hidden="true">⌄</i></button>
     </div>
-    <div class="fox-ve-node-card-port-grid">
-      <div class="fox-ve-node-card-ports fox-ve-node-card-inputs">
-        <button each="inputs as port" key="{port.id}" type="button" class="fox-ve-node-card-port" data-port-id="{port.id}" data-port-side="input" data-port-type="{port.type}" aria-label="input {port.label}" pointerdown="port-down port input" pointerup="port-up port input"><span class="fox-ve-node-card-port-dot"/><span class="fox-ve-node-card-port-label">{port.label}</span></button>
+    <div class="{{css-prefix}}-node-card-port-grid">
+      <div class="{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-inputs">
+        <button each="inputs as port" key="{port.id}" type="button" class="{{css-prefix}}-node-card-port" data-port-id="{port.id}" data-port-side="input" data-port-type="{port.type}" aria-label="input {port.label}" pointerdown="port-down port input" pointerup="port-up port input"><span class="{{css-prefix}}-node-card-port-dot"/><span class="{{css-prefix}}-node-card-port-label">{port.label}</span></button>
       </div>
-      <div class="fox-ve-node-card-ports fox-ve-node-card-outputs">
-        <button each="outputs as port" key="{port.id}" type="button" class="fox-ve-node-card-port" data-port-id="{port.id}" data-port-side="output" data-port-type="{port.type}" aria-label="output {port.label}" pointerdown="port-down port output" pointerup="port-up port output"><span class="fox-ve-node-card-port-label">{port.label}</span><span class="fox-ve-node-card-port-dot"/></button>
+      <div class="{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-outputs">
+        <button each="outputs as port" key="{port.id}" type="button" class="{{css-prefix}}-node-card-port" data-port-id="{port.id}" data-port-side="output" data-port-type="{port.type}" aria-label="output {port.label}" pointerdown="port-down port output" pointerup="port-up port output"><span class="{{css-prefix}}-node-card-port-label">{port.label}</span><span class="{{css-prefix}}-node-card-port-dot"/></button>
       </div>
     </div>
-    <div class="fox-ve-node-card-details" hidden="{!expanded}">Ready · {status}</div>
+    <div class="{{css-prefix}}-node-card-details" hidden="{!expanded}">Ready · {status}</div>
   </view>
 
 
@@ -84,5 +84,5 @@
   </behavior>
 
 
-  <dev><probes><layout-probe name="collapse-button-alignment" subject=".fox-ve-node-card-expand" relation="center-y" target=".fox-ve-node-card-title" tolerance="2" severity="error"/></probes></dev>
+  <dev><probes><layout-probe name="collapse-button-alignment" subject=".{{css-prefix}}-node-card-expand" relation="center-y" target=".{{css-prefix}}-node-card-title" tolerance="2" severity="error"/></probes></dev>
 </gizmo>

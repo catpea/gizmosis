@@ -8,7 +8,7 @@
 import { escapeAttr, escapeHtml, installNodeEditorStyles } from "gizmo/node-editor";
 
 export const gizmoManifest = {
-  "$schema": "https://gizmo-xml.local/schemas/gizmo-manifest-v0.5.json",
+  "$schema": "https://gizmosis.local/schemas/gizmo-manifest-v0.5.json",
   "version": "0.5",
   "source": "example/node-editor/src/node-card.xml",
   "name": "Node Card",
@@ -827,7 +827,7 @@ export const gizmoManifest = {
           "each": "inputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "fox-ve-node-card-port",
+          "class": "{{css-prefix}}-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "input",
           "data-port-type": "{port.type}",
@@ -843,7 +843,7 @@ export const gizmoManifest = {
           "each": "outputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "fox-ve-node-card-port",
+          "class": "{{css-prefix}}-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "output",
           "data-port-type": "{port.type}",
@@ -861,7 +861,7 @@ export const gizmoManifest = {
           "each": "inputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "fox-ve-node-card-port",
+          "class": "{{css-prefix}}-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "input",
           "data-port-type": "{port.type}",
@@ -877,7 +877,7 @@ export const gizmoManifest = {
           "each": "outputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "fox-ve-node-card-port",
+          "class": "{{css-prefix}}-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "output",
           "data-port-type": "{port.type}",
@@ -888,6 +888,12 @@ export const gizmoManifest = {
       }
     ],
     "bindings": [
+      {
+        "kind": "attribute",
+        "element": "view",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-root"
+      },
       {
         "kind": "attribute",
         "element": "view",
@@ -908,9 +914,27 @@ export const gizmoManifest = {
       },
       {
         "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-header"
+      },
+      {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-status"
+      },
+      {
+        "kind": "attribute",
         "element": "span",
         "name": "data-status",
         "value": "{status}"
+      },
+      {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-title"
       },
       {
         "kind": "text",
@@ -919,8 +943,26 @@ export const gizmoManifest = {
       {
         "kind": "attribute",
         "element": "button",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-expand"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
         "name": "aria-expanded",
         "value": "{expanded}"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port-grid"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-inputs"
       },
       {
         "kind": "attribute",
@@ -933,6 +975,12 @@ export const gizmoManifest = {
         "element": "button",
         "name": "key",
         "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port"
       },
       {
         "kind": "attribute",
@@ -953,8 +1001,26 @@ export const gizmoManifest = {
         "value": "input {port.label}"
       },
       {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port-dot"
+      },
+      {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port-label"
+      },
+      {
         "kind": "text",
         "value": "{port.label}"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-outputs"
       },
       {
         "kind": "attribute",
@@ -967,6 +1033,12 @@ export const gizmoManifest = {
         "element": "button",
         "name": "key",
         "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port"
       },
       {
         "kind": "attribute",
@@ -987,8 +1059,26 @@ export const gizmoManifest = {
         "value": "output {port.label}"
       },
       {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port-label"
+      },
+      {
         "kind": "text",
         "value": "{port.label}"
+      },
+      {
+        "kind": "attribute",
+        "element": "span",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-port-dot"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-card-details"
       },
       {
         "kind": "attribute",
@@ -1001,7 +1091,7 @@ export const gizmoManifest = {
         "value": "Ready · {status}"
       }
     ],
-    "source": "<view class=\"fox-ve-node-card-root\" class.is-selected=\"{selected}\" class.is-disabled=\"{status === 'disabled'}\" style.--node-color=\"{color}\">\n\n    \n  <div class=\"fox-ve-node-card-header\">\n\n      \n    <span class=\"fox-ve-node-card-status\" data-status=\"{status}\"/>\n\n      \n    <span class=\"fox-ve-node-card-title\">{nodeLabel}</span>\n\n      \n    <button type=\"button\" class=\"fox-ve-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{expanded}\" click=\"toggle-expanded\">\n      <i aria-hidden=\"true\">⌄</i>\n    </button>\n\n    \n  </div>\n\n    \n  <div class=\"fox-ve-node-card-port-grid\">\n\n      \n    <div class=\"fox-ve-node-card-ports fox-ve-node-card-inputs\">\n\n        \n      <button each=\"inputs as port\" key=\"{port.id}\" type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"input\" data-port-type=\"{port.type}\" aria-label=\"input {port.label}\" pointerdown=\"port-down port input\" pointerup=\"port-up port input\">\n        <span class=\"fox-ve-node-card-port-dot\"/>\n        <span class=\"fox-ve-node-card-port-label\">{port.label}</span>\n      </button>\n\n      \n    </div>\n\n      \n    <div class=\"fox-ve-node-card-ports fox-ve-node-card-outputs\">\n\n        \n      <button each=\"outputs as port\" key=\"{port.id}\" type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"output\" data-port-type=\"{port.type}\" aria-label=\"output {port.label}\" pointerdown=\"port-down port output\" pointerup=\"port-up port output\">\n        <span class=\"fox-ve-node-card-port-label\">{port.label}</span>\n        <span class=\"fox-ve-node-card-port-dot\"/>\n      </button>\n\n      \n    </div>\n\n    \n  </div>\n\n    \n  <div class=\"fox-ve-node-card-details\" hidden=\"{!expanded}\">Ready · {status}</div>\n\n  \n</view>"
+    "source": "<view class=\"{{css-prefix}}-node-card-root\" class.is-selected=\"{selected}\" class.is-disabled=\"{status === 'disabled'}\" style.--node-color=\"{color}\">\n\n    \n  <div class=\"{{css-prefix}}-node-card-header\">\n\n      \n    <span class=\"{{css-prefix}}-node-card-status\" data-status=\"{status}\"/>\n\n      \n    <span class=\"{{css-prefix}}-node-card-title\">{nodeLabel}</span>\n\n      \n    <button type=\"button\" class=\"{{css-prefix}}-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{expanded}\" click=\"toggle-expanded\">\n      <i aria-hidden=\"true\">⌄</i>\n    </button>\n\n    \n  </div>\n\n    \n  <div class=\"{{css-prefix}}-node-card-port-grid\">\n\n      \n    <div class=\"{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-inputs\">\n\n        \n      <button each=\"inputs as port\" key=\"{port.id}\" type=\"button\" class=\"{{css-prefix}}-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"input\" data-port-type=\"{port.type}\" aria-label=\"input {port.label}\" pointerdown=\"port-down port input\" pointerup=\"port-up port input\">\n        <span class=\"{{css-prefix}}-node-card-port-dot\"/>\n        <span class=\"{{css-prefix}}-node-card-port-label\">{port.label}</span>\n      </button>\n\n      \n    </div>\n\n      \n    <div class=\"{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-outputs\">\n\n        \n      <button each=\"outputs as port\" key=\"{port.id}\" type=\"button\" class=\"{{css-prefix}}-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"output\" data-port-type=\"{port.type}\" aria-label=\"output {port.label}\" pointerdown=\"port-down port output\" pointerup=\"port-up port output\">\n        <span class=\"{{css-prefix}}-node-card-port-label\">{port.label}</span>\n        <span class=\"{{css-prefix}}-node-card-port-dot\"/>\n      </button>\n\n      \n    </div>\n\n    \n  </div>\n\n    \n  <div class=\"{{css-prefix}}-node-card-details\" hidden=\"{!expanded}\">Ready · {status}</div>\n\n  \n</view>"
   },
   "geometry": {
     "spaces": [],
@@ -1197,9 +1287,9 @@ export const gizmoManifest = {
         "name": "collapse-button-alignment",
         "attrs": {
           "name": "collapse-button-alignment",
-          "subject": ".fox-ve-node-card-expand",
+          "subject": ".{{css-prefix}}-node-card-expand",
           "relation": "center-y",
-          "target": ".fox-ve-node-card-title",
+          "target": ".{{css-prefix}}-node-card-title",
           "tolerance": "2",
           "severity": "error"
         },
@@ -1221,7 +1311,7 @@ export const gizmoManifest = {
         "<gizmo/> creates Web Components from declarative XML.",
         "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
         "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-        "Support libraries provide reusable mechanics only; they must never hide component-specific implementations.",
+        "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
         "Agents must read features.json and process-library before changing components or compiler behavior."
       ],
       "canonicalRoot": [
@@ -1283,7 +1373,7 @@ export const gizmoManifest = {
           ]
         },
         "use": {
-          "purpose": "import a Gizmo package such as gizmo/node-editor",
+          "purpose": "import a Gizmo package such as gizmo/package-name",
           "attributes": [
             "library"
           ]
@@ -1387,12 +1477,6 @@ export const gizmoManifest = {
           "press",
           "resize",
           "pointer"
-        ],
-        "nodeEditorPackage": [
-          "connect",
-          "node",
-          "port",
-          "edge"
         ]
       },
       "resourceTags": [
@@ -1446,7 +1530,7 @@ export const gizmoManifest = {
       ],
       "compilerStatus": {
         "recognized": "all entries in this file are parsed/manifested/validated by v0.5 compiler",
-        "lowered": "node-card, node-cable, node-graph example components are lowered for demo; generic full lowering is incremental",
+        "lowered": "generic view lowering handles static markup, bindings, and repeat fragments; package-specific behavior lowering remains incremental",
         "manifest": "compiler emits the full semantic IR for agents and future lowerers"
       }
     }
@@ -1454,6 +1538,10 @@ export const gizmoManifest = {
   "diagnostics": []
 };
 export const gizmoDiagnostics = [];
+
+const NODE_CARD_HTML = "<div class=\"fox-ve-node-card-header\">\n      <span class=\"fox-ve-node-card-status\" data-status=\"{{status}}\"></span>\n      <span class=\"fox-ve-node-card-title\">{{node-label}}</span>\n      <button type=\"button\" class=\"fox-ve-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{{expanded}}\"><i aria-hidden=\"true\">⌄</i></button>\n    </div>\n    <div class=\"fox-ve-node-card-port-grid\">\n      <div class=\"fox-ve-node-card-ports fox-ve-node-card-inputs\">\n        {{inputs}}\n      </div>\n      <div class=\"fox-ve-node-card-ports fox-ve-node-card-outputs\">\n        {{outputs}}\n      </div>\n    </div>\n    <div class=\"fox-ve-node-card-details\" {{hidden}}>Ready · {{status}}</div>";
+const NODE_CARD_INPUT_PORT_HTML = "<button type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{{id}}\" data-port-side=\"input\" data-port-type=\"{{type}}\" aria-label=\"input {{label}}\"><span class=\"fox-ve-node-card-port-dot\"></span><span class=\"fox-ve-node-card-port-label\">{{label}}</span></button>";
+const NODE_CARD_OUTPUT_PORT_HTML = "<button type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{{id}}\" data-port-side=\"output\" data-port-type=\"{{type}}\" aria-label=\"output {{label}}\"><span class=\"fox-ve-node-card-port-label\">{{label}}</span><span class=\"fox-ve-node-card-port-dot\"></span></button>";
 
 export class FoxVeNodeCard extends HTMLElement {
   static observedAttributes = ['node-label', 'color', 'status', 'expanded', 'selected'];
@@ -1483,16 +1571,14 @@ export class FoxVeNodeCard extends HTMLElement {
     this.classList.toggle('is-selected', this.hasAttribute('selected'));
     this.classList.toggle('is-disabled', this.status === 'disabled');
     this.style.setProperty('--node-color', this.color);
-    this.innerHTML =       '<div class="fox-ve-node-card-header">' +
-      '<span class="fox-ve-node-card-status" data-status="' + escapeHtml(this.status) + '"></span>' +
-      '<span class="fox-ve-node-card-title">' + escapeHtml(this.nodeLabel) + '</span>' +
-      '<button type="button" class="fox-ve-node-card-expand" aria-label="Toggle node details" aria-expanded="' + (this.expanded ? 'true' : 'false') + '"><i aria-hidden="true">⌄</i></button>' +
-      '</div>' +
-      '<div class="fox-ve-node-card-port-grid">' +
-      '<div class="fox-ve-node-card-ports fox-ve-node-card-inputs">' + this._inputs.map((port, index) => this._portHtml(port, index, 'input')).join('') + '</div>' +
-      '<div class="fox-ve-node-card-ports fox-ve-node-card-outputs">' + this._outputs.map((port, index) => this._portHtml(port, index, 'output')).join('') + '</div>' +
-      '</div>' +
-      '<div class="fox-ve-node-card-details" ' + (this.expanded ? '' : 'hidden') + '>Ready · ' + escapeHtml(this.status) + '</div>';
+    this.innerHTML = renderNodeTemplate(NODE_CARD_HTML, {
+      status: escapeHtml(this.status),
+      'node-label': escapeHtml(this.nodeLabel),
+      expanded: this.expanded ? 'true' : 'false',
+      inputs: this._inputs.map((port, index) => this._portHtml(port, index, 'input')).join(''),
+      outputs: this._outputs.map((port, index) => this._portHtml(port, index, 'output')).join(''),
+      hidden: this.expanded ? '' : 'hidden'
+    });
     this._installViewEvents();
   }
 
@@ -1519,10 +1605,13 @@ export class FoxVeNodeCard extends HTMLElement {
     const id = String(port?.id ?? side + '-' + index);
     const label = String(port?.label ?? id);
     const type = String(port?.type ?? '');
-    const core = side === 'output'
-      ? '<span class="fox-ve-node-card-port-label">' + escapeHtml(label) + '</span><span class="fox-ve-node-card-port-dot"></span>'
-      : '<span class="fox-ve-node-card-port-dot"></span><span class="fox-ve-node-card-port-label">' + escapeHtml(label) + '</span>';
-    return '<button type="button" class="fox-ve-node-card-port" data-port-id="' + escapeAttr(id) + '" data-port-side="' + side + '" data-port-type="' + escapeAttr(type) + '" aria-label="' + side + ' ' + escapeAttr(label) + '">' + core + '</button>';
+    const template = side === 'output' ? NODE_CARD_OUTPUT_PORT_HTML : NODE_CARD_INPUT_PORT_HTML;
+    return renderNodeTemplate(template, {
+      id: escapeAttr(id),
+      type: escapeAttr(type),
+      label: escapeHtml(label),
+      'aria-label': side + ' ' + escapeAttr(label)
+    });
   }
 
   _portDetail(portEl) {
@@ -1533,6 +1622,10 @@ export class FoxVeNodeCard extends HTMLElement {
       side: portEl.dataset.portSide || ''
     };
   }
+}
+
+function renderNodeTemplate(template, values) {
+  return template.replace(/\{\{([a-z0-9-]+)\}\}/g, (match, key) => Object.prototype.hasOwnProperty.call(values, key) ? values[key] : match);
 }
 
 FoxVeNodeCard.gizmoManifest = gizmoManifest;

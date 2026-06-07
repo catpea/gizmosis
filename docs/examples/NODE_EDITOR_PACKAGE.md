@@ -16,4 +16,4 @@ The package provides reusable helpers and package vocabulary, but it does not hi
 
 ## Support library rule
 
-`example/node-editor/src/library/` may provide helper functions only. It must not contain `node-card.js`, `node-cable.js`, or `node-graph.js` component implementations.
+`example/node-editor/src/library/` exports runtime helper functions through `index.js`; those runtime helpers must not contain `node-card.js`, `node-cable.js`, or `node-graph.js` component implementations. Build-time package behavior generator assets may live under `example/node-editor/src/library/compiler/` because the node-editor package owns graph/card/cable behavior. View markup remains in each XML `<view/>` and is lowered by compiler infrastructure. Package generator assets must not be copied into `dist/library/` and must not live under the general compiler.

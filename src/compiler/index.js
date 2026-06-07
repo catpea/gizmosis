@@ -11,12 +11,13 @@ export { validateIr, hasErrors } from './validate.js';
 export { generateDts, generateJavaScript, generateManifest } from './generator.js';
 export { parseXml, serializeXml } from './xml-parser.js';
 export { GIZMO_FEATURES } from './features.js';
+export { lowerView } from './view-lowerer.js';
 
 export async function compileGizmo(entryFile, options = {}) {
   const loaded = await loadGizmoXml(entryFile);
   const ir = buildIr(loaded.document, { filename: loaded.filename });
   if (options.sourceLabel) ir.source = options.sourceLabel;
-  const diagnostics = validateIr(ir);
+  const diagnostics = validateIr(ir, options);
   const manifest = generateManifest(ir, diagnostics);
   const js = generateJavaScript(ir, diagnostics, options);
   const dts = generateDts(ir, options);

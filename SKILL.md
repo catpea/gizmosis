@@ -19,6 +19,7 @@ Use this skill when creating, converting, compiling, or reviewing `<gizmo/>` Web
 - `dist/` contains compiled, standalone ESM distribution files.
 - Example harnesses must import only from `dist/`.
 - No file in `dist/` may import from `../src/`.
+- Package-specific compiler generators may live with a package, such as `example/node-editor/src/library/compiler/`. They are build-time source, not runtime support-library code.
 
 ## Node editor component contract
 
@@ -71,6 +72,7 @@ npm test
 ## Forbidden shortcuts
 
 - Do not place example-specific Web Component implementations in support libraries.
+- Do not place package-specific generated behavior templates in `src/compiler/`; keep them with the package generator that owns them, and keep view markup in XML `<view/>`.
 - Do not hardcode graph/card/cable selectors in generic helpers.
 - Do not add hidden bridge classes that subclass or wrap a hand-written implementation.
 - Do not split one component across many XML files unless each XML file represents a separate Web Component.

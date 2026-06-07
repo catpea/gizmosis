@@ -227,11 +227,12 @@ function readInteractions(root) {
 }
 
 function readInteractionNode(node) {
-  const nested = elementChildren(node).filter(child => isInteractionKind(child.name)).map(child => readInteractionNode(child));
+  const children = elementChildren(node);
+  const nestedChildren = children.filter(child => isNestedInteractionChild(node, child));
   return {
     kind: node.name, name: node.attrs.name || '', attrs: node.attrs, about: readAbout(node), contract: readContract(firstChild(node, 'contract')),
-    invariants: readInvariants(firstChild(node, 'invariants')), agentNotes: readAgentNotes(firstChild(node, 'agent-notes')), nested,
-    commands: elementChildren(node).filter(child => !['about', 'contract', 'invariants', 'agent-notes'].includes(child.name) && !isInteractionKind(child.name)).map(readCommand),
+    invariants: readInvariants(firstChild(node, 'invariants')), agentNotes: readAgentNotes(firstChild(node, 'agent-notes')), nested: nestedChildren.map(child => readInteractionNode(child)),
+    commands: children.filter(child => !['about', 'contract', 'invariants', 'agent-notes'].includes(child.name) && !nestedChildren.includes(child)).map(readCommand),
     ast: node, text: normalizeText(textContent(node))
   };
 }
@@ -313,7 +314,11 @@ function readPropLike(node) {
 
 function collectAttrs(node, attrName, out = []) { if (node?.type === 'element' && Object.prototype.hasOwnProperty.call(node.attrs || {}, attrName)) out.push({ element: node.name, value: node.attrs[attrName], attrs: node.attrs }); for (const child of node?.children || []) collectAttrs(child, attrName, out); return out; }
 function collectBindings(node, out = []) { if (node?.type === 'text' && /\{[^}]+\}/.test(node.value)) out.push({ kind: 'text', value: node.value }); if (node?.type === 'element') { for (const [name, value] of Object.entries(node.attrs || {})) { if (name.includes('.') || /^bind\./.test(name) || /^on\./.test(name) || /\{[^}]+\}/.test(value) || ['each', 'key', 'if', 'hidden'].includes(name)) out.push({ kind: 'attribute', element: node.name, name, value }); } } for (const child of node?.children || []) collectBindings(child, out); return out; }
-function isInteractionKind(name) { return [...GIZMO_FEATURES.interactionTags.core, ...GIZMO_FEATURES.interactionTags.nodeEditorPackage, 'interaction', 'select-box', 'scrub', 'resizer', 'splitter'].includes(name); }
+function isInteractionKind(name) { return [...GIZMO_FEATURES.interactionTags.core, 'interaction', 'select-box', 'scrub', 'resizer', 'splitter'].includes(name); }
+function isNestedInteractionChild(parent, child) {
+  if (['about', 'contract', 'invariants', 'agent-notes'].includes(child.name)) return false;
+  return isInteractionKind(child.name) || (parent.name === 'interaction' && !GIZMO_FEATURES.commandTags.includes(child.name));
+}
 function safeChildren(root, name) { return root ? elementChildren(root, name) : []; }
 function mergeByName(items) { const out = []; const seen = new Set(); for (const item of items || []) { const key = item.name || JSON.stringify(item.attrs || {}); if (seen.has(key)) continue; seen.add(key); out.push(item); } return out; }
 function normalizeText(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }

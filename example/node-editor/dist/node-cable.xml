@@ -20,7 +20,7 @@
   <contract>
     <props>
         <prop name="edge-id" field="edgeId" kind="text" reflect="true"/>
-        <prop name="svg-selector" field="svgSelector" kind="text" default=".fox-ve-node-graph-edge-layer"/>
+        <prop name="svg-selector" field="svgSelector" kind="text" default=".{{css-prefix}}-node-graph-edge-layer"/>
         <prop name="from" kind="record" of="Point"/>
         <prop name="to" kind="record" of="Point"/>
         <prop name="missing" kind="boolean" reflect="true"/>

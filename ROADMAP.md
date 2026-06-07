@@ -10,7 +10,11 @@
 
 ## v0.6 — General lowering
 
-- Generic DOM lowering for `<view/>`.
+- Package-owned `.js` behavior generator assets instead of generated-code blobs inside the general compiler.
+- Package-owned validation metadata for package interaction tags.
+- XML-owned view markup lowered by compiler infrastructure, without duplicate package HTML templates.
+- Project-level CSS prefix configuration for generated node-editor classes.
+- Generic DOM lowering for `<view/>` static markup and repeated fragments, followed by live DOM update plans.
 - Generic action lowering.
 - Runtime interaction helpers configured by compiled descriptors.
 - Cross-component import graph generation.

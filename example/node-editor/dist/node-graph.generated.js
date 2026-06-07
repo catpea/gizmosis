@@ -34,7 +34,7 @@ import {
 } from "gizmo/node-editor";
 
 export const gizmoManifest = {
-  "$schema": "https://gizmo-xml.local/schemas/gizmo-manifest-v0.5.json",
+  "$schema": "https://gizmosis.local/schemas/gizmo-manifest-v0.5.json",
   "version": "0.5",
   "source": "example/node-editor/src/node-graph.xml",
   "name": "Node Graph",
@@ -2294,7 +2294,7 @@ export const gizmoManifest = {
         "value": "viewport",
         "attrs": {
           "ref": "viewport",
-          "class": "fox-ve-node-graph-viewport",
+          "class": "{{css-prefix}}-node-graph-viewport",
           "tabindex": "0",
           "role": "application",
           "aria-label": "Node graph"
@@ -2305,7 +2305,7 @@ export const gizmoManifest = {
         "value": "svg",
         "attrs": {
           "ref": "svg",
-          "class": "fox-ve-node-graph-edges",
+          "class": "{{css-prefix}}-node-graph-edges",
           "aria-hidden": "true"
         }
       },
@@ -2314,7 +2314,7 @@ export const gizmoManifest = {
         "value": "edgeLayer",
         "attrs": {
           "ref": "edgeLayer",
-          "class": "fox-ve-node-graph-edge-layer",
+          "class": "{{css-prefix}}-node-graph-edge-layer",
           "svg.transform": "translate({view.panX} {view.panY}) scale({view.zoom})"
         }
       },
@@ -2323,7 +2323,7 @@ export const gizmoManifest = {
         "value": "ghost",
         "attrs": {
           "ref": "ghost",
-          "class": "fox-ve-node-graph-ghost-edge",
+          "class": "{{css-prefix}}-node-graph-ghost-edge",
           "hidden": "{!connection}",
           "svg.d": "{ghostEdgePath(connection)}"
         }
@@ -2333,7 +2333,7 @@ export const gizmoManifest = {
         "value": "cableLayer",
         "attrs": {
           "ref": "cableLayer",
-          "class": "fox-ve-node-graph-cables",
+          "class": "{{css-prefix}}-node-graph-cables",
           "hidden": "true"
         }
       },
@@ -2342,7 +2342,7 @@ export const gizmoManifest = {
         "value": "nodeLayer",
         "attrs": {
           "ref": "nodeLayer",
-          "class": "fox-ve-node-graph-nodes",
+          "class": "{{css-prefix}}-node-graph-nodes",
           "style.transform": "translate({view.panX}px, {view.panY}px) scale({view.zoom})",
           "on.fox-node-port-down": "port-connect",
           "on.fox-node-port-up": "port-connect"
@@ -2357,7 +2357,7 @@ export const gizmoManifest = {
           "each": "edges as edge",
           "key": "{edge.id}",
           "edge-id": "{edge.id}",
-          "svg-selector": ".fox-ve-node-graph-edge-layer",
+          "svg-selector": ".{{css-prefix}}-node-graph-edge-layer",
           "bind.from": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}",
           "bind.to": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
         }
@@ -2390,7 +2390,7 @@ export const gizmoManifest = {
           "each": "edges as edge",
           "key": "{edge.id}",
           "edge-id": "{edge.id}",
-          "svg-selector": ".fox-ve-node-graph-edge-layer",
+          "svg-selector": ".{{css-prefix}}-node-graph-edge-layer",
           "bind.from": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}",
           "bind.to": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
         }
@@ -2417,6 +2417,12 @@ export const gizmoManifest = {
     ],
     "bindings": [
       {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-viewport"
+      },
+      {
         "kind": "text",
         "value": "zoom {view.zoom}"
       },
@@ -2426,9 +2432,27 @@ export const gizmoManifest = {
       },
       {
         "kind": "attribute",
+        "element": "svg",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-edges"
+      },
+      {
+        "kind": "attribute",
+        "element": "g",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-edge-layer"
+      },
+      {
+        "kind": "attribute",
         "element": "g",
         "name": "svg.transform",
         "value": "translate({view.panX} {view.panY}) scale({view.zoom})"
+      },
+      {
+        "kind": "attribute",
+        "element": "path",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-ghost-edge"
       },
       {
         "kind": "attribute",
@@ -2441,6 +2465,12 @@ export const gizmoManifest = {
         "element": "path",
         "name": "svg.d",
         "value": "{ghostEdgePath(connection)}"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-cables"
       },
       {
         "kind": "attribute",
@@ -2469,6 +2499,12 @@ export const gizmoManifest = {
       {
         "kind": "attribute",
         "element": "fox-ve-node-cable",
+        "name": "svg-selector",
+        "value": ".{{css-prefix}}-node-graph-edge-layer"
+      },
+      {
+        "kind": "attribute",
+        "element": "fox-ve-node-cable",
         "name": "bind.from",
         "value": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}"
       },
@@ -2477,6 +2513,12 @@ export const gizmoManifest = {
         "element": "fox-ve-node-cable",
         "name": "bind.to",
         "value": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-nodes"
       },
       {
         "kind": "attribute",
@@ -2577,11 +2619,17 @@ export const gizmoManifest = {
       {
         "kind": "attribute",
         "element": "div",
+        "name": "class",
+        "value": "{{css-prefix}}-node-graph-empty"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
         "name": "hidden",
         "value": "{nodes.length !== 0}"
       }
     ],
-    "source": "<view>\n\n    \n  <div ref=\"viewport\" class=\"fox-ve-node-graph-viewport\" tabindex=\"0\" role=\"application\" aria-label=\"Node graph\">\n\n      \n    <div class=\"status-strip\">\n\n        \n      <span class=\"pill\">\n        <span class=\"dot\"/>\n        <span data-readout=\"zoom\">zoom {view.zoom}</span>\n      </span>\n\n        \n      <span class=\"pill\">\n        <span data-readout=\"mode\">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span>\n      </span>\n\n      \n    </div>\n\n\n      \n    <svg ref=\"svg\" class=\"fox-ve-node-graph-edges\" aria-hidden=\"true\">\n\n        \n      <g ref=\"edgeLayer\" class=\"fox-ve-node-graph-edge-layer\" svg.transform=\"translate({view.panX} {view.panY}) scale({view.zoom})\"/>\n\n        \n      <path ref=\"ghost\" class=\"fox-ve-node-graph-ghost-edge\" hidden=\"{!connection}\" svg.d=\"{ghostEdgePath(connection)}\"/>\n\n      \n    </svg>\n\n\n      \n    <div ref=\"cableLayer\" class=\"fox-ve-node-graph-cables\" hidden=\"true\">\n\n        \n      <fox-ve-node-cable each=\"edges as edge\" key=\"{edge.id}\" edge-id=\"{edge.id}\" svg-selector=\".fox-ve-node-graph-edge-layer\" bind.from=\"{portWorld(edge.from.nodeId, edge.from.portId, 'output')}\" bind.to=\"{portWorld(edge.to.nodeId, edge.to.portId, 'input')}\"/>\n\n      \n    </div>\n\n\n      \n    <div ref=\"nodeLayer\" class=\"fox-ve-node-graph-nodes\" style.transform=\"translate({view.panX}px, {view.panY}px) scale({view.zoom})\" on.fox-node-port-down=\"port-connect\" on.fox-node-port-up=\"port-connect\">\n\n        \n      <fox-ve-node-card each=\"nodes as node\" key=\"{node.id}\" data-id=\"{node.id}\" data-type=\"{node.type}\" node-label=\"{node.label}\" color=\"{node.color}\" status=\"{node.status}\" selected=\"{selected includes node.id}\" expanded=\"{node.expanded}\" style.left=\"{node.x}px\" style.top=\"{node.y}px\" bind.inputs=\"{node.inputs}\" bind.outputs=\"{node.outputs}\"/>\n\n      \n    </div>\n\n\n      \n    <div class=\"fox-ve-node-graph-empty\" hidden=\"{nodes.length !== 0}\">Double-click empty space to add a node.</div>\n\n    \n  </div>\n\n  \n</view>"
+    "source": "<view>\n\n    \n  <div ref=\"viewport\" class=\"{{css-prefix}}-node-graph-viewport\" tabindex=\"0\" role=\"application\" aria-label=\"Node graph\">\n\n      \n    <div class=\"status-strip\">\n\n        \n      <span class=\"pill\">\n        <span class=\"dot\"/>\n        <span data-readout=\"zoom\">zoom {view.zoom}</span>\n      </span>\n\n        \n      <span class=\"pill\">\n        <span data-readout=\"mode\">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span>\n      </span>\n\n      \n    </div>\n\n\n      \n    <svg ref=\"svg\" class=\"{{css-prefix}}-node-graph-edges\" aria-hidden=\"true\">\n\n        \n      <g ref=\"edgeLayer\" class=\"{{css-prefix}}-node-graph-edge-layer\" svg.transform=\"translate({view.panX} {view.panY}) scale({view.zoom})\"/>\n\n        \n      <path ref=\"ghost\" class=\"{{css-prefix}}-node-graph-ghost-edge\" hidden=\"{!connection}\" svg.d=\"{ghostEdgePath(connection)}\"/>\n\n      \n    </svg>\n\n\n      \n    <div ref=\"cableLayer\" class=\"{{css-prefix}}-node-graph-cables\" hidden=\"true\">\n\n        \n      <fox-ve-node-cable each=\"edges as edge\" key=\"{edge.id}\" edge-id=\"{edge.id}\" svg-selector=\".{{css-prefix}}-node-graph-edge-layer\" bind.from=\"{portWorld(edge.from.nodeId, edge.from.portId, 'output')}\" bind.to=\"{portWorld(edge.to.nodeId, edge.to.portId, 'input')}\"/>\n\n      \n    </div>\n\n\n      \n    <div ref=\"nodeLayer\" class=\"{{css-prefix}}-node-graph-nodes\" style.transform=\"translate({view.panX}px, {view.panY}px) scale({view.zoom})\" on.fox-node-port-down=\"port-connect\" on.fox-node-port-up=\"port-connect\">\n\n        \n      <fox-ve-node-card each=\"nodes as node\" key=\"{node.id}\" data-id=\"{node.id}\" data-type=\"{node.type}\" node-label=\"{node.label}\" color=\"{node.color}\" status=\"{node.status}\" selected=\"{selected includes node.id}\" expanded=\"{node.expanded}\" style.left=\"{node.x}px\" style.top=\"{node.y}px\" bind.inputs=\"{node.inputs}\" bind.outputs=\"{node.outputs}\"/>\n\n      \n    </div>\n\n\n      \n    <div class=\"{{css-prefix}}-node-graph-empty\" hidden=\"{nodes.length !== 0}\">Double-click empty space to add a node.</div>\n\n    \n  </div>\n\n  \n</view>"
   },
   "geometry": {
     "spaces": [
@@ -3316,7 +3364,7 @@ export const gizmoManifest = {
             "name": "node-drag",
             "from": "nodeLayer",
             "handle": "fox-ve-node-card",
-            "ignore": ".fox-ve-node-card-port, button, input, textarea, select, [contenteditable]",
+            "ignore": ".{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]",
             "button": "primary",
             "capture": "true",
             "threshold": "1",
@@ -3555,7 +3603,7 @@ export const gizmoManifest = {
           "attrs": {
             "name": "port-connect",
             "from": "nodeLayer",
-            "handle": ".fox-ve-node-card-port",
+            "handle": ".{{css-prefix}}-node-card-port",
             "start-event": "fox-node-port-down",
             "end-event": "fox-node-port-up",
             "mode-prop": "connection-mode",
@@ -3833,9 +3881,9 @@ export const gizmoManifest = {
         "name": "collapse-button-alignment",
         "attrs": {
           "name": "collapse-button-alignment",
-          "subject": ".fox-ve-node-card-expand",
+          "subject": ".{{css-prefix}}-node-card-expand",
           "relation": "center-y",
-          "target": ".fox-ve-node-card-title",
+          "target": ".{{css-prefix}}-node-card-title",
           "tolerance": "2",
           "severity": "error"
         },
@@ -3852,9 +3900,9 @@ export const gizmoManifest = {
           "when": "after-interaction",
           "severity": "error"
         },
-        "message": "const ghost = one(\".fox-ve-node-graph-ghost-edge\"); if (!state.connection) { expect( ghost.hidden && !ghost.getAttribute(\"d\"), \"Ghost edge must be hidden and have no path when no connection is active.\", { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") } ); }",
+        "message": "const ghost = one(\".{{css-prefix}}-node-graph-ghost-edge\"); if (!state.connection) { expect( ghost.hidden && !ghost.getAttribute(\"d\"), \"Ghost edge must be hidden and have no path when no connection is active.\", { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") } ); }",
         "hints": [],
-        "body": "const ghost = one(\".fox-ve-node-graph-ghost-edge\");\n        if (!state.connection) {\n          expect(\n            ghost.hidden && !ghost.getAttribute(\"d\"),\n            \"Ghost edge must be hidden and have no path when no connection is active.\",\n            { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") }\n          );\n        }"
+        "body": "const ghost = one(\".{{css-prefix}}-node-graph-ghost-edge\");\n        if (!state.connection) {\n          expect(\n            ghost.hidden && !ghost.getAttribute(\"d\"),\n            \"Ghost edge must be hidden and have no path when no connection is active.\",\n            { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") }\n          );\n        }"
       },
       {
         "kind": "layout-probe",
@@ -3983,7 +4031,7 @@ export const gizmoManifest = {
         "<gizmo/> creates Web Components from declarative XML.",
         "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
         "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-        "Support libraries provide reusable mechanics only; they must never hide component-specific implementations.",
+        "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
         "Agents must read features.json and process-library before changing components or compiler behavior."
       ],
       "canonicalRoot": [
@@ -4045,7 +4093,7 @@ export const gizmoManifest = {
           ]
         },
         "use": {
-          "purpose": "import a Gizmo package such as gizmo/node-editor",
+          "purpose": "import a Gizmo package such as gizmo/package-name",
           "attributes": [
             "library"
           ]
@@ -4149,12 +4197,6 @@ export const gizmoManifest = {
           "press",
           "resize",
           "pointer"
-        ],
-        "nodeEditorPackage": [
-          "connect",
-          "node",
-          "port",
-          "edge"
         ]
       },
       "resourceTags": [
@@ -4208,7 +4250,7 @@ export const gizmoManifest = {
       ],
       "compilerStatus": {
         "recognized": "all entries in this file are parsed/manifested/validated by v0.5 compiler",
-        "lowered": "node-card, node-cable, node-graph example components are lowered for demo; generic full lowering is incremental",
+        "lowered": "generic view lowering handles static markup, bindings, and repeat fragments; package-specific behavior lowering remains incremental",
         "manifest": "compiler emits the full semantic IR for agents and future lowerers"
       }
     }
@@ -4289,24 +4331,12 @@ export class FoxVeNodeGraph extends HTMLElement {
   _build() {
     if (this._viewport) return;
     this.className = 'fox-ve-node-graph-root';
-    this.innerHTML = `
-      <div class="fox-ve-node-graph-viewport" tabindex="0" role="application" aria-label="Node graph">
-        <div class="status-strip">
-          <span class="pill"><span class="dot"></span><span data-readout="zoom">zoom 1.00</span></span>
-          <span class="pill"><span data-readout="mode">ready</span></span>
-        </div>
-        <svg class="fox-ve-node-graph-edges" aria-hidden="true">
-          <g class="fox-ve-node-graph-edge-layer"></g>
-          <path class="fox-ve-node-graph-ghost-edge" hidden></path>
-        </svg>
-        <div class="fox-ve-node-graph-nodes"></div>
-        <div class="fox-ve-node-graph-empty">Double-click empty space to add a node.</div>
-      </div>
-    `;
+    this.innerHTML = "<div class=\"fox-ve-node-graph-viewport\" tabindex=\"0\" role=\"application\" aria-label=\"Node graph\">\n      <div class=\"status-strip\">\n        <span class=\"pill\"><span class=\"dot\"></span><span data-readout=\"zoom\">zoom 1.00</span></span>\n        <span class=\"pill\"><span data-readout=\"mode\">ready</span></span>\n      </div>\n\n      <svg class=\"fox-ve-node-graph-edges\" aria-hidden=\"true\">\n        <g class=\"fox-ve-node-graph-edge-layer\"></g>\n        <path class=\"fox-ve-node-graph-ghost-edge\" hidden></path>\n      </svg>\n\n      <div class=\"fox-ve-node-graph-cables\" hidden>\n        \n      </div>\n\n      <div class=\"fox-ve-node-graph-nodes\">\n        \n      </div>\n\n      <div class=\"fox-ve-node-graph-empty\">Double-click empty space to add a node.</div>\n    </div>";
     this._viewport = this.querySelector('.fox-ve-node-graph-viewport');
     this._svg = this.querySelector('.fox-ve-node-graph-edges');
     this._edgeLayer = this.querySelector('.fox-ve-node-graph-edge-layer');
     this._ghost = this.querySelector('.fox-ve-node-graph-ghost-edge');
+    this._cableLayer = this.querySelector('.fox-ve-node-graph-cables');
     this._nodeLayer = this.querySelector('.fox-ve-node-graph-nodes');
     this._empty = this.querySelector('.fox-ve-node-graph-empty');
     this._zoomReadout = this.querySelector('[data-readout="zoom"]');
@@ -5010,11 +5040,11 @@ export class FoxVeNodeGraph extends HTMLElement {
   }
 }
 
-
-
 // Generated lowering for <fox-ve-node-cable each="edges as edge"/>.
 // The graph computes endpoint geometry; each cable Web Component owns its SVG group.
 function ensureCableLayer(host) {
+  if (host._cableLayer) return host._cableLayer;
+  host._cableLayer = host.querySelector?.('.fox-ve-node-graph-cables') || null;
   if (host._cableLayer) return host._cableLayer;
   const layer = document.createElement('div');
   layer.className = 'fox-ve-node-graph-cables';
