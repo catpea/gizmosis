@@ -1,0 +1,88 @@
+<gizmo name="Node Card" tag="fox-ve-node-card" css="./node-graph.css">
+  <about>
+    <summary>
+      Compact visual node card Web Component with a caption, status marker, collapse button, input ports, and output ports.
+      The card emits port pointer events; it does not know about graph-level dragging, panning, zooming, or edge creation.
+    </summary>
+  </about>
+
+  <terms>
+    <term name="port">A named input or output connector displayed as a row with a visible dot.</term>
+    <term name="caption">The card header containing status, node label, and collapse button.</term>
+  </terms>
+
+  <build mode="development" probes="keep" diagnostics="panel console event"/>
+  <build mode="production" probes="strip" diagnostics="strip"/>
+  <diagnostics report="panel console event" throw="never"/>
+  <use library="gizmo/node-editor"/>
+
+
+  <contract>
+    <props>
+        <prop name="node-label" field="nodeLabel" kind="text" default="Node" reflect="true"/>
+        <prop name="color" kind="css-color" default="#0d6efd"/>
+        <prop name="status" kind="choice" values="ok warning error disabled" default="ok"/>
+        <prop name="expanded" kind="boolean" reflect="true"/>
+        <prop name="selected" kind="boolean" reflect="true"/>
+        <prop name="inputs" kind="list" of="Port"/>
+        <prop name="outputs" kind="list" of="Port"/>
+      </props>
+
+    <events>
+        <event name="fox-node-port-down"><detail><field name="port" kind="record" of="PortDetail"/></detail></event>
+        <event name="fox-node-port-up"><detail><field name="port" kind="record" of="PortDetail"/></detail></event>
+        <event name="fox-node-expand"><detail><field name="expanded" kind="boolean"/></detail></event>
+      </events>
+
+    <methods>
+        <method name="render"/>
+      </methods>
+
+    <parts>
+        <part name="root"/>
+        <part name="caption"/>
+        <part name="title"/>
+        <part name="expand-button"/>
+        <part name="input-port"/>
+        <part name="output-port"/>
+      </parts>
+  </contract>
+<requires>
+    <style src="./node-graph.css"/>
+    <capability name="dom.pointer.capture" as="pointerCapture" optional="true"/>
+  </requires>
+
+  <types>
+    <type name="Port"><prop name="id" kind="text"/><prop name="label" kind="text"/><prop name="type" kind="text"/></type>
+    <type name="PortDetail"><prop name="id" kind="text"/><prop name="label" kind="text"/><prop name="type" kind="text"/><prop name="side" kind="choice" values="input output"/></type>
+  </types>
+
+  <view class="fox-ve-node-card-root" class.is-selected="{selected}" class.is-disabled="{status === 'disabled'}" style.--node-color="{color}">
+    <div class="fox-ve-node-card-header">
+      <span class="fox-ve-node-card-status" data-status="{status}"/>
+      <span class="fox-ve-node-card-title">{nodeLabel}</span>
+      <button type="button" class="fox-ve-node-card-expand" aria-label="Toggle node details" aria-expanded="{expanded}" click="toggle-expanded"><i aria-hidden="true">⌄</i></button>
+    </div>
+    <div class="fox-ve-node-card-port-grid">
+      <div class="fox-ve-node-card-ports fox-ve-node-card-inputs">
+        <button each="inputs as port" key="{port.id}" type="button" class="fox-ve-node-card-port" data-port-id="{port.id}" data-port-side="input" data-port-type="{port.type}" aria-label="input {port.label}" pointerdown="port-down port input" pointerup="port-up port input"><span class="fox-ve-node-card-port-dot"/><span class="fox-ve-node-card-port-label">{port.label}</span></button>
+      </div>
+      <div class="fox-ve-node-card-ports fox-ve-node-card-outputs">
+        <button each="outputs as port" key="{port.id}" type="button" class="fox-ve-node-card-port" data-port-id="{port.id}" data-port-side="output" data-port-type="{port.type}" aria-label="output {port.label}" pointerdown="port-down port output" pointerup="port-up port output"><span class="fox-ve-node-card-port-label">{port.label}</span><span class="fox-ve-node-card-port-dot"/></button>
+      </div>
+    </div>
+    <div class="fox-ve-node-card-details" hidden="{!expanded}">Ready · {status}</div>
+  </view>
+
+
+  <behavior>
+    <actions>
+        <action name="toggle-expanded"><toggle prop="expanded"/><emit name="fox-node-expand"><detail expanded="{expanded}"/></emit></action>
+        <action name="port-down"><stop/><capture-pointer/><emit name="fox-node-port-down"><detail port="{portDetail(port, side)}"/></emit></action>
+        <action name="port-up"><stop/><emit name="fox-node-port-up"><detail port="{portDetail(port, side)}"/></emit></action>
+      </actions>
+  </behavior>
+
+
+  <dev><probes><layout-probe name="collapse-button-alignment" subject=".fox-ve-node-card-expand" relation="center-y" target=".fox-ve-node-card-title" tolerance="2" severity="error"/></probes></dev>
+</gizmo>

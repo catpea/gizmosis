@@ -1,0 +1,486 @@
+:root {
+      --bg: #070912;
+      --panel: #101522;
+      --panel-2: #151c2d;
+      --panel-3: #1b2436;
+      --text: #e9eef8;
+      --muted: #9aa8bd;
+      --line: rgba(255,255,255,.12);
+      --accent: #49fafe;
+      --accent-2: #9d7cff;
+      --ok: #44d07b;
+      --warn: #ffc857;
+      --error: #ff5d73;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 16px;
+      color-scheme: dark;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(73,250,254,.12), transparent 28rem),
+        radial-gradient(circle at 90% 0%, rgba(157,124,255,.16), transparent 24rem),
+        linear-gradient(180deg, #070912 0%, #05070d 100%);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .topbar,
+    .bottombar {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(21,28,45,.92), rgba(11,15,26,.92));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.2vw, 1.65rem);
+      letter-spacing: -.02em;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid rgba(255,255,255,.14);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: rgba(73,250,254,.55); }
+    .btn:active { transform: translateY(0); }
+    .btn.primary { background: linear-gradient(180deg, rgba(73,250,254,.25), rgba(73,250,254,.08)); border-color: rgba(73,250,254,.45); }
+    .btn.danger { background: linear-gradient(180deg, rgba(255,93,115,.2), rgba(255,93,115,.06)); }
+    .btn[aria-pressed="true"] { border-color: rgba(73,250,254,.75); box-shadow: 0 0 0 3px rgba(73,250,254,.12) inset; }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(360px, .92fr) minmax(520px, 1.35fr);
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .pane {
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16,21,34,.96), rgba(8,11,18,.96));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pane-header {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+
+    .pane-header strong { letter-spacing: .01em; }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 9px;
+      cursor: pointer;
+      font-size: .82rem;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--text);
+      border-color: rgba(73,250,254,.5);
+      background: rgba(73,250,254,.11);
+    }
+
+    .xml-body {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      min-height: 0;
+      flex: 1;
+    }
+
+    pre.xml {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      line-height: 1.45;
+      color: #d7e7ff;
+      font-size: 12.5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      tab-size: 2;
+      white-space: pre;
+    }
+
+    .notes {
+      border-top: 1px solid var(--line);
+      padding: 12px 14px;
+      background: rgba(73,250,254,.04);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .notes code {
+      color: var(--accent);
+      background: rgba(0,0,0,.2);
+      border-radius: 6px;
+      padding: 1px 5px;
+    }
+
+    .graph-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: grid;
+    }
+
+    fox-ve-node-graph {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+      --node-color: #0d6efd;
+    }
+
+    .fox-ve-node-graph-root,
+    .fox-ve-node-graph-viewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      outline: none;
+    }
+
+    .fox-ve-node-graph-viewport {
+      background-color: #0a0e18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(rgba(73,250,254,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(73,250,254,.08) 1px, transparent 1px);
+      background-size:
+        calc(var(--grid, 24px) * var(--zoom, 1)) calc(var(--grid, 24px) * var(--zoom, 1)),
+        calc(var(--grid, 24px) * var(--zoom, 1)) calc(var(--grid, 24px) * var(--zoom, 1)),
+        calc(var(--grid, 24px) * 4 * var(--zoom, 1)) calc(var(--grid, 24px) * 4 * var(--zoom, 1)),
+        calc(var(--grid, 24px) * 4 * var(--zoom, 1)) calc(var(--grid, 24px) * 4 * var(--zoom, 1));
+      background-position:
+        var(--pan-x, 0px) var(--pan-y, 0px),
+        var(--pan-x, 0px) var(--pan-y, 0px),
+        var(--pan-x, 0px) var(--pan-y, 0px),
+        var(--pan-x, 0px) var(--pan-y, 0px);
+      cursor: crosshair;
+    }
+
+    .fox-ve-node-graph-viewport:focus {
+      box-shadow: 0 0 0 3px rgba(73,250,254,.08) inset;
+    }
+
+    .fox-ve-node-graph-edges,
+    .fox-ve-node-graph-nodes {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform-origin: 0 0;
+    }
+
+    .fox-ve-node-graph-edges { pointer-events: none; overflow: visible; }
+    .fox-ve-node-graph-edge-group { pointer-events: auto; }
+    .fox-ve-node-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer; }
+    .fox-ve-node-graph-edge { fill: none; stroke: rgba(73,250,254,.78); stroke-width: 3; filter: drop-shadow(0 0 7px rgba(73,250,254,.32)); pointer-events: none; }
+    .fox-ve-node-graph-edge-group:hover .fox-ve-node-graph-edge { stroke-width: 4; stroke: #fff; }
+    .fox-ve-node-graph-ghost-edge { fill: none; stroke: rgba(255,200,87,.92); stroke-width: 3; stroke-dasharray: 8 8; filter: drop-shadow(0 0 8px rgba(255,200,87,.35)); pointer-events: none; }
+    .fox-ve-node-graph-nodes { pointer-events: none; }
+
+    .fox-ve-node-graph-empty {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      color: rgba(233,238,248,.65);
+      font-size: .95rem;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px;
+      padding: 8px 12px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .fox-ve-node-graph-root.is-panning .fox-ve-node-graph-viewport { cursor: grabbing; }
+    .fox-ve-node-graph-root.is-connection-mode .fox-ve-node-graph-viewport { cursor: crosshair; }
+    .fox-ve-node-graph-root.is-readonly .fox-ve-node-graph-viewport { cursor: not-allowed; }
+
+    fox-ve-node-card {
+      position: absolute;
+      width: 208px;
+      display: block;
+      pointer-events: auto;
+      user-select: none;
+      color: var(--text);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
+        linear-gradient(180deg, #182033, #0f1421);
+      box-shadow: 0 20px 34px rgba(0,0,0,.36), 0 0 0 1px rgba(0,0,0,.35) inset;
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+
+    fox-ve-node-card[selected] {
+      border-color: rgba(73,250,254,.8);
+      box-shadow: 0 0 0 2px rgba(73,250,254,.16), 0 20px 38px rgba(0,0,0,.42), 0 0 32px rgba(73,250,254,.08);
+    }
+
+    fox-ve-node-card[status="warning"] { --node-status: var(--warn); }
+    fox-ve-node-card[status="error"] { --node-status: var(--error); }
+    fox-ve-node-card[status="disabled"] { opacity: .58; filter: saturate(.4); }
+    fox-ve-node-card:not([status]), fox-ve-node-card[status="ok"] { --node-status: var(--ok); }
+
+    .fox-ve-node-card-header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 10px 8px;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--node-color, #0d6efd) 22%, transparent), transparent 72%);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      cursor: grab;
+    }
+
+    .fox-ve-node-card-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--node-status, var(--ok));
+      box-shadow: 0 0 12px color-mix(in srgb, var(--node-status, var(--ok)) 70%, transparent);
+    }
+
+    .fox-ve-node-card-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .fox-ve-node-card-expand {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(0,0,0,.16);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .fox-ve-node-card-expand i {
+      display: inline-block;
+      transition: transform .16s ease;
+      font-style: normal;
+    }
+
+    fox-ve-node-card[expanded] .fox-ve-node-card-expand i { transform: rotate(180deg); }
+
+    .fox-ve-node-card-port-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 9px 8px;
+    }
+
+    .fox-ve-node-card-ports {
+      display: grid;
+      gap: 4px;
+    }
+
+    .fox-ve-node-card-port {
+      min-width: 0;
+      height: 23px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: rgba(233,238,248,.82);
+      cursor: crosshair;
+      padding: 0 4px;
+      font-size: 12px;
+    }
+
+    .fox-ve-node-card-port:hover {
+      background: rgba(255,255,255,.06);
+      color: #fff;
+    }
+
+    .fox-ve-node-card-outputs .fox-ve-node-card-port { justify-content: flex-end; text-align: right; }
+    .fox-ve-node-card-port-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fox-ve-node-card-port-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      background: var(--node-color, #0d6efd);
+      border: 2px solid rgba(255,255,255,.7);
+      box-shadow: 0 0 12px color-mix(in srgb, var(--node-color, #0d6efd) 70%, transparent);
+    }
+
+    .fox-ve-node-card-details {
+      padding: 8px 10px 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 12px;
+      background: rgba(0,0,0,.12);
+    }
+
+    .status-strip {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .pill {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(5,7,13,.72);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: rgba(233,238,248,.82);
+      font-size: 12px;
+      backdrop-filter: blur(12px);
+    }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+    .bottombar {
+      display: grid;
+      grid-template-columns: .95fr .9fr 1.15fr;
+      min-height: 190px;
+      overflow: hidden;
+    }
+
+    .log-panel,
+    .test-panel,
+    .probe-panel {
+      min-width: 0;
+      padding: 12px;
+      overflow: auto;
+    }
+
+    .log-panel, .test-panel { border-right: 1px solid var(--line); }
+
+    .section-title {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .log-list,
+    .test-list,
+    .probe-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      font-size: .86rem;
+    }
+
+    .log-list li,
+    .test-list li,
+    .probe-list li {
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.035);
+      border-radius: 10px;
+      padding: 7px 9px;
+      color: rgba(233,238,248,.84);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .test-list li.pass, .probe-list li.pass { border-color: rgba(68,208,123,.32); background: rgba(68,208,123,.08); }
+    .test-list li.fail, .probe-list li.fail { border-color: rgba(255,93,115,.38); background: rgba(255,93,115,.08); }
+    .probe-list li.warn { border-color: rgba(255,200,87,.4); background: rgba(255,200,87,.08); }
+    .probe-detail { display: block; margin-top: 4px; color: rgba(233,238,248,.68); font-size: .78rem; white-space: pre-wrap; }
+    fox-ve-node-graph[data-probe-bugs] .fox-ve-node-card-expand { transform: translateY(7px); }
+
+    @media (max-width: 980px) {
+      .main { grid-template-columns: 1fr; }
+      .bottombar { grid-template-columns: 1fr; }
+      .log-panel, .test-panel { border-right: 0; border-bottom: 1px solid var(--line); }
+      fox-ve-node-graph { min-height: 520px; }
+      .topbar { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; }
+    }

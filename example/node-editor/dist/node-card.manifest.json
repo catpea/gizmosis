@@ -1,0 +1,1446 @@
+{
+  "$schema": "https://gizmo-xml.local/schemas/gizmo-manifest-v0.5.json",
+  "version": "0.5",
+  "source": "example/node-editor/src/node-card.xml",
+  "name": "Node Card",
+  "tag": "fox-ve-node-card",
+  "css": "./node-graph.css",
+  "build": [
+    {
+      "attrs": {
+        "mode": "development",
+        "probes": "keep",
+        "diagnostics": "panel console event"
+      }
+    },
+    {
+      "attrs": {
+        "mode": "production",
+        "probes": "strip",
+        "diagnostics": "strip"
+      }
+    }
+  ],
+  "diagnosticsPolicy": [
+    {
+      "attrs": {
+        "report": "panel console event",
+        "throw": "never"
+      }
+    }
+  ],
+  "uses": [
+    {
+      "library": "gizmo/node-editor",
+      "attrs": {
+        "library": "gizmo/node-editor"
+      }
+    }
+  ],
+  "about": {
+    "summary": "Compact visual node card Web Component with a caption, status marker, collapse button, input ports, and output ports. The card emits port pointer events; it does not know about graph-level dragging, panning, zooming, or edge creation.",
+    "text": "Compact visual node card Web Component with a caption, status marker, collapse button, input ports, and output ports. The card emits port pointer events; it does not know about graph-level dragging, panning, zooming, or edge creation."
+  },
+  "terms": [
+    {
+      "name": "port",
+      "text": "A named input or output connector displayed as a row with a visible dot.",
+      "attrs": {
+        "name": "port"
+      }
+    },
+    {
+      "name": "caption",
+      "text": "The card header containing status, node label, and collapse button.",
+      "attrs": {
+        "name": "caption"
+      }
+    }
+  ],
+  "contract": {
+    "props": [
+      {
+        "name": "node-label",
+        "field": "nodeLabel",
+        "kind": "text",
+        "type": "",
+        "of": "",
+        "values": [],
+        "default": "Node",
+        "reflect": true,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "node-label",
+          "field": "nodeLabel",
+          "kind": "text",
+          "default": "Node",
+          "reflect": "true"
+        }
+      },
+      {
+        "name": "color",
+        "field": "color",
+        "kind": "css-color",
+        "type": "",
+        "of": "",
+        "values": [],
+        "default": "#0d6efd",
+        "reflect": false,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "color",
+          "kind": "css-color",
+          "default": "#0d6efd"
+        }
+      },
+      {
+        "name": "status",
+        "field": "status",
+        "kind": "choice",
+        "type": "",
+        "of": "",
+        "values": [
+          "ok",
+          "warning",
+          "error",
+          "disabled"
+        ],
+        "default": "ok",
+        "reflect": false,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "status",
+          "kind": "choice",
+          "values": "ok warning error disabled",
+          "default": "ok"
+        }
+      },
+      {
+        "name": "expanded",
+        "field": "expanded",
+        "kind": "boolean",
+        "type": "",
+        "of": "",
+        "values": [],
+        "reflect": true,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "expanded",
+          "kind": "boolean",
+          "reflect": "true"
+        }
+      },
+      {
+        "name": "selected",
+        "field": "selected",
+        "kind": "boolean",
+        "type": "",
+        "of": "",
+        "values": [],
+        "reflect": true,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "selected",
+          "kind": "boolean",
+          "reflect": "true"
+        }
+      },
+      {
+        "name": "inputs",
+        "field": "inputs",
+        "kind": "list",
+        "type": "",
+        "of": "Port",
+        "values": [],
+        "reflect": false,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "inputs",
+          "kind": "list",
+          "of": "Port"
+        }
+      },
+      {
+        "name": "outputs",
+        "field": "outputs",
+        "kind": "list",
+        "type": "",
+        "of": "Port",
+        "values": [],
+        "reflect": false,
+        "readonly": false,
+        "required": false,
+        "optional": false,
+        "attrFormat": "",
+        "attrs": {
+          "name": "outputs",
+          "kind": "list",
+          "of": "Port"
+        }
+      }
+    ],
+    "attrs": [],
+    "events": [
+      {
+        "name": "fox-node-port-down",
+        "attrs": {
+          "name": "fox-node-port-down"
+        },
+        "detail": [
+          {
+            "name": "port",
+            "field": "port",
+            "kind": "record",
+            "type": "",
+            "of": "PortDetail",
+            "values": [],
+            "reflect": false,
+            "readonly": false,
+            "required": false,
+            "optional": false,
+            "attrFormat": "",
+            "attrs": {
+              "name": "port",
+              "kind": "record",
+              "of": "PortDetail"
+            }
+          }
+        ],
+        "text": ""
+      },
+      {
+        "name": "fox-node-port-up",
+        "attrs": {
+          "name": "fox-node-port-up"
+        },
+        "detail": [
+          {
+            "name": "port",
+            "field": "port",
+            "kind": "record",
+            "type": "",
+            "of": "PortDetail",
+            "values": [],
+            "reflect": false,
+            "readonly": false,
+            "required": false,
+            "optional": false,
+            "attrFormat": "",
+            "attrs": {
+              "name": "port",
+              "kind": "record",
+              "of": "PortDetail"
+            }
+          }
+        ],
+        "text": ""
+      },
+      {
+        "name": "fox-node-expand",
+        "attrs": {
+          "name": "fox-node-expand"
+        },
+        "detail": [
+          {
+            "name": "expanded",
+            "field": "expanded",
+            "kind": "boolean",
+            "type": "",
+            "of": "",
+            "values": [],
+            "reflect": false,
+            "readonly": false,
+            "required": false,
+            "optional": false,
+            "attrFormat": "",
+            "attrs": {
+              "name": "expanded",
+              "kind": "boolean"
+            }
+          }
+        ],
+        "text": ""
+      }
+    ],
+    "methods": [
+      {
+        "kind": "method",
+        "name": "render",
+        "attrs": {
+          "name": "render"
+        },
+        "text": ""
+      }
+    ],
+    "slots": [],
+    "parts": [
+      {
+        "kind": "part",
+        "name": "root",
+        "attrs": {
+          "name": "root"
+        },
+        "text": ""
+      },
+      {
+        "kind": "part",
+        "name": "caption",
+        "attrs": {
+          "name": "caption"
+        },
+        "text": ""
+      },
+      {
+        "kind": "part",
+        "name": "title",
+        "attrs": {
+          "name": "title"
+        },
+        "text": ""
+      },
+      {
+        "kind": "part",
+        "name": "expand-button",
+        "attrs": {
+          "name": "expand-button"
+        },
+        "text": ""
+      },
+      {
+        "kind": "part",
+        "name": "input-port",
+        "attrs": {
+          "name": "input-port"
+        },
+        "text": ""
+      },
+      {
+        "kind": "part",
+        "name": "output-port",
+        "attrs": {
+          "name": "output-port"
+        },
+        "text": ""
+      }
+    ],
+    "styles": []
+  },
+  "requires": {
+    "components": [],
+    "styles": [
+      {
+        "kind": "style",
+        "name": "./node-graph.css",
+        "attrs": {
+          "src": "./node-graph.css"
+        },
+        "text": ""
+      }
+    ],
+    "scripts": [],
+    "assets": [],
+    "capabilities": [
+      {
+        "kind": "capability",
+        "name": "dom.pointer.capture",
+        "attrs": {
+          "name": "dom.pointer.capture",
+          "as": "pointerCapture",
+          "optional": "true"
+        },
+        "text": ""
+      }
+    ],
+    "services": [],
+    "themes": []
+  },
+  "provides": {
+    "capabilities": [],
+    "services": []
+  },
+  "model": {
+    "state": [],
+    "signals": [],
+    "computed": [],
+    "subscriptions": [],
+    "stores": []
+  },
+  "types": [
+    {
+      "name": "Port",
+      "attrs": {
+        "name": "Port"
+      },
+      "props": [
+        {
+          "name": "id",
+          "field": "id",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "id",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "label",
+          "field": "label",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "label",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "type",
+          "field": "type",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "type",
+            "kind": "text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PortDetail",
+      "attrs": {
+        "name": "PortDetail"
+      },
+      "props": [
+        {
+          "name": "id",
+          "field": "id",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "id",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "label",
+          "field": "label",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "label",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "type",
+          "field": "type",
+          "kind": "text",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "type",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "side",
+          "field": "side",
+          "kind": "choice",
+          "type": "",
+          "of": "",
+          "values": [
+            "input",
+            "output"
+          ],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "side",
+            "kind": "choice",
+            "values": "input output"
+          }
+        }
+      ]
+    }
+  ],
+  "props": [
+    {
+      "name": "node-label",
+      "field": "nodeLabel",
+      "kind": "text",
+      "type": "",
+      "of": "",
+      "values": [],
+      "default": "Node",
+      "reflect": true,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "node-label",
+        "field": "nodeLabel",
+        "kind": "text",
+        "default": "Node",
+        "reflect": "true"
+      }
+    },
+    {
+      "name": "color",
+      "field": "color",
+      "kind": "css-color",
+      "type": "",
+      "of": "",
+      "values": [],
+      "default": "#0d6efd",
+      "reflect": false,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "color",
+        "kind": "css-color",
+        "default": "#0d6efd"
+      }
+    },
+    {
+      "name": "status",
+      "field": "status",
+      "kind": "choice",
+      "type": "",
+      "of": "",
+      "values": [
+        "ok",
+        "warning",
+        "error",
+        "disabled"
+      ],
+      "default": "ok",
+      "reflect": false,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "status",
+        "kind": "choice",
+        "values": "ok warning error disabled",
+        "default": "ok"
+      }
+    },
+    {
+      "name": "expanded",
+      "field": "expanded",
+      "kind": "boolean",
+      "type": "",
+      "of": "",
+      "values": [],
+      "reflect": true,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "expanded",
+        "kind": "boolean",
+        "reflect": "true"
+      }
+    },
+    {
+      "name": "selected",
+      "field": "selected",
+      "kind": "boolean",
+      "type": "",
+      "of": "",
+      "values": [],
+      "reflect": true,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "selected",
+        "kind": "boolean",
+        "reflect": "true"
+      }
+    },
+    {
+      "name": "inputs",
+      "field": "inputs",
+      "kind": "list",
+      "type": "",
+      "of": "Port",
+      "values": [],
+      "reflect": false,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "inputs",
+        "kind": "list",
+        "of": "Port"
+      }
+    },
+    {
+      "name": "outputs",
+      "field": "outputs",
+      "kind": "list",
+      "type": "",
+      "of": "Port",
+      "values": [],
+      "reflect": false,
+      "readonly": false,
+      "required": false,
+      "optional": false,
+      "attrFormat": "",
+      "attrs": {
+        "name": "outputs",
+        "kind": "list",
+        "of": "Port"
+      }
+    }
+  ],
+  "attrs": [],
+  "state": [],
+  "events": [
+    {
+      "name": "fox-node-port-down",
+      "attrs": {
+        "name": "fox-node-port-down"
+      },
+      "detail": [
+        {
+          "name": "port",
+          "field": "port",
+          "kind": "record",
+          "type": "",
+          "of": "PortDetail",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "port",
+            "kind": "record",
+            "of": "PortDetail"
+          }
+        }
+      ],
+      "text": ""
+    },
+    {
+      "name": "fox-node-port-up",
+      "attrs": {
+        "name": "fox-node-port-up"
+      },
+      "detail": [
+        {
+          "name": "port",
+          "field": "port",
+          "kind": "record",
+          "type": "",
+          "of": "PortDetail",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "port",
+            "kind": "record",
+            "of": "PortDetail"
+          }
+        }
+      ],
+      "text": ""
+    },
+    {
+      "name": "fox-node-expand",
+      "attrs": {
+        "name": "fox-node-expand"
+      },
+      "detail": [
+        {
+          "name": "expanded",
+          "field": "expanded",
+          "kind": "boolean",
+          "type": "",
+          "of": "",
+          "values": [],
+          "reflect": false,
+          "readonly": false,
+          "required": false,
+          "optional": false,
+          "attrFormat": "",
+          "attrs": {
+            "name": "expanded",
+            "kind": "boolean"
+          }
+        }
+      ],
+      "text": ""
+    }
+  ],
+  "methods": [
+    {
+      "kind": "method",
+      "name": "render",
+      "attrs": {
+        "name": "render"
+      },
+      "text": ""
+    }
+  ],
+  "slots": [],
+  "parts": [
+    {
+      "kind": "part",
+      "name": "root",
+      "attrs": {
+        "name": "root"
+      },
+      "text": ""
+    },
+    {
+      "kind": "part",
+      "name": "caption",
+      "attrs": {
+        "name": "caption"
+      },
+      "text": ""
+    },
+    {
+      "kind": "part",
+      "name": "title",
+      "attrs": {
+        "name": "title"
+      },
+      "text": ""
+    },
+    {
+      "kind": "part",
+      "name": "expand-button",
+      "attrs": {
+        "name": "expand-button"
+      },
+      "text": ""
+    },
+    {
+      "kind": "part",
+      "name": "input-port",
+      "attrs": {
+        "name": "input-port"
+      },
+      "text": ""
+    },
+    {
+      "kind": "part",
+      "name": "output-port",
+      "attrs": {
+        "name": "output-port"
+      },
+      "text": ""
+    }
+  ],
+  "view": {
+    "refs": [],
+    "repeated": [
+      {
+        "element": "button",
+        "value": "inputs as port",
+        "attrs": {
+          "each": "inputs as port",
+          "key": "{port.id}",
+          "type": "button",
+          "class": "fox-ve-node-card-port",
+          "data-port-id": "{port.id}",
+          "data-port-side": "input",
+          "data-port-type": "{port.type}",
+          "aria-label": "input {port.label}",
+          "pointerdown": "port-down port input",
+          "pointerup": "port-up port input"
+        }
+      },
+      {
+        "element": "button",
+        "value": "outputs as port",
+        "attrs": {
+          "each": "outputs as port",
+          "key": "{port.id}",
+          "type": "button",
+          "class": "fox-ve-node-card-port",
+          "data-port-id": "{port.id}",
+          "data-port-side": "output",
+          "data-port-type": "{port.type}",
+          "aria-label": "output {port.label}",
+          "pointerdown": "port-down port output",
+          "pointerup": "port-up port output"
+        }
+      }
+    ],
+    "keys": [
+      {
+        "element": "button",
+        "value": "{port.id}",
+        "attrs": {
+          "each": "inputs as port",
+          "key": "{port.id}",
+          "type": "button",
+          "class": "fox-ve-node-card-port",
+          "data-port-id": "{port.id}",
+          "data-port-side": "input",
+          "data-port-type": "{port.type}",
+          "aria-label": "input {port.label}",
+          "pointerdown": "port-down port input",
+          "pointerup": "port-up port input"
+        }
+      },
+      {
+        "element": "button",
+        "value": "{port.id}",
+        "attrs": {
+          "each": "outputs as port",
+          "key": "{port.id}",
+          "type": "button",
+          "class": "fox-ve-node-card-port",
+          "data-port-id": "{port.id}",
+          "data-port-side": "output",
+          "data-port-type": "{port.type}",
+          "aria-label": "output {port.label}",
+          "pointerdown": "port-down port output",
+          "pointerup": "port-up port output"
+        }
+      }
+    ],
+    "bindings": [
+      {
+        "kind": "attribute",
+        "element": "view",
+        "name": "class.is-selected",
+        "value": "{selected}"
+      },
+      {
+        "kind": "attribute",
+        "element": "view",
+        "name": "class.is-disabled",
+        "value": "{status === 'disabled'}"
+      },
+      {
+        "kind": "attribute",
+        "element": "view",
+        "name": "style.--node-color",
+        "value": "{color}"
+      },
+      {
+        "kind": "attribute",
+        "element": "span",
+        "name": "data-status",
+        "value": "{status}"
+      },
+      {
+        "kind": "text",
+        "value": "{nodeLabel}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "aria-expanded",
+        "value": "{expanded}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "each",
+        "value": "inputs as port"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "key",
+        "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "data-port-id",
+        "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "data-port-type",
+        "value": "{port.type}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "aria-label",
+        "value": "input {port.label}"
+      },
+      {
+        "kind": "text",
+        "value": "{port.label}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "each",
+        "value": "outputs as port"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "key",
+        "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "data-port-id",
+        "value": "{port.id}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "data-port-type",
+        "value": "{port.type}"
+      },
+      {
+        "kind": "attribute",
+        "element": "button",
+        "name": "aria-label",
+        "value": "output {port.label}"
+      },
+      {
+        "kind": "text",
+        "value": "{port.label}"
+      },
+      {
+        "kind": "attribute",
+        "element": "div",
+        "name": "hidden",
+        "value": "{!expanded}"
+      },
+      {
+        "kind": "text",
+        "value": "Ready · {status}"
+      }
+    ],
+    "source": "<view class=\"fox-ve-node-card-root\" class.is-selected=\"{selected}\" class.is-disabled=\"{status === 'disabled'}\" style.--node-color=\"{color}\">\n\n    \n  <div class=\"fox-ve-node-card-header\">\n\n      \n    <span class=\"fox-ve-node-card-status\" data-status=\"{status}\"/>\n\n      \n    <span class=\"fox-ve-node-card-title\">{nodeLabel}</span>\n\n      \n    <button type=\"button\" class=\"fox-ve-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{expanded}\" click=\"toggle-expanded\">\n      <i aria-hidden=\"true\">⌄</i>\n    </button>\n\n    \n  </div>\n\n    \n  <div class=\"fox-ve-node-card-port-grid\">\n\n      \n    <div class=\"fox-ve-node-card-ports fox-ve-node-card-inputs\">\n\n        \n      <button each=\"inputs as port\" key=\"{port.id}\" type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"input\" data-port-type=\"{port.type}\" aria-label=\"input {port.label}\" pointerdown=\"port-down port input\" pointerup=\"port-up port input\">\n        <span class=\"fox-ve-node-card-port-dot\"/>\n        <span class=\"fox-ve-node-card-port-label\">{port.label}</span>\n      </button>\n\n      \n    </div>\n\n      \n    <div class=\"fox-ve-node-card-ports fox-ve-node-card-outputs\">\n\n        \n      <button each=\"outputs as port\" key=\"{port.id}\" type=\"button\" class=\"fox-ve-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"output\" data-port-type=\"{port.type}\" aria-label=\"output {port.label}\" pointerdown=\"port-down port output\" pointerup=\"port-up port output\">\n        <span class=\"fox-ve-node-card-port-label\">{port.label}</span>\n        <span class=\"fox-ve-node-card-port-dot\"/>\n      </button>\n\n      \n    </div>\n\n    \n  </div>\n\n    \n  <div class=\"fox-ve-node-card-details\" hidden=\"{!expanded}\">Ready · {status}</div>\n\n  \n</view>"
+  },
+  "geometry": {
+    "spaces": [],
+    "functions": []
+  },
+  "behavior": {
+    "events": [],
+    "actions": [
+      {
+        "name": "toggle-expanded",
+        "attrs": {
+          "name": "toggle-expanded"
+        },
+        "steps": [
+          {
+            "kind": "toggle",
+            "name": "",
+            "attrs": {
+              "prop": "expanded"
+            },
+            "text": ""
+          },
+          {
+            "kind": "emit",
+            "name": "fox-node-expand",
+            "attrs": {
+              "name": "fox-node-expand"
+            },
+            "text": ""
+          }
+        ],
+        "text": ""
+      },
+      {
+        "name": "port-down",
+        "attrs": {
+          "name": "port-down"
+        },
+        "steps": [
+          {
+            "kind": "stop",
+            "name": "",
+            "attrs": {},
+            "text": ""
+          },
+          {
+            "kind": "capture-pointer",
+            "name": "",
+            "attrs": {},
+            "text": ""
+          },
+          {
+            "kind": "emit",
+            "name": "fox-node-port-down",
+            "attrs": {
+              "name": "fox-node-port-down"
+            },
+            "text": ""
+          }
+        ],
+        "text": ""
+      },
+      {
+        "name": "port-up",
+        "attrs": {
+          "name": "port-up"
+        },
+        "steps": [
+          {
+            "kind": "stop",
+            "name": "",
+            "attrs": {},
+            "text": ""
+          },
+          {
+            "kind": "emit",
+            "name": "fox-node-port-up",
+            "attrs": {
+              "name": "fox-node-port-up"
+            },
+            "text": ""
+          }
+        ],
+        "text": ""
+      }
+    ],
+    "reducers": [],
+    "streams": [],
+    "machines": [],
+    "commands": []
+  },
+  "actions": [
+    {
+      "name": "toggle-expanded",
+      "attrs": {
+        "name": "toggle-expanded"
+      },
+      "steps": [
+        {
+          "kind": "toggle",
+          "name": "",
+          "attrs": {
+            "prop": "expanded"
+          },
+          "text": ""
+        },
+        {
+          "kind": "emit",
+          "name": "fox-node-expand",
+          "attrs": {
+            "name": "fox-node-expand"
+          },
+          "text": ""
+        }
+      ],
+      "text": ""
+    },
+    {
+      "name": "port-down",
+      "attrs": {
+        "name": "port-down"
+      },
+      "steps": [
+        {
+          "kind": "stop",
+          "name": "",
+          "attrs": {},
+          "text": ""
+        },
+        {
+          "kind": "capture-pointer",
+          "name": "",
+          "attrs": {},
+          "text": ""
+        },
+        {
+          "kind": "emit",
+          "name": "fox-node-port-down",
+          "attrs": {
+            "name": "fox-node-port-down"
+          },
+          "text": ""
+        }
+      ],
+      "text": ""
+    },
+    {
+      "name": "port-up",
+      "attrs": {
+        "name": "port-up"
+      },
+      "steps": [
+        {
+          "kind": "stop",
+          "name": "",
+          "attrs": {},
+          "text": ""
+        },
+        {
+          "kind": "emit",
+          "name": "fox-node-port-up",
+          "attrs": {
+            "name": "fox-node-port-up"
+          },
+          "text": ""
+        }
+      ],
+      "text": ""
+    }
+  ],
+  "interactions": [],
+  "effects": {
+    "effects": [],
+    "tasks": [],
+    "workers": [],
+    "frames": []
+  },
+  "resources": {
+    "resources": [],
+    "listens": [],
+    "observes": [],
+    "timers": []
+  },
+  "frames": [],
+  "dev": {
+    "stories": [],
+    "tests": [],
+    "fixtures": [],
+    "traces": [],
+    "probes": [
+      {
+        "kind": "layout-probe",
+        "name": "collapse-button-alignment",
+        "attrs": {
+          "name": "collapse-button-alignment",
+          "subject": ".fox-ve-node-card-expand",
+          "relation": "center-y",
+          "target": ".fox-ve-node-card-title",
+          "tolerance": "2",
+          "severity": "error"
+        },
+        "message": "",
+        "hints": [],
+        "body": ""
+      }
+    ]
+  },
+  "fixtures": [],
+  "tests": [],
+  "features": {
+    "version": "0.5",
+    "supported": {
+      "name": "Gizmo XML",
+      "version": "0.5",
+      "classification": "contract-first component capsule language for declarative Web Components and AI-assisted UI development",
+      "principles": [
+        "<gizmo/> creates Web Components from declarative XML.",
+        "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
+        "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
+        "Support libraries provide reusable mechanics only; they must never hide component-specific implementations.",
+        "Agents must read features.json and process-library before changing components or compiler behavior."
+      ],
+      "canonicalRoot": [
+        "about",
+        "terms",
+        "contract",
+        "types",
+        "requires",
+        "provides",
+        "model",
+        "view",
+        "behavior",
+        "effects",
+        "resources",
+        "dev"
+      ],
+      "compatibilityRoot": [
+        "build",
+        "diagnostics",
+        "use",
+        "props",
+        "state",
+        "events",
+        "geometry",
+        "interactions",
+        "actions",
+        "frames",
+        "fixtures",
+        "tests"
+      ],
+      "rootAttributes": {
+        "gizmo": [
+          "name",
+          "tag",
+          "css",
+          "shadow"
+        ]
+      },
+      "sections": {
+        "about": {
+          "purpose": "semantic summary for humans and agents"
+        },
+        "terms": {
+          "purpose": "domain vocabulary lock"
+        },
+        "build": {
+          "purpose": "dev/prod/test build policy",
+          "attributes": [
+            "mode",
+            "probes",
+            "diagnostics"
+          ]
+        },
+        "diagnostics": {
+          "purpose": "application-layer reporting policy",
+          "attributes": [
+            "report",
+            "throw"
+          ]
+        },
+        "use": {
+          "purpose": "import a Gizmo package such as gizmo/node-editor",
+          "attributes": [
+            "library"
+          ]
+        },
+        "contract": {
+          "purpose": "public surface exposed by a Web Component"
+        },
+        "types": {
+          "purpose": "data records and choices"
+        },
+        "requires": {
+          "purpose": "dependencies and host capabilities"
+        },
+        "provides": {
+          "purpose": "capabilities/services provided to descendants or host systems"
+        },
+        "model": {
+          "purpose": "internal memory and derived state"
+        },
+        "view": {
+          "purpose": "DOM projection with XHTML-like XML and binding attributes"
+        },
+        "behavior": {
+          "purpose": "reactions and component behavior"
+        },
+        "effects": {
+          "purpose": "operations that touch DOM/world or async work"
+        },
+        "resources": {
+          "purpose": "acquire/release lifecycle resources"
+        },
+        "geometry": {
+          "purpose": "coordinate spaces and pure geometry math"
+        },
+        "interactions": {
+          "purpose": "luxury browser gestures"
+        },
+        "frames": {
+          "purpose": "requestAnimationFrame scheduling"
+        },
+        "dev": {
+          "purpose": "development-only intelligence layer"
+        },
+        "fixtures": {
+          "purpose": "reusable component/test data"
+        },
+        "tests": {
+          "purpose": "executable behavior expectations"
+        }
+      },
+      "dataKinds": [
+        "text",
+        "number",
+        "boolean",
+        "css-color",
+        "choice",
+        "list",
+        "record",
+        "maybe",
+        "url",
+        "string",
+        "unknown"
+      ],
+      "legacyTypesAccepted": [
+        "String",
+        "Number",
+        "Boolean",
+        "URL",
+        "Array",
+        "Object",
+        "String?",
+        "Number?",
+        "Boolean?"
+      ],
+      "viewBindings": {
+        "text": "{expr} inside text nodes",
+        "attribute": "attr=\"{expr}\"",
+        "class": "class.name=\"{expr}\"",
+        "style": "style.name=\"{expr}\" and style.--token=\"{expr}\"",
+        "svg": "svg.d=\"{expr}\" svg.transform=\"{expr}\"",
+        "bind": "bind.prop=\"{expr}\" for DOM/custom-element properties",
+        "customEvent": "on.event-name=\"action\"",
+        "repeat": "each=\"items as item\" key=\"{item.id}\"",
+        "conditional": "if=\"{expr}\" hidden=\"{expr}\""
+      },
+      "behaviorSurfaces": [
+        "action",
+        "event",
+        "reducer",
+        "stream",
+        "machine",
+        "command"
+      ],
+      "interactionTags": {
+        "core": [
+          "drag",
+          "pan",
+          "zoom",
+          "key",
+          "tap",
+          "press",
+          "resize",
+          "pointer"
+        ],
+        "nodeEditorPackage": [
+          "connect",
+          "node",
+          "port",
+          "edge"
+        ]
+      },
+      "resourceTags": [
+        "resource",
+        "acquire",
+        "release",
+        "listen",
+        "observe",
+        "timer"
+      ],
+      "effectTags": [
+        "effect",
+        "task",
+        "worker",
+        "frame",
+        "call",
+        "schedule",
+        "measure"
+      ],
+      "devTags": [
+        "story",
+        "test",
+        "fixture",
+        "trace",
+        "probes",
+        "probe",
+        "layout-probe"
+      ],
+      "commandTags": [
+        "set",
+        "toggle",
+        "append",
+        "remove",
+        "update",
+        "emit",
+        "dispatch",
+        "run",
+        "call",
+        "guard",
+        "let",
+        "when",
+        "otherwise",
+        "case",
+        "prevent",
+        "stop",
+        "capture-pointer",
+        "focus",
+        "schedule",
+        "reflect",
+        "hide"
+      ],
+      "compilerStatus": {
+        "recognized": "all entries in this file are parsed/manifested/validated by v0.5 compiler",
+        "lowered": "node-card, node-cable, node-graph example components are lowered for demo; generic full lowering is incremental",
+        "manifest": "compiler emits the full semantic IR for agents and future lowerers"
+      }
+    }
+  },
+  "diagnostics": []
+}

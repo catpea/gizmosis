@@ -1,0 +1,46 @@
+{
+  "name": "gizmosis",
+  "version": "0.5.0",
+  "description": "XML-first, agent-readable language prototype for complex Web Component UI development.",
+  "type": "module",
+  "private": false,
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./core": "./src/core/index.js",
+    "./runtime": "./src/runtime/index.js",
+    "./compiler": "./src/compiler/index.js"
+  },
+  "files": [
+    "src/",
+    "docs/",
+    "example/",
+    "process-library/",
+    "test/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "http-server -c-1 -o .",
+    "demo": "http-server -c-1 -o .",
+    "compile": "node tools/build-node-editor-example.js",
+    "inspect": "node src/compiler/cli.js inspect example/node-editor/src/node-graph.xml",
+    "check": "node --check src/index.js && node --check src/core/dom.js && node --check src/runtime/diagnostics.js && node --check src/runtime/frames.js && node --check src/compiler/cli.js && node --check src/compiler/features.js && node --check src/compiler/index.js && node --check src/compiler/ir.js && node --check src/compiler/generator.js && node --check src/compiler/validate.js && node --check src/compiler/xml-parser.js && node --check tools/build-node-editor-example.js && node --check example/node-editor/src/app/node-graph-app.js && node --check example/node-editor/src/library/index.js && node --check example/node-editor/src/library/interactions.js && node --check example/node-editor/dist/app/node-graph-app.js && node --check example/node-editor/dist/library/index.js && node --check example/node-editor/dist/library/interactions.js && node --check example/node-editor/dist/node-card.generated.js && node --check example/node-editor/dist/node-cable.generated.js && node --check example/node-editor/dist/node-graph.generated.js && node src/compiler/cli.js check example/node-editor/src/node-card.xml && node src/compiler/cli.js check example/node-editor/src/node-cable.xml && node src/compiler/cli.js check example/node-editor/src/node-graph.xml",
+    "test": "node test/run-tests.js",
+    "features": "node src/compiler/cli.js features"
+  },
+  "keywords": [
+    "web-components",
+    "xml",
+    "dom",
+    "ui",
+    "agents",
+    "probes",
+    "compiler"
+  ],
+  "license": "MIT",
+  "bin": {
+    "gizmo": "./src/compiler/cli.js"
+  }
+}

@@ -1,0 +1,398 @@
+<gizmo name="Node Graph" tag="fox-ve-node-graph" css="./node-graph.css">
+  <about>
+    <summary>
+      SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates.
+      The viewport applies pan and zoom. The component coordinates generated node-card and node-cable Web Components.
+      Browser mechanics are compiled from declarative Gizmo XML and supported by the gizmo/node-editor helper library.
+    </summary>
+  </about>
+
+  <terms>
+    <term name="world">Persistent graph coordinate space. Node x/y values are stored here.</term>
+    <term name="viewport">Visible component coordinate space after pan and zoom.</term>
+    <term name="client">Browser PointerEvent client coordinate space.</term>
+    <term name="node card">Generated fox-ve-node-card Web Component representing one NodeGraphNode.</term>
+    <term name="port dot">The visible circular input/output connector inside a node card port row.</term>
+    <term name="ghost edge">Temporary SVG path shown during port connection. It is visual feedback only.</term>
+  </terms>
+
+  <build mode="development" probes="keep" diagnostics="panel console event"/>
+  <build mode="production" probes="strip" diagnostics="strip"/>
+
+  <diagnostics report="panel console event" throw="never"/>
+
+  <use library="gizmo/node-editor"/>
+
+
+  <contract>
+    <props>
+        <prop name="zoom" kind="number" min="0.2" max="3" default="1" reflect="true"/>
+        <prop name="pan-x" field="panX" kind="number" default="0" reflect="true"/>
+        <prop name="pan-y" field="panY" kind="number" default="0" reflect="true"/>
+        <prop name="connection-mode" field="connectionMode" kind="boolean" reflect="true"/>
+        <prop name="grid-size" field="gridSize" kind="number" min="4" default="24"/>
+        <prop name="snap-to-grid" field="snapToGrid" kind="boolean" reflect="true"/>
+        <prop name="readonly" kind="boolean" reflect="true"/>
+        <prop name="nodes" kind="list" of="NodeGraphNode" attr-format="json"/>
+        <prop name="edges" kind="list" of="NodeGraphEdge" attr-format="json"/>
+        <prop name="selected" kind="list" of="text" attr-format="json-or-tokens"/>
+      </props>
+
+    <events>
+        <event name="fox-node-select">
+          <detail><field name="ids" kind="list" of="text"/></detail>
+        </event>
+        <event name="fox-node-move">
+          <detail>
+            <field name="id" kind="text"/>
+            <field name="x" kind="number"/>
+            <field name="y" kind="number"/>
+            <field name="nodes" kind="list" of="Point"/>
+          </detail>
+        </event>
+        <event name="fox-edge-connect">
+          <detail>
+            <field name="from" kind="record" of="NodeGraphEndpoint"/>
+            <field name="to" kind="record" of="NodeGraphEndpoint"/>
+          </detail>
+        </event>
+        <event name="fox-edge-disconnect"><detail><field name="id" kind="text"/></detail></event>
+        <event name="fox-node-add"><detail><field name="id" kind="text"/><field name="type" kind="text"/><field name="x" kind="number"/><field name="y" kind="number"/></detail></event>
+        <event name="fox-pan-zoom"><detail><field name="panX" kind="number"/><field name="panY" kind="number"/><field name="zoom" kind="number"/></detail></event>
+      </events>
+
+    <methods>
+        <method name="loadGraph"/>
+        <method name="resetGraph"/>
+        <method name="fitToNodes"/>
+        <method name="centerOnNode"/>
+        <method name="viewportToWorld"/>
+        <method name="worldToViewport"/>
+        <method name="clientToWorld"/>
+      </methods>
+
+    <slots>
+        <slot name="toolbar"/>
+      </slots>
+
+    <parts>
+        <part name="viewport"/>
+        <part name="edge-layer"/>
+        <part name="ghost-edge"/>
+        <part name="node-layer"/>
+        <part name="empty-state"/>
+      </parts>
+  </contract>
+
+<model>
+    <state>
+        <field name="view" kind="record" of="Viewport"/>
+        <field name="connection" kind="maybe" of="Connection"/>
+        <field name="nodeDrag" kind="maybe" of="NodeDrag"/>
+        <field name="spaceDown" kind="boolean" default="false"/>
+      </state>
+  </model>
+  <requires>
+    <style src="./node-graph.css"/>
+    <component tag="fox-ve-node-card" src="./node-card.generated.js"/>
+    <component tag="fox-ve-node-cable" src="./node-cable.generated.js"/>
+    <capability name="resize.observe" as="resizeObserver"/>
+    <capability name="animation.frame" as="frame"/>
+    <capability name="dom.pointer.capture" as="pointerCapture" optional="true"/>
+  </requires>
+
+
+  <types>
+    <type name="Point">
+      <prop name="x" kind="number"/>
+      <prop name="y" kind="number"/>
+    </type>
+
+    <type name="Viewport">
+      <prop name="panX" kind="number" default="0"/>
+      <prop name="panY" kind="number" default="0"/>
+      <prop name="zoom" kind="number" default="1"/>
+    </type>
+
+    <type name="Port">
+      <prop name="id" kind="text"/>
+      <prop name="label" kind="text"/>
+      <prop name="type" kind="text"/>
+    </type>
+
+    <type name="PortDetail">
+      <prop name="id" kind="text"/>
+      <prop name="label" kind="text"/>
+      <prop name="type" kind="text"/>
+      <prop name="side" kind="choice" values="input output"/>
+      <prop name="nodeId" kind="text"/>
+    </type>
+
+    <type name="NodeGraphNode">
+      <prop name="id" kind="text"/>
+      <prop name="x" kind="number"/>
+      <prop name="y" kind="number"/>
+      <prop name="type" kind="text" default="effect"/>
+      <prop name="label" kind="text"/>
+      <prop name="color" kind="css-color"/>
+      <prop name="status" kind="choice" values="ok warning error disabled" default="ok"/>
+      <prop name="expanded" kind="boolean"/>
+      <prop name="inputs" kind="list" of="Port"/>
+      <prop name="outputs" kind="list" of="Port"/>
+    </type>
+
+    <type name="NodeGraphEndpoint">
+      <prop name="nodeId" kind="text"/>
+      <prop name="portId" kind="text"/>
+    </type>
+
+    <type name="NodeGraphEdge">
+      <prop name="id" kind="text"/>
+      <prop name="from" kind="record" of="NodeGraphEndpoint"/>
+      <prop name="to" kind="record" of="NodeGraphEndpoint"/>
+    </type>
+
+    <type name="Connection">
+      <prop name="from" kind="record" of="PortDetail"/>
+      <prop name="to" kind="record" of="Point"/>
+    </type>
+
+    <type name="NodeDrag">
+      <prop name="id" kind="text"/>
+      <prop name="ids" kind="list" of="text"/>
+      <prop name="starts" kind="list" of="Point"/>
+      <prop name="moved" kind="boolean"/>
+    </type>
+  </types>
+
+  <view>
+    <div ref="viewport" class="fox-ve-node-graph-viewport" tabindex="0" role="application" aria-label="Node graph">
+      <div class="status-strip">
+        <span class="pill"><span class="dot"/><span data-readout="zoom">zoom {view.zoom}</span></span>
+        <span class="pill"><span data-readout="mode">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span></span>
+      </div>
+
+      <svg ref="svg" class="fox-ve-node-graph-edges" aria-hidden="true">
+        <g ref="edgeLayer" class="fox-ve-node-graph-edge-layer" svg.transform="translate({view.panX} {view.panY}) scale({view.zoom})"/>
+        <path ref="ghost" class="fox-ve-node-graph-ghost-edge" hidden="{!connection}" svg.d="{ghostEdgePath(connection)}"/>
+      </svg>
+
+      <div ref="cableLayer" class="fox-ve-node-graph-cables" hidden="true">
+        <fox-ve-node-cable each="edges as edge"
+                            key="{edge.id}"
+                            edge-id="{edge.id}"
+                            svg-selector=".fox-ve-node-graph-edge-layer"
+                            bind.from="{portWorld(edge.from.nodeId, edge.from.portId, 'output')}"
+                            bind.to="{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"/>
+      </div>
+
+      <div ref="nodeLayer" class="fox-ve-node-graph-nodes" style.transform="translate({view.panX}px, {view.panY}px) scale({view.zoom})" on.fox-node-port-down="port-connect" on.fox-node-port-up="port-connect">
+        <fox-ve-node-card each="nodes as node" key="{node.id}" data-id="{node.id}" data-type="{node.type}" node-label="{node.label}" color="{node.color}" status="{node.status}" selected="{selected includes node.id}" expanded="{node.expanded}" style.left="{node.x}px" style.top="{node.y}px" bind.inputs="{node.inputs}" bind.outputs="{node.outputs}"/>
+      </div>
+
+      <div class="fox-ve-node-graph-empty" hidden="{nodes.length !== 0}">Double-click empty space to add a node.</div>
+    </div>
+  </view>
+
+
+  <behavior>
+    <actions>
+        <action name="node-drag-start"><call method="_onNodePointerDown"/></action>
+        <action name="node-drag-move"><call method="_onPointerMove"/></action>
+        <action name="node-drag-end"><call method="_onPointerUp"/></action>
+        <action name="node-drag-cancel"><call method="_onPointerCancel"/></action>
+        <action name="port-connect-start"><call method="_onPortDown"/></action>
+        <action name="port-connect-move"><call method="_onPointerMove"/></action>
+        <action name="port-connect-end"><call method="_onPortUp"/></action>
+        <action name="port-connect-finally"><call method="_endConnection"/></action>
+      </actions>
+  </behavior>
+
+
+  <geometry>
+    <space name="client"/>
+    <space name="viewport"/>
+    <space name="world"/>
+
+    <function name="viewportToWorld">
+      <param name="point" kind="record" of="Point"/>
+      <return><![CDATA[
+        {
+          x: (point.x - view.panX) / view.zoom,
+          y: (point.y - view.panY) / view.zoom
+        }
+      ]]></return>
+    </function>
+
+    <function name="worldToViewport">
+      <param name="point" kind="record" of="Point"/>
+      <return><![CDATA[
+        {
+          x: point.x * view.zoom + view.panX,
+          y: point.y * view.zoom + view.panY
+        }
+      ]]></return>
+    </function>
+
+    <function name="edgePath">
+      <param name="from" kind="record" of="Point"/>
+      <param name="to" kind="record" of="Point"/>
+      <let name="dx" value="max(36, abs(to.x - from.x) * 0.45)"/>
+      <return><![CDATA[
+        `M ${from.x.toFixed(2)} ${from.y.toFixed(2)} C ${(from.x + dx).toFixed(2)} ${from.y.toFixed(2)}, ${(to.x - dx).toFixed(2)} ${to.y.toFixed(2)}, ${to.x.toFixed(2)} ${to.y.toFixed(2)}`
+      ]]></return>
+    </function>
+
+    <function name="portCenter">
+      <param name="nodeId" kind="text"/>
+      <param name="portId" kind="text"/>
+      <param name="side" kind="choice" values="input output"/>
+      <return><![CDATA[
+        measuredPortDotWorld(nodeId, portId, side) || fallbackPortWorld(nodeId, portId, side)
+      ]]></return>
+    </function>
+  </geometry>
+
+  <interactions>
+    <pan name="viewport-pan" from="viewport" button="middle or space-primary" target="view" x="panX" y="panY">
+      <change><reflect props="pan-x pan-y zoom"/><schedule frame="draw-edges"/><emit name="fox-pan-zoom" detail="{view}"/></change>
+    </pan>
+
+    <zoom name="wheel-zoom" from="viewport" gesture="wheel" target="view" around="pointer" min="0.2" max="3" sensitivity="0.001">
+      <change><reflect props="pan-x pan-y zoom"/><schedule frame="draw-edges"/><emit name="fox-pan-zoom" detail="{view}"/></change>
+    </zoom>
+
+    <interaction name="node-drag">
+      <about><summary>Moves one or more selected node cards in world coordinates.</summary></about>
+      <contract>
+        <reads><state name="nodes"/><state name="selected"/><state name="view.zoom"/><prop name="readonly"/><prop name="snap-to-grid"/><prop name="grid-size"/></reads>
+        <mutates><state name="nodes"/><state name="selected"/><state name="nodeDrag"/><dom ref="nodeLayer"/></mutates>
+        <emits><event name="fox-node-select"/><event name="fox-node-move"/></emits>
+        <schedules><frame name="draw-edges"/></schedules>
+        <forbids><mutation name="edges"/><mutation name="view.panX"/><mutation name="view.panY"/><mutation name="view.zoom"/></forbids>
+      </contract>
+      <invariants>
+        <invariant name="world-coordinates">Node positions are stored in world coordinates.</invariant>
+        <invariant name="zoom-correct-delta">Drag movement must use drag.delta.world.</invariant>
+        <invariant name="edge-redraw">Every node position update schedules draw-edges.</invariant>
+      </invariants>
+      <agent-notes>
+        <note priority="critical">Do not calculate node movement from raw clientX/clientY. Use drag.delta.world.</note>
+        <note priority="critical">Do not mutate edges during node dragging.</note>
+        <note priority="high">Keep direct card positioning during drag for responsiveness.</note>
+      </agent-notes>
+      <drag name="node-drag" from="nodeLayer" handle="fox-ve-node-card" ignore=".fox-ve-node-card-port, button, input, textarea, select, [contenteditable]" button="primary" capture="true" threshold="1" space="world" when="!readonly">
+        <start action="node-drag-start"/>
+        <move action="node-drag-move"/>
+        <end action="node-drag-end"/>
+        <cancel action="node-drag-cancel"/>
+      </drag>
+    </interaction>
+
+    <interaction name="port-connect">
+      <about><summary>Creates an edge by dragging from one node port to another compatible port.</summary></about>
+      <contract>
+        <reads><state name="connection"/><state name="view"/><state name="nodes"/><prop name="readonly"/></reads>
+        <mutates><state name="connection"/><prop name="connection-mode"/><dom ref="ghost"/></mutates>
+        <emits><event name="fox-edge-connect"/></emits>
+        <schedules><frame name="draw-ghost"/></schedules>
+        <forbids><mutation name="nodes"/><mutation name="edges"/><mutation name="selected"/><mutation name="view.panX"/><mutation name="view.panY"/><mutation name="view.zoom"/></forbids>
+      </contract>
+      <invariants>
+        <invariant name="no-connect-in-readonly">When readonly is true, connection must not start.</invariant>
+        <invariant name="ghost-is-not-edge">The ghost path is visual only. It must not mutate edges.</invariant>
+        <invariant name="opposite-sides-only">Connections require one output side and one input side.</invariant>
+        <invariant name="clear-connection-after-end">Connection state is always cleared after successful, invalid, or cancelled connection.</invariant>
+      </invariants>
+      <agent-notes>
+        <note priority="critical">Do not append to edges inside the pure connect contract; emit fox-edge-connect and let owner policy decide.</note>
+        <note priority="critical">Always clear connection and remove connection-mode in finally.</note>
+        <note priority="high">Draw the ghost in viewport coordinates.</note>
+      </agent-notes>
+      <connect name="port-connect" from="nodeLayer" handle=".fox-ve-node-card-port" start-event="fox-node-port-down" end-event="fox-node-port-up" mode-prop="connection-mode" ghost="ghost" space="viewport" when="!readonly">
+        <start action="port-connect-start"/>
+        <move action="port-connect-move"/>
+        <end action="port-connect-end"/>
+        <finally action="port-connect-finally"/>
+      </connect>
+    </interaction>
+
+    <key from="window" key="Space"><down><set state="spaceDown" value="true"/></down><up><set state="spaceDown" value="false"/></up></key>
+    <key from="viewport" key="0" prevent="true"><call method="fitToNodes"/></key>
+    <key from="viewport" key="ArrowLeft ArrowRight ArrowUp ArrowDown" when="selected.length &gt; 0 &amp;&amp; !readonly" prevent="true"><nudge-selected direction="{key.direction}" step="{snapToGrid ? gridSize : 8}" shift-multiplier="4"/></key>
+    <resize target="self"><schedule frame="draw-edges"/></resize>
+  </interactions>
+
+  <effects>
+    <effect name="draw-edges"><call method="_drawEdges"/></effect>
+    <effect name="draw-ghost"><call method="_drawGhost"/></effect>
+    <effect name="fit-to-nodes"><call method="fitToNodes"/></effect>
+    <effect name="center-on-node"><call method="centerOnNode"/></effect>
+  </effects>
+
+  <frames>
+    <frame name="draw-edges" coalesce="true" settle="1"><effect name="draw-edges"/><effect name="draw-ghost"/></frame>
+    <frame name="draw-ghost" coalesce="true"><effect name="draw-ghost"/></frame>
+  </frames>
+
+  <dev>
+    <probes>
+      <layout-probe name="collapse-button-alignment" subject=".fox-ve-node-card-expand" relation="center-y" target=".fox-ve-node-card-title" tolerance="2" severity="error">
+        Collapse button must be vertically centered with the node title.
+      </layout-probe>
+
+      <probe name="ghost-edge-clears" select="fox-ve-node-graph" when="after-interaction" severity="error"><![CDATA[
+        const ghost = one(".fox-ve-node-graph-ghost-edge");
+        if (!state.connection) {
+          expect(
+            ghost.hidden && !ghost.getAttribute("d"),
+            "Ghost edge must be hidden and have no path when no connection is active.",
+            { hidden: ghost.hidden, d: ghost.getAttribute("d") }
+          );
+        }
+      ]]></probe>
+
+      <layout-probe name="edge-start-port-center" subject="edge.start" relation="same-point" target="edge.from.port.dot.center" space="world" tolerance="2" severity="error">
+        <message>Cable starts must match output port dot centers.</message>
+        <hints>
+          <hint>Check whether SVG path points are in viewport or world space.</hint>
+          <hint>Prefer measured DOM port dot centers over header/row constants.</hint>
+          <hint>Schedule draw-edges after node-card render and one settle frame.</hint>
+        </hints>
+      </layout-probe>
+
+      <layout-probe name="edge-end-port-center" subject="edge.end" relation="same-point" target="edge.to.port.dot.center" space="world" tolerance="2" severity="error">
+        Cable ends must match input port dot centers.
+      </layout-probe>
+    </probes>
+  </dev>
+
+  <fixtures>
+    <fixture name="basic-node-graph">
+      <nodes>
+        <node id="source" type="source" label="Source" color="#49fafe" x="40" y="80"><outputs><port id="out" label="RGBA" type="rgba"/></outputs></node>
+        <node id="blur" type="effect" label="Blur" color="#9d7cff" x="340" y="90"><inputs><port id="in" label="In" type="rgba"/></inputs><outputs><port id="out" label="Out" type="rgba"/></outputs></node>
+      </nodes>
+      <edges><edge id="edge-1" from-node="source" from-port="out" to-node="blur" to-port="in"/></edges>
+      <selected><id>blur</id></selected>
+    </fixture>
+  </fixtures>
+
+  <tests>
+    <test name="drag-uses-world-delta-under-zoom">
+      <given><view panX="0" panY="0" zoom="2"/><node id="a" x="100" y="100"/></given>
+      <when><pointer-delta client-x="20" client-y="10"/></when>
+      <then><expect node="a" x="110" y="105"/></then>
+    </test>
+    <test name="same-side-port-connection-is-invalid">
+      <given><port-down node="a" port="out" side="output"/></given>
+      <when><port-up node="b" port="out" side="output"/></when>
+      <then><expect event="fox-edge-connect" count="0"/></then>
+    </test>
+    <test name="edge-endpoints-align-with-port-dots">
+      <given fixture="basic-node-graph"/>
+      <when><run-probes/></when>
+      <then><expect probe="edge-start-port-center" pass="true"/><expect probe="edge-end-port-center" pass="true"/></then>
+    </test>
+  </tests>
+</gizmo>

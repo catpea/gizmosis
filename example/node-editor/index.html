@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gizmo XML v0.5 Node Editor Example</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "gizmo/node-graph": "./dist/node-graph.generated.js",
+        "gizmo/node-editor": "./dist/library/index.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Gizmo XML v0.5 Node Editor Example</h1>
+        <p>Compiled from three Gizmo sources: <code>src/node-card.xml</code>, <code>src/node-cable.xml</code>, and <code>src/node-graph.xml</code>. The harness imports only from <code>dist/</code>.</p>
+      </div>
+      <div class="toolbar" aria-label="Demo controls">
+        <button class="btn primary" id="runTestsBtn">Run Tests</button>
+        <button class="btn" id="runProbesBtn">Run Probes</button>
+        <button class="btn danger" id="bugBtn" aria-pressed="false">Inject Probe Bugs</button>
+        <button class="btn" id="fitBtn">Fit</button>
+        <button class="btn" id="resetBtn">Reset</button>
+        <button class="btn" id="snapBtn" aria-pressed="true">Snap Grid</button>
+        <button class="btn danger" id="readonlyBtn" aria-pressed="false">Readonly</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="pane" aria-label="Gizmo XML source">
+        <div class="pane-header">
+          <strong>Canonical XML Source</strong>
+          <div class="tabs" role="tablist" aria-label="Source view">
+            <button class="tab" role="tab" data-source="node-graph.xml" aria-selected="true">node-graph.xml</button>
+            <button class="tab" role="tab" data-source="node-card.xml" aria-selected="false">node-card.xml</button>
+            <button class="tab" role="tab" data-source="node-cable.xml" aria-selected="false">node-cable.xml</button>
+          </div>
+        </div>
+        <div class="xml-body">
+          <pre class="xml" id="xmlPanel" aria-live="polite"></pre>
+          <div class="notes">
+            <strong>Source of truth:</strong> each Web Component is represented by one XML file. The graph composes generated card and cable components.
+          </div>
+        </div>
+      </section>
+
+      <section class="pane" aria-label="Interactive node graph">
+        <div class="pane-header">
+          <strong>Live Node Graph</strong>
+          <span style="color: var(--muted); font-size: .88rem;">Double-click empty space to add a node. Double-click an edge to remove it.</span>
+        </div>
+        <div class="graph-wrap">
+          <fox-ve-node-graph id="graph" snap-to-grid grid-size="24"></fox-ve-node-graph>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bottombar">
+      <section class="log-panel">
+        <h2 class="section-title">Event Log</h2>
+        <ol class="log-list" id="logList"></ol>
+      </section>
+      <section class="test-panel">
+        <h2 class="section-title">Behavior Tests</h2>
+        <ol class="test-list" id="testList"></ol>
+      </section>
+      <section class="probe-panel">
+        <h2 class="section-title">Development Probes</h2>
+        <ol class="probe-list" id="probeList"></ol>
+      </section>
+    </footer>
+  </div>
+
+  <script type="module">
+    import './dist/app/node-graph-app.js';
+  </script>
+</body>
+</html>

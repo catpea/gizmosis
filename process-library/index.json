@@ -1,0 +1,139 @@
+{
+  "name": "gizmo-process-library",
+  "version": "0.3.0",
+  "description": "Repository-local procedures for programming and translating Gizmo XML Web Components with AI agents.",
+  "discovery": {
+    "readFirst": [
+      "SKILL.md",
+      "process-library/README.md",
+      "process-library/solutions/search-index.json"
+    ],
+    "searchIndex": "solutions/search-index.json",
+    "featureMap": "reference/js-to-gizmo-feature-map.md",
+    "features": "../features.json"
+  },
+  "procedures": [
+    {
+      "id": "author-gizmo-web-component",
+      "path": "procedures/author-gizmo-web-component.md",
+      "purpose": "Create one Web Component from one XML source."
+    },
+    {
+      "id": "translate-existing-web-component",
+      "path": "procedures/translate-existing-web-component.md",
+      "purpose": "Full process for converting existing JavaScript Web Components into Gizmo XML."
+    },
+    {
+      "id": "convert-imperative-component",
+      "path": "procedures/convert-imperative-component.md",
+      "purpose": "Concise checklist for converting imperative components."
+    },
+    {
+      "id": "extract-public-contract",
+      "path": "procedures/extract-public-contract.md",
+      "purpose": "Extract tag, props, methods, events, and public guarantees."
+    },
+    {
+      "id": "translate-data-props-state",
+      "path": "procedures/translate-data-props-state.md",
+      "purpose": "Translate constructor fields, accessors, arrays, choices, JSON attributes, and normalization."
+    },
+    {
+      "id": "translate-dom-construction",
+      "path": "procedures/translate-dom-construction.md",
+      "purpose": "Translate createElement/append/class/style/dataset/repeated DOM into view markup."
+    },
+    {
+      "id": "translate-event-handlers",
+      "path": "procedures/translate-event-handlers.md",
+      "purpose": "Translate listeners, CustomEvent emission, actions, stop/prevent, and event details."
+    },
+    {
+      "id": "translate-interactions",
+      "path": "procedures/translate-interactions.md",
+      "purpose": "Translate pointer, drag, pan, zoom, key, resize, and connect behaviors."
+    },
+    {
+      "id": "translate-effects-lifecycle",
+      "path": "procedures/translate-effects-lifecycle.md",
+      "purpose": "Translate observers, frames, timers, measurement, cleanup, and external effects."
+    },
+    {
+      "id": "translate-svg-geometry",
+      "path": "procedures/translate-svg-geometry.md",
+      "purpose": "Translate SVG, path generation, transforms, coordinate spaces, and layout probes."
+    },
+    {
+      "id": "prevent-escape-hatches",
+      "path": "procedures/prevent-escape-hatches.md",
+      "purpose": "Detect and remove hidden imperative implementations."
+    },
+    {
+      "id": "split-node-editor-components",
+      "path": "procedures/split-node-editor-components.md",
+      "purpose": "Keep card, cable, and graph as separate Web Components."
+    },
+    {
+      "id": "add-application-probes",
+      "path": "procedures/add-application-probes.md",
+      "purpose": "Add semantic runtime/layout diagnostics."
+    },
+    {
+      "id": "compile-wash-verify",
+      "path": "procedures/compile-wash-verify.md",
+      "purpose": "Compile declarative XML into standalone dist output and verify quality gates."
+    },
+    {
+      "id": "create-process-library-entry",
+      "path": "procedures/create-process-library-entry.md",
+      "purpose": "Add or update procedures when the project learns a new rule."
+    },
+    {
+      "id": "use-full-language-capsule",
+      "path": "procedures/use-full-language-capsule.md",
+      "purpose": "Use the canonical contract/requires/model/view/behavior/effects/resources/dev component capsule."
+    },
+    {
+      "id": "translate-dependencies-capabilities",
+      "path": "procedures/translate-dependencies-capabilities.md",
+      "purpose": "Translate imports, globals, browser APIs, services, assets, and host powers into requires/provides."
+    },
+    {
+      "id": "translate-behavior-surfaces",
+      "path": "procedures/translate-behavior-surfaces.md",
+      "purpose": "Choose action, event, reducer, stream, machine, command, or luxury interaction without ideological confusion."
+    },
+    {
+      "id": "translate-resources-vs-effects",
+      "path": "procedures/translate-resources-vs-effects.md",
+      "purpose": "Separate effects from acquired resources and prevent lifecycle bugs."
+    },
+    {
+      "id": "update-features-json",
+      "path": "procedures/update-features-json.md",
+      "purpose": "Keep features.json, compiler features, and process-library search routes synchronized."
+    }
+  ],
+  "references": [
+    {
+      "id": "js-to-gizmo-feature-map",
+      "path": "reference/js-to-gizmo-feature-map.md"
+    },
+    {
+      "id": "gizmo-feature-catalog",
+      "path": "reference/gizmo-feature-catalog.md"
+    },
+    {
+      "id": "escape-hatch-smells",
+      "path": "reference/escape-hatch-smells.md"
+    },
+    {
+      "id": "full-gizmo-language",
+      "path": "reference/full-gizmo-language.md"
+    },
+    {
+      "id": "features-json",
+      "path": "../features.json"
+    }
+  ]
+}

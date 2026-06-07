@@ -1,0 +1,335 @@
+{
+  "name": "gizmo-process-search-index",
+  "version": "0.3.0",
+  "purpose": "Help AI agents route JavaScript-to-Gizmo translation problems to the right procedure, guide, and quality gates.",
+  "entries": [
+    {
+      "id": "convert-existing-web-component",
+      "queries": [
+        "convert web component",
+        "imperative custom element",
+        "class extends HTMLElement",
+        "customElements.define",
+        "existing JavaScript component"
+      ],
+      "read": [
+        "procedures/translate-existing-web-component.md",
+        "reference/js-to-gizmo-feature-map.md",
+        "procedures/prevent-escape-hatches.md"
+      ],
+      "qualityGates": [
+        "public contract extracted",
+        "one XML file per Web Component",
+        "no hidden bridge implementation",
+        "npm run compile",
+        "npm run check",
+        "npm test"
+      ]
+    },
+    {
+      "id": "public-contract",
+      "queries": [
+        "observedAttributes",
+        "attributeChangedCallback",
+        "getters setters",
+        "methods",
+        "CustomEvent",
+        "public API"
+      ],
+      "read": [
+        "procedures/extract-public-contract.md",
+        "procedures/translate-data-props-state.md"
+      ],
+      "qualityGates": [
+        "all attributes in <props/>",
+        "all events in <events/>",
+        "public methods documented or lowered"
+      ]
+    },
+    {
+      "id": "data-state-props",
+      "queries": [
+        "constructor fields",
+        "private fields",
+        "arrays",
+        "JSON attribute",
+        "normalizeNode",
+        "get inputs",
+        "set inputs"
+      ],
+      "read": [
+        "procedures/translate-data-props-state.md",
+        "reference/js-to-gizmo-feature-map.md"
+      ],
+      "qualityGates": [
+        "kinds use kind= not TypeScript notation",
+        "arrays use kind=list of=...",
+        "normalization rules captured"
+      ]
+    },
+    {
+      "id": "dom-view",
+      "queries": [
+        "createElement",
+        "append",
+        "replaceChildren",
+        "innerHTML",
+        "textContent",
+        "className",
+        "dataset",
+        "querySelector",
+        "template"
+      ],
+      "read": [
+        "procedures/translate-dom-construction.md",
+        "reference/gizmo-feature-catalog.md"
+      ],
+      "qualityGates": [
+        "DOM tree is in <view/>",
+        "repeated DOM uses each/key",
+        "no imperative DOM construction in support library"
+      ]
+    },
+    {
+      "id": "events-actions",
+      "queries": [
+        "addEventListener",
+        "removeEventListener",
+        "dispatchEvent",
+        "CustomEvent",
+        "stopPropagation",
+        "preventDefault",
+        "pointer capture"
+      ],
+      "read": [
+        "procedures/translate-event-handlers.md",
+        "procedures/translate-interactions.md"
+      ],
+      "qualityGates": [
+        "simple handlers become <actions/>",
+        "multi-event gestures become luxury tags",
+        "event detail declared"
+      ]
+    },
+    {
+      "id": "interaction-luxury-tags",
+      "queries": [
+        "drag",
+        "pointerdown pointermove pointerup",
+        "pan",
+        "zoom",
+        "wheel",
+        "keyboard",
+        "Space drag",
+        "connect ports"
+      ],
+      "read": [
+        "procedures/translate-interactions.md",
+        "procedures/split-node-editor-components.md"
+      ],
+      "qualityGates": [
+        "no hand-written pointer streams",
+        "drag/pan/zoom/connect selected correctly",
+        "guards and cleanup captured"
+      ]
+    },
+    {
+      "id": "effects-lifecycle",
+      "queries": [
+        "ResizeObserver",
+        "requestAnimationFrame",
+        "setTimeout",
+        "setInterval",
+        "MutationObserver",
+        "IntersectionObserver",
+        "window listener",
+        "cleanup"
+      ],
+      "read": [
+        "procedures/translate-effects-lifecycle.md",
+        "procedures/add-application-probes.md"
+      ],
+      "qualityGates": [
+        "effects touch DOM/world",
+        "cleanup is explicit",
+        "frames coalesce",
+        "probes cover layout-sensitive behavior"
+      ]
+    },
+    {
+      "id": "svg-geometry",
+      "queries": [
+        "SVG",
+        "createElementNS",
+        "path d",
+        "viewBox",
+        "transform",
+        "edge path",
+        "port center",
+        "coordinate space"
+      ],
+      "read": [
+        "procedures/translate-svg-geometry.md",
+        "procedures/add-application-probes.md"
+      ],
+      "qualityGates": [
+        "svg.* used",
+        "coordinate spaces named",
+        "geometry functions pure",
+        "layout probes verify endpoints"
+      ]
+    },
+    {
+      "id": "escape-hatch-prevention",
+      "queries": [
+        "support library",
+        "bridge class",
+        "implementation class",
+        "hardcoded selector",
+        "generic helper",
+        "bad code",
+        "escape hatch"
+      ],
+      "read": [
+        "procedures/prevent-escape-hatches.md",
+        "reference/escape-hatch-smells.md"
+      ],
+      "qualityGates": [
+        "support library selector-free or parameterized",
+        "generated component owns selectors",
+        "tests reject src imports in dist"
+      ]
+    },
+    {
+      "id": "process-creation",
+      "queries": [
+        "new procedure",
+        "learned rule",
+        "document process",
+        "process library",
+        "institutional knowledge"
+      ],
+      "read": [
+        "procedures/create-process-library-entry.md"
+      ],
+      "qualityGates": [
+        "procedure has inputs steps quality gates recovery",
+        "index.json updated",
+        "search-index.json updated"
+      ]
+    },
+    {
+      "id": "full-component-capsule",
+      "queries": [
+        "contract first",
+        "component capsule",
+        "requires model behavior effects resources",
+        "full language",
+        "canonical grammar",
+        "what it exposes what it needs what it remembers what it does"
+      ],
+      "read": [
+        "procedures/use-full-language-capsule.md",
+        "reference/full-gizmo-language.md",
+        "features.json"
+      ],
+      "qualityGates": [
+        "public API in <contract>",
+        "dependencies in <requires>",
+        "state in <model>",
+        "lifecycle in <resources>",
+        "npm test"
+      ]
+    },
+    {
+      "id": "dependencies-capabilities",
+      "queries": [
+        "import",
+        "dependency",
+        "requires",
+        "provides",
+        "capability",
+        "service",
+        "asset",
+        "component dependency",
+        "navigator.clipboard",
+        "host capability"
+      ],
+      "read": [
+        "procedures/translate-dependencies-capabilities.md",
+        "reference/full-gizmo-language.md",
+        "features.json"
+      ],
+      "qualityGates": [
+        "dependencies classified",
+        "optional dependencies marked",
+        "tests can provide fake capabilities"
+      ]
+    },
+    {
+      "id": "behavior-surface-selection",
+      "queries": [
+        "action vs reducer",
+        "stream",
+        "machine",
+        "command",
+        "behavior surface",
+        "state machine",
+        "subscription",
+        "computed"
+      ],
+      "read": [
+        "procedures/translate-behavior-surfaces.md",
+        "reference/full-gizmo-language.md",
+        "features.json"
+      ],
+      "qualityGates": [
+        "smallest correct behavior surface chosen",
+        "luxury tags used for browser gestures"
+      ]
+    },
+    {
+      "id": "resources-vs-effects",
+      "queries": [
+        "resource vs effect",
+        "acquire release",
+        "listener cleanup",
+        "worker cleanup",
+        "audio context",
+        "timer",
+        "observer cleanup"
+      ],
+      "read": [
+        "procedures/translate-resources-vs-effects.md",
+        "procedures/translate-effects-lifecycle.md",
+        "features.json"
+      ],
+      "qualityGates": [
+        "every acquire has release",
+        "effects do not hide lifecycle resources"
+      ]
+    },
+    {
+      "id": "features-memory",
+      "queries": [
+        "features.json",
+        "supported tags",
+        "what does compiler support",
+        "language catalog",
+        "new tag",
+        "forget nothing"
+      ],
+      "read": [
+        "procedures/update-features-json.md",
+        "features.json",
+        "reference/full-gizmo-language.md"
+      ],
+      "qualityGates": [
+        "root features.json updated",
+        "compiler features.js updated",
+        "search index updated",
+        "tests updated"
+      ]
+    }
+  ]
+}

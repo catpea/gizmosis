@@ -1,0 +1,65 @@
+<gizmo name="Node Cable" tag="fox-ve-node-cable" css="./node-graph.css">
+  <about>
+    <summary>
+      Cable Web Component for node editors. It receives graph-space endpoints and a selector for a shared SVG edge layer, then draws its own SVG group into that layer.
+      The graph owns geometry; the cable owns its SVG paths and cleanup.
+    </summary>
+  </about>
+
+  <terms>
+    <term name="shared SVG">The SVG owned by a graph component where cable components draw path elements.</term>
+    <term name="graph-space endpoint">A point in world coordinates after graph port measurement.</term>
+  </terms>
+
+  <build mode="development" probes="keep" diagnostics="panel console event"/>
+  <build mode="production" probes="strip" diagnostics="strip"/>
+  <diagnostics report="panel console event" throw="never"/>
+  <use library="gizmo/node-editor"/>
+
+
+  <contract>
+    <props>
+        <prop name="edge-id" field="edgeId" kind="text" reflect="true"/>
+        <prop name="svg-selector" field="svgSelector" kind="text" default=".fox-ve-node-graph-edge-layer"/>
+        <prop name="from" kind="record" of="Point"/>
+        <prop name="to" kind="record" of="Point"/>
+        <prop name="missing" kind="boolean" reflect="true"/>
+      </props>
+
+    <events>
+        <event name="fox-edge-render"><detail><field name="id" kind="text"/></detail></event>
+      </events>
+
+    <methods>
+        <method name="renderIntoSharedSvg"/>
+        <method name="removeFromSharedSvg"/>
+      </methods>
+
+    <parts>
+        <part name="edge-group"/>
+        <part name="edge-hit"/>
+        <part name="edge-line"/>
+      </parts>
+  </contract>
+<requires>
+    <style src="./node-graph.css"/>
+    <capability name="svg.shared-layer" as="sharedSvgLayer"/>
+  </requires>
+
+  <types>
+    <type name="Point"><prop name="x" kind="number"/><prop name="y" kind="number"/></type>
+  </types>
+
+  <view hidden="true" aria-hidden="true"/>
+
+  <effects>
+    <effect name="draw-cable"><call method="renderIntoSharedSvg"/></effect>
+    <effect name="remove-cable"><call method="removeFromSharedSvg"/></effect>
+  </effects>
+
+  <dev>
+    <probes>
+      <layout-probe name="cable-has-shared-svg-layer" subject="self" relation="exists" target="{svgSelector}" severity="error"/>
+    </probes>
+  </dev>
+</gizmo>
