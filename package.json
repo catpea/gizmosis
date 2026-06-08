@@ -1,6 +1,6 @@
 {
   "name": "gizmosis",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "XML-first, agent-readable language prototype for complex Web Component UI development.",
   "type": "module",
   "private": false,
