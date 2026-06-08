@@ -9,7 +9,7 @@ Gizmosis is a compiler-oriented XML language for creating Web Components.
 One Web Component equals one `<gizmo/>` XML file.
 
 ```xml
-<gizmo name="Node Card" tag="fox-ve-node-card" css="./node-graph.css" shadow="none">
+<gizmo name="Node Card" tag="go-node-card" css="./node-graph.css" shadow="none">
   ...
 </gizmo>
 ```
@@ -131,9 +131,9 @@ Agents must read `features.json` before changing grammar, compiler behavior, or 
 
 The example uses three generated components:
 
-- `fox-ve-node-card`
-- `fox-ve-node-cable`
-- `fox-ve-node-graph`
+- `go-node-card`
+- `go-node-cable`
+- `go-node-graph`
 
 `<connect/>` belongs to this package rather than universal core.
 

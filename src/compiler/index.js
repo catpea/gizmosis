@@ -4,6 +4,7 @@ import { loadGizmoXml } from './loader.js';
 import { buildIr } from './ir.js';
 import { validateIr } from './validate.js';
 import { generateDts, generateJavaScript, generateManifest } from './generator.js';
+import { applyProjectPrefixToDocument, resolveProjectPrefix } from './prefix.js';
 
 export { loadGizmoXml } from './loader.js';
 export { buildIr } from './ir.js';
@@ -12,10 +13,21 @@ export { generateDts, generateJavaScript, generateManifest } from './generator.j
 export { parseXml, serializeXml } from './xml-parser.js';
 export { GIZMO_FEATURES } from './features.js';
 export { lowerView } from './view-lowerer.js';
+export {
+  DEFAULT_PROJECT_PREFIX,
+  applyProjectPrefixToDocument,
+  prefixTag,
+  renderProjectPrefixString,
+  resolveProjectPrefix,
+  rewriteProjectPrefixedName,
+  sanitizeProjectPrefix
+} from './prefix.js';
 
 export async function compileGizmo(entryFile, options = {}) {
   const loaded = await loadGizmoXml(entryFile);
+  applyProjectPrefixToDocument(loaded.document, options);
   const ir = buildIr(loaded.document, { filename: loaded.filename });
+  ir.project = { prefix: resolveProjectPrefix(options) };
   if (options.sourceLabel) ir.source = options.sourceLabel;
   const diagnostics = validateIr(ir, options);
   const manifest = generateManifest(ir, diagnostics);

@@ -77,7 +77,7 @@ node -e "console.log(require('./process-library/solutions/search-index.json').en
 - Humans should avoid imperative component code; the compiler and AI should wash XML into JavaScript.
 - `src/` contains source files. `dist/` contains standalone compiled distribution files.
 - Example harnesses may live beside `src/` and `dist/`, but they must import only from `dist/`.
-- Runtime support libraries may provide reusable mechanics only. Package-specific compiler generators may live beside a package under `src/library/compiler/`, but they must not be copied into runtime `dist/library/` or hidden inside the general compiler.
+- Runtime support libraries may provide reusable, descriptor-configured mechanics only. Package-specific compiler generators may live beside a package under `src/library/compiler/`, but they must not be copied into runtime `dist/library/` or hidden inside the general compiler.
 - If an agent is tempted to write a hand-coded Web Component, it must write or improve the `.xml` source instead.
 
 ## Quality gates for every agent task

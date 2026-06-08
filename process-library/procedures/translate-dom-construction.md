@@ -33,7 +33,7 @@ Convert imperative DOM construction into `<view/>` markup that the compiler can 
 ## Examples
 
 ```xml
-<fox-ve-node-card each="nodes as node"
+<go-node-card each="nodes as node"
                   key="{node.id}"
                   data-id="{node.id}"
                   node-label="{node.label}"

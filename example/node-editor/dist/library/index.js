@@ -1,5 +1,6 @@
 export * from './constants.js';
 export * from './dom.js';
+export * from './graph-runtime.js';
 export * from './interactions.js';
 
 let nodeEditorStylesInstalled = false;

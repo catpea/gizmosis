@@ -4,11 +4,11 @@ This tutorial explains why the example is split into three Web Components.
 
 ## Components
 
-1. `node-card.xml` declares `fox-ve-node-card`.
+1. `node-card.xml` declares `go-node-card`.
    - Owns caption, status, collapse button, input/output port rows, and port events.
-2. `node-cable.xml` declares `fox-ve-node-cable`.
+2. `node-cable.xml` declares `go-node-cable`.
    - Owns one SVG cable group in a shared SVG layer.
-3. `node-graph.xml` declares `fox-ve-node-graph`.
+3. `node-graph.xml` declares `go-node-graph`.
    - Owns graph state, pan/zoom, node dragging, connection gestures, probes, fixtures, and tests.
 
 ## Compile

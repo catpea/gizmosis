@@ -8,9 +8,9 @@ Prevent visual programming language examples from collapsing into one large grap
 
 A node editor must be decomposed into at least:
 
-- `node-card.xml` → `fox-ve-node-card`
-- `node-cable.xml` → `fox-ve-node-cable`
-- `node-graph.xml` → `fox-ve-node-graph`
+- `node-card.xml` → `go-node-card`
+- `node-cable.xml` → `go-node-cable`
+- `node-graph.xml` → `go-node-graph`
 
 ## Steps
 
@@ -18,7 +18,7 @@ A node editor must be decomposed into at least:
 2. Create `node-card.xml` for caption, collapse state, ports, and port events.
 3. Create `node-cable.xml` for cable SVG path ownership.
 4. Create `node-graph.xml` for graph state, selection, pan/zoom, dragging, and connection orchestration.
-5. Move reusable selector-free runtime mechanics into `src/library/` only when they are shared across components.
+5. Move reusable selector-configured runtime mechanics into `src/library/` only when they receive concrete tags, selectors, events, and markup from generated descriptors.
 6. Keep package-specific graph/card/cable behavior generator templates under `src/library/compiler/` for this package, not under the general compiler.
 7. Compile all three XML files and verify the graph composes generated card and cable components.
 
@@ -27,9 +27,9 @@ A node editor must be decomposed into at least:
 1. The graph coordinates state and interactions.
 2. The card owns its caption, ports, collapse button, and port events.
 3. The cable owns its SVG group/path lifecycle in a shared SVG layer.
-4. Runtime support files may provide geometry and browser-resource helpers only.
-5. Runtime support files must not contain graph-specific selectors, card-specific templates, or cable-specific drawing ownership.
-6. Package generator files under `src/library/compiler/` may contain graph/card/cable behavior lowering templates because they are build-time source owned by this package.
+4. Runtime support files may provide geometry, browser-resource helpers, and descriptor-driven VPL mechanics.
+5. Runtime support files must not contain graph-specific selectors, card-specific templates, cable-specific generated elements, or custom element definitions.
+6. Package generator files under `src/library/compiler/` may contain thin graph/card/cable shell generation because they are build-time source owned by this package.
 7. Component markup must remain in XML `<view/>` and be lowered by compiler infrastructure, not duplicated in package HTML files.
 
 ## Quality gates
@@ -40,3 +40,4 @@ A node editor must be decomposed into at least:
 - `dist/library/` does not contain `node-card.js`, `node-cable.js`, or `node-graph.js`.
 - `src/compiler/` does not contain node-editor graph/card/cable templates.
 - `example/node-editor/src/library/compiler/` does not contain duplicate `.html` view templates.
+- `example/node-editor/src/library/compiler/` does not contain `graph-class.js` or graph-class-style implementation files.

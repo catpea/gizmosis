@@ -37,7 +37,7 @@ p { margin: .25rem 0 0; color: var(--muted); }
 .xml { margin: 0; padding: .8rem; overflow: auto; min-height: 0; flex: 1; color: #d8ecff; background: #070b16; font-size: .78rem; line-height: 1.35; }
 .notes { border-top: 1px solid var(--line); color: var(--muted); padding: .65rem .8rem; font-size: .85rem; }
 .graph-wrap { flex: 1; min-height: 0; padding: .7rem; }
-fox-ve-node-graph { display: block; height: 100%; min-height: 460px; }
+go-node-graph { display: block; height: 100%; min-height: 460px; }
 .bottombar { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
 .bottombar section { min-height: 126px; max-height: 210px; overflow: auto; padding: .65rem .8rem; }
 .section-title { margin: 0 0 .45rem; font-size: .9rem; color: var(--muted); }

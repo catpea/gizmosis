@@ -3,7 +3,10 @@
   "version": "0.5",
   "source": "example/node-editor/src/node-card.xml",
   "name": "Node Card",
-  "tag": "fox-ve-node-card",
+  "tag": "go-node-card",
+  "project": {
+    "prefix": "go"
+  },
   "css": "./node-graph.css",
   "build": [
     {
@@ -818,7 +821,7 @@
           "each": "inputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "{{css-prefix}}-node-card-port",
+          "class": "go-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "input",
           "data-port-type": "{port.type}",
@@ -834,7 +837,7 @@
           "each": "outputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "{{css-prefix}}-node-card-port",
+          "class": "go-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "output",
           "data-port-type": "{port.type}",
@@ -852,7 +855,7 @@
           "each": "inputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "{{css-prefix}}-node-card-port",
+          "class": "go-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "input",
           "data-port-type": "{port.type}",
@@ -868,7 +871,7 @@
           "each": "outputs as port",
           "key": "{port.id}",
           "type": "button",
-          "class": "{{css-prefix}}-node-card-port",
+          "class": "go-node-card-port",
           "data-port-id": "{port.id}",
           "data-port-side": "output",
           "data-port-type": "{port.type}",
@@ -879,12 +882,6 @@
       }
     ],
     "bindings": [
-      {
-        "kind": "attribute",
-        "element": "view",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-root"
-      },
       {
         "kind": "attribute",
         "element": "view",
@@ -905,27 +902,9 @@
       },
       {
         "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-header"
-      },
-      {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-status"
-      },
-      {
-        "kind": "attribute",
         "element": "span",
         "name": "data-status",
         "value": "{status}"
-      },
-      {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-title"
       },
       {
         "kind": "text",
@@ -934,26 +913,8 @@
       {
         "kind": "attribute",
         "element": "button",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-expand"
-      },
-      {
-        "kind": "attribute",
-        "element": "button",
         "name": "aria-expanded",
         "value": "{expanded}"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port-grid"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-inputs"
       },
       {
         "kind": "attribute",
@@ -966,12 +927,6 @@
         "element": "button",
         "name": "key",
         "value": "{port.id}"
-      },
-      {
-        "kind": "attribute",
-        "element": "button",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port"
       },
       {
         "kind": "attribute",
@@ -992,26 +947,8 @@
         "value": "input {port.label}"
       },
       {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port-dot"
-      },
-      {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port-label"
-      },
-      {
         "kind": "text",
         "value": "{port.label}"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-outputs"
       },
       {
         "kind": "attribute",
@@ -1024,12 +961,6 @@
         "element": "button",
         "name": "key",
         "value": "{port.id}"
-      },
-      {
-        "kind": "attribute",
-        "element": "button",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port"
       },
       {
         "kind": "attribute",
@@ -1050,26 +981,8 @@
         "value": "output {port.label}"
       },
       {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port-label"
-      },
-      {
         "kind": "text",
         "value": "{port.label}"
-      },
-      {
-        "kind": "attribute",
-        "element": "span",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-port-dot"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-card-details"
       },
       {
         "kind": "attribute",
@@ -1082,7 +995,7 @@
         "value": "Ready · {status}"
       }
     ],
-    "source": "<view class=\"{{css-prefix}}-node-card-root\" class.is-selected=\"{selected}\" class.is-disabled=\"{status === 'disabled'}\" style.--node-color=\"{color}\">\n\n    \n  <div class=\"{{css-prefix}}-node-card-header\">\n\n      \n    <span class=\"{{css-prefix}}-node-card-status\" data-status=\"{status}\"/>\n\n      \n    <span class=\"{{css-prefix}}-node-card-title\">{nodeLabel}</span>\n\n      \n    <button type=\"button\" class=\"{{css-prefix}}-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{expanded}\" click=\"toggle-expanded\">\n      <i aria-hidden=\"true\">⌄</i>\n    </button>\n\n    \n  </div>\n\n    \n  <div class=\"{{css-prefix}}-node-card-port-grid\">\n\n      \n    <div class=\"{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-inputs\">\n\n        \n      <button each=\"inputs as port\" key=\"{port.id}\" type=\"button\" class=\"{{css-prefix}}-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"input\" data-port-type=\"{port.type}\" aria-label=\"input {port.label}\" pointerdown=\"port-down port input\" pointerup=\"port-up port input\">\n        <span class=\"{{css-prefix}}-node-card-port-dot\"/>\n        <span class=\"{{css-prefix}}-node-card-port-label\">{port.label}</span>\n      </button>\n\n      \n    </div>\n\n      \n    <div class=\"{{css-prefix}}-node-card-ports {{css-prefix}}-node-card-outputs\">\n\n        \n      <button each=\"outputs as port\" key=\"{port.id}\" type=\"button\" class=\"{{css-prefix}}-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"output\" data-port-type=\"{port.type}\" aria-label=\"output {port.label}\" pointerdown=\"port-down port output\" pointerup=\"port-up port output\">\n        <span class=\"{{css-prefix}}-node-card-port-label\">{port.label}</span>\n        <span class=\"{{css-prefix}}-node-card-port-dot\"/>\n      </button>\n\n      \n    </div>\n\n    \n  </div>\n\n    \n  <div class=\"{{css-prefix}}-node-card-details\" hidden=\"{!expanded}\">Ready · {status}</div>\n\n  \n</view>"
+    "source": "<view class=\"go-node-card-root\" class.is-selected=\"{selected}\" class.is-disabled=\"{status === 'disabled'}\" style.--node-color=\"{color}\">\n\n    \n  <div class=\"go-node-card-header\">\n\n      \n    <span class=\"go-node-card-status\" data-status=\"{status}\"/>\n\n      \n    <span class=\"go-node-card-title\">{nodeLabel}</span>\n\n      \n    <button type=\"button\" class=\"go-node-card-expand\" aria-label=\"Toggle node details\" aria-expanded=\"{expanded}\" click=\"toggle-expanded\">\n      <i aria-hidden=\"true\">⌄</i>\n    </button>\n\n    \n  </div>\n\n    \n  <div class=\"go-node-card-port-grid\">\n\n      \n    <div class=\"go-node-card-ports go-node-card-inputs\">\n\n        \n      <button each=\"inputs as port\" key=\"{port.id}\" type=\"button\" class=\"go-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"input\" data-port-type=\"{port.type}\" aria-label=\"input {port.label}\" pointerdown=\"port-down port input\" pointerup=\"port-up port input\">\n        <span class=\"go-node-card-port-dot\"/>\n        <span class=\"go-node-card-port-label\">{port.label}</span>\n      </button>\n\n      \n    </div>\n\n      \n    <div class=\"go-node-card-ports go-node-card-outputs\">\n\n        \n      <button each=\"outputs as port\" key=\"{port.id}\" type=\"button\" class=\"go-node-card-port\" data-port-id=\"{port.id}\" data-port-side=\"output\" data-port-type=\"{port.type}\" aria-label=\"output {port.label}\" pointerdown=\"port-down port output\" pointerup=\"port-up port output\">\n        <span class=\"go-node-card-port-label\">{port.label}</span>\n        <span class=\"go-node-card-port-dot\"/>\n      </button>\n\n      \n    </div>\n\n    \n  </div>\n\n    \n  <div class=\"go-node-card-details\" hidden=\"{!expanded}\">Ready · {status}</div>\n\n  \n</view>"
   },
   "geometry": {
     "spaces": [],
@@ -1278,9 +1191,9 @@
         "name": "collapse-button-alignment",
         "attrs": {
           "name": "collapse-button-alignment",
-          "subject": ".{{css-prefix}}-node-card-expand",
+          "subject": ".go-node-card-expand",
           "relation": "center-y",
-          "target": ".{{css-prefix}}-node-card-title",
+          "target": ".go-node-card-title",
           "tolerance": "2",
           "severity": "error"
         },
@@ -1302,7 +1215,7 @@
         "<gizmo/> creates Web Components from declarative XML.",
         "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
         "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-        "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
+        "Runtime support libraries provide reusable, descriptor-configured mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
         "Agents must read features.json and process-library before changing components or compiler behavior."
       ],
       "canonicalRoot": [
@@ -1339,6 +1252,18 @@
           "tag",
           "css",
           "shadow"
+        ]
+      },
+      "projectFiles": {
+        "file": "gizmosis.xml",
+        "purpose": "lightweight XML project runner for multi-file Gizmosis builds",
+        "targetTasks": [
+          "giz",
+          "mkdir",
+          "delete",
+          "copy",
+          "render-prefix",
+          "property"
         ]
       },
       "sections": {

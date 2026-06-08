@@ -1,4 +1,4 @@
-<gizmo name="Node Card" tag="fox-ve-node-card" css="./node-graph.css">
+<gizmo name="Node Card" tag="go-node-card" css="./node-graph.css">
   <about>
     <summary>
       Compact visual node card Web Component with a caption, status marker, collapse button, input ports, and output ports.

@@ -6,7 +6,7 @@ Create one Web Component from one `<gizmo/>` XML source file.
 
 ## Inputs
 
-- Component tag name, such as `fox-ve-node-card`.
+- Component tag name, such as `go-node-card`.
 - Public attributes/properties.
 - Events emitted by the component.
 - DOM view structure.

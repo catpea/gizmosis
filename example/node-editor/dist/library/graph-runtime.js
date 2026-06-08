@@ -1,6 +1,29 @@
-export class FoxVeNodeGraph extends HTMLElement {
-  constructor() {
-    super();
+import {
+  DEFAULT_NODE_WIDTH,
+  DEFAULT_PORT_HEADER,
+  DEFAULT_PORT_STEP,
+  MAX_ZOOM,
+  MIN_ZOOM
+} from './constants.js';
+import {
+  centerY,
+  clone,
+  clamp,
+  cssEscape,
+  distance,
+  edgePath,
+  formatNumber,
+  parseEdgePath,
+  readPoint,
+  round,
+  roundPoint,
+  slugify
+} from './dom.js';
+
+export class NodeEditorGraphRuntime {
+  constructor(host, config = {}) {
+    this.host = host;
+    this.config = normalizeGraphConfig(config);
     this._nodes = [];
     this._edges = [];
     this._selected = [];
@@ -17,6 +40,24 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._lastProbeResults = [];
   }
 
+  get classList() { return this.host.classList; }
+  get className() { return this.host.className; }
+  set className(value) { this.host.className = value; }
+  get innerHTML() { return this.host.innerHTML; }
+  set innerHTML(value) { this.host.innerHTML = value; }
+  get dataset() { return this.host.dataset; }
+
+  querySelector(...args) { return this.host.querySelector(...args); }
+  querySelectorAll(...args) { return this.host.querySelectorAll(...args); }
+  append(...args) { return this.host.append(...args); }
+  closest(...args) { return this.host.closest(...args); }
+  hasAttribute(...args) { return this.host.hasAttribute(...args); }
+  getAttribute(...args) { return this.host.getAttribute(...args); }
+  setAttribute(...args) { return this.host.setAttribute(...args); }
+  removeAttribute(...args) { return this.host.removeAttribute(...args); }
+  toggleAttribute(...args) { return this.host.toggleAttribute(...args); }
+  dispatchEvent(...args) { return this.host.dispatchEvent(...args); }
+
   connectedCallback() {
     this._build();
     if (!this._installed) {
@@ -24,7 +65,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       this._installed = true;
     }
     this._resizeObserver = new ResizeObserver(() => this.scheduleEdges());
-    this._resizeObserver.observe(this);
+    this._resizeObserver.observe(this.host);
     this.render();
   }
 
@@ -68,15 +109,15 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _build() {
     if (this._viewport) return;
-    this.className = '{{css-prefix}}-node-graph-root';
-    this.innerHTML = {{node-graph-html}};
-    this._viewport = this.querySelector('.{{css-prefix}}-node-graph-viewport');
-    this._svg = this.querySelector('.{{css-prefix}}-node-graph-edges');
-    this._edgeLayer = this.querySelector('.{{css-prefix}}-node-graph-edge-layer');
-    this._ghost = this.querySelector('.{{css-prefix}}-node-graph-ghost-edge');
-    this._cableLayer = this.querySelector('.{{css-prefix}}-node-graph-cables');
-    this._nodeLayer = this.querySelector('.{{css-prefix}}-node-graph-nodes');
-    this._empty = this.querySelector('.{{css-prefix}}-node-graph-empty');
+    this.className = this.config.classes.root;
+    this.innerHTML = this.config.html;
+    this._viewport = this.querySelector(this.config.selectors.viewport);
+    this._svg = this.querySelector(this.config.selectors.svg);
+    this._edgeLayer = this.querySelector(this.config.selectors.edgeLayer);
+    this._ghost = this.querySelector(this.config.selectors.ghost);
+    this._cableLayer = this.querySelector(this.config.selectors.cableLayer);
+    this._nodeLayer = this.querySelector(this.config.selectors.nodeLayer);
+    this._empty = this.querySelector(this.config.selectors.empty);
     this._zoomReadout = this.querySelector('[data-readout="zoom"]');
     this._modeReadout = this.querySelector('[data-readout="mode"]');
   }
@@ -87,8 +128,8 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._viewport.addEventListener('dblclick', event => this._onDoubleClick(event));
     this._viewport.addEventListener('keydown', event => this._onKeyDown(event));
     this._nodeLayer.addEventListener('pointerdown', event => this._onNodePointerDown(event));
-    this._nodeLayer.addEventListener('fox-node-port-down', event => this._onPortDown(event));
-    this._nodeLayer.addEventListener('fox-node-port-up', event => this._onPortUp(event));
+    this._nodeLayer.addEventListener(this.config.events.portDown, event => this._onPortDown(event));
+    this._nodeLayer.addEventListener(this.config.events.portUp, event => this._onPortUp(event));
     this._edgeLayer.addEventListener('dblclick', event => this._onEdgeDoubleClick(event));
     window.addEventListener('pointermove', event => this._onPointerMove(event));
     window.addEventListener('pointerup', event => this._onPointerUp(event));
@@ -118,9 +159,9 @@ export class FoxVeNodeGraph extends HTMLElement {
     const selected = new Set(this._selected);
     for (const node of this._nodes) {
       active.add(String(node.id));
-      let card = this._nodeLayer.querySelector(`{{node-card-tag}}[data-id="${cssEscape(node.id)}"]`);
+      let card = this._nodeLayer.querySelector(`${this.config.tags.card}[data-id="${cssEscape(node.id)}"]`);
       if (!card) {
-        card = document.createElement('{{node-card-tag}}');
+        card = document.createElement(this.config.tags.card);
         card.dataset.id = node.id;
         this._nodeLayer.append(card);
       }
@@ -135,7 +176,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       card.inputs = node.inputs || [];
       card.outputs = node.outputs || [];
     }
-    this._nodeLayer.querySelectorAll('{{node-card-tag}}').forEach(card => {
+    this._nodeLayer.querySelectorAll(this.config.tags.card).forEach(card => {
       if (!active.has(card.dataset.id)) card.remove();
     });
     this.scheduleEdges();
@@ -143,7 +184,7 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _onViewportPointerDown(event) {
     this._viewport.focus({ preventScroll: true });
-    if (event.target.closest('{{node-card-tag}}')) return;
+    if (event.target.closest(this.config.tags.card)) return;
     if (this.readonly) return;
     if (event.button === 1 || (event.button === 0 && this._spaceDown)) {
       event.preventDefault();
@@ -162,8 +203,8 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _onNodePointerDown(event) {
     if (this.readonly || event.button !== 0) return;
-    if (event.target.closest('.{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]')) return;
-    const card = event.target.closest('{{node-card-tag}}');
+    if (event.target.closest(this.config.selectors.nodeDragIgnore)) return;
+    const card = event.target.closest(this.config.tags.card);
     if (!card) return;
     event.preventDefault();
     this._viewport.focus({ preventScroll: true });
@@ -201,7 +242,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       this._view.panY = this._pan.startPanY + event.clientY - this._pan.startY;
       this._reflectView();
       this.render();
-      this._emit('fox-pan-zoom', this._viewDetail());
+      this._emit(this.config.events.panZoom, this._viewDetail());
       return;
     }
 
@@ -216,7 +257,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       if (this._nodeDrag.moved) {
         const movedNodes = this._positionsOf(this._nodeDrag.ids);
         const primary = this._positionOf(this._nodeDrag.id) || movedNodes[0];
-        if (primary) this._emit('fox-node-move', { id: primary.id, x: primary.x, y: primary.y, nodes: movedNodes });
+        if (primary) this._emit(this.config.events.nodeMove, { id: primary.id, x: primary.x, y: primary.y, nodes: movedNodes });
       }
       this._nodeDrag = null;
       this.render();
@@ -239,7 +280,7 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _onPortDown(event) {
     if (this.readonly) return;
-    const card = event.target.closest('{{node-card-tag}}');
+    const card = event.target.closest(this.config.tags.card);
     const start = { ...event.detail.port, nodeId: card?.dataset.id || '' };
     this._connection = {
       from: start,
@@ -252,7 +293,7 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _onPortUp(event) {
     if (!this._connection || this.readonly) return;
-    const card = event.target.closest('{{node-card-tag}}');
+    const card = event.target.closest(this.config.tags.card);
     const target = { ...event.detail.port, nodeId: card?.dataset.id || '' };
     const start = this._connection.from;
     if (this._validConnection(start, target)) {
@@ -262,7 +303,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       const to = start.side === 'output'
         ? { nodeId: target.nodeId, portId: target.id }
         : { nodeId: start.nodeId, portId: start.id };
-      this._emit('fox-edge-connect', { from, to });
+      this._emit(this.config.events.edgeConnect, { from, to });
       this._addEdge(from, to);
     }
     this._endConnection();
@@ -281,13 +322,13 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _onDoubleClick(event) {
     if (this.readonly) return;
-    if (event.target.closest('{{node-card-tag}}') || event.target.closest('[data-edge-id]')) return;
+    if (event.target.closest(this.config.tags.card) || event.target.closest('[data-edge-id]')) return;
     event.preventDefault();
     const point = this.clientToWorld(event.clientX, event.clientY);
     const node = this._makeNode(point);
     this._nodes = [...this._nodes, node];
     this._setSelected([node.id]);
-    this._emit('fox-node-add', { id: node.id, type: node.type, x: node.x, y: node.y });
+    this._emit(this.config.events.nodeAdd, { id: node.id, type: node.type, x: node.x, y: node.y });
     this.render();
   }
 
@@ -299,7 +340,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     event.stopPropagation();
     const id = hit.dataset.edgeId;
     this._edges = this._edges.filter(edge => edge.id !== id);
-    this._emit('fox-edge-disconnect', { id });
+    this._emit(this.config.events.edgeDisconnect, { id });
     this.render();
   }
 
@@ -313,7 +354,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._view.panY = viewport.y - before.y * zoom;
     this._reflectView();
     this.render();
-    this._emit('fox-pan-zoom', this._viewDetail());
+    this._emit(this.config.events.panZoom, this._viewDetail());
   }
 
   _onKeyDown(event) {
@@ -334,7 +375,7 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _setSelected(ids, emit = true) {
     this._selected = Array.isArray(ids) ? ids.map(String).filter(id => this._nodes.some(n => String(n.id) === id)) : [];
-    if (emit) this._emit('fox-node-select', { ids: this.selected });
+    if (emit) this._emit(this.config.events.nodeSelect, { ids: this.selected });
     this.render();
   }
 
@@ -351,7 +392,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._applyNodePositions(updates);
     const movedNodes = this._positionsOf(this._selected);
     const primary = movedNodes[0];
-    if (primary) this._emit('fox-node-move', { id: primary.id, x: primary.x, y: primary.y, nodes: movedNodes });
+    if (primary) this._emit(this.config.events.nodeMove, { id: primary.id, x: primary.x, y: primary.y, nodes: movedNodes });
   }
 
   _positionsOf(ids) {
@@ -377,7 +418,7 @@ export class FoxVeNodeGraph extends HTMLElement {
       return next ? { ...node, x: next.x, y: next.y } : node;
     });
     for (const update of updates) {
-      const card = this._nodeLayer.querySelector(`{{node-card-tag}}[data-id="${cssEscape(update.id)}"]`);
+      const card = this._nodeLayer.querySelector(`${this.config.tags.card}[data-id="${cssEscape(update.id)}"]`);
       if (card) {
         card.style.left = `${round(update.x)}px`;
         card.style.top = `${round(update.y)}px`;
@@ -448,8 +489,8 @@ export class FoxVeNodeGraph extends HTMLElement {
 
   _portDotWorld(nodeId, portId, side) {
     if (!this._nodeLayer || !this._viewport) return null;
-    const port = this._nodeLayer.querySelector(`{{node-card-tag}}[data-id="${cssEscape(nodeId)}"] [data-port-side="${cssEscape(side)}"][data-port-id="${cssEscape(portId)}"]`);
-    const dot = port?.querySelector('.{{css-prefix}}-node-card-port-dot');
+    const port = this._nodeLayer.querySelector(`${this.config.tags.card}[data-id="${cssEscape(nodeId)}"] [data-port-side="${cssEscape(side)}"][data-port-id="${cssEscape(portId)}"]`);
+    const dot = port?.querySelector(this.config.selectors.cardPortDot);
     if (!dot) return null;
     const dotRect = dot.getBoundingClientRect();
     const vp = this._viewport.getBoundingClientRect();
@@ -498,28 +539,41 @@ export class FoxVeNodeGraph extends HTMLElement {
     const width = this._viewport.clientWidth || rect.width || 800;
     const height = this._viewport.clientHeight || rect.height || 420;
     this._svg.setAttribute('viewBox', `0 0 ${Math.max(1, width)} ${Math.max(1, height)}`);
-    this._edgeLayer.innerHTML = '';
+    const cableLayer = this._ensureCableLayer();
+    const active = new Set();
     for (const edge of this._edges) {
+      const id = String(edge.id || '');
+      active.add(id);
+      let cable = cableLayer.querySelector(`${this.config.tags.cable}[data-edge-id="${cssEscape(id)}"]`);
+      if (!cable) {
+        cable = document.createElement(this.config.tags.cable);
+        cable.dataset.edgeId = id;
+        cable.setAttribute('edge-id', id);
+        cable.setAttribute('svg-selector', this.config.selectors.edgeLayer);
+        cableLayer.append(cable);
+      }
       const from = this._portWorld(edge.from?.nodeId, edge.from?.portId, 'output');
       const to = this._portWorld(edge.to?.nodeId, edge.to?.portId, 'input');
-      const group = document.createElementNS(SVG_NS, 'g');
-      group.setAttribute('class', '{{css-prefix}}-node-graph-edge-group');
-      group.dataset.edgeId = edge.id;
-      const hit = document.createElementNS(SVG_NS, 'path');
-      hit.setAttribute('class', '{{css-prefix}}-node-graph-edge-hit');
-      hit.dataset.edgeId = edge.id;
-      const line = document.createElementNS(SVG_NS, 'path');
-      line.setAttribute('class', '{{css-prefix}}-node-graph-edge');
-      line.dataset.edgeId = edge.id;
-      if (from && to) {
-        const drawFrom = this._probeBugMode ? { ...from, y: from.y + 8 } : from;
-        const d = edgePath(drawFrom, to);
-        hit.setAttribute('d', d);
-        line.setAttribute('d', d);
-      }
-      group.append(hit, line);
-      this._edgeLayer.append(group);
+      cable.from = this._probeBugMode && from ? { ...from, y: from.y + 8 } : from;
+      cable.to = to;
+      cable.toggleAttribute('missing', !(from && to));
+      cable.render?.();
     }
+    cableLayer.querySelectorAll(this.config.tags.cable).forEach(cable => {
+      if (!active.has(cable.dataset.edgeId || '')) cable.remove();
+    });
+  }
+
+  _ensureCableLayer() {
+    if (this._cableLayer) return this._cableLayer;
+    this._cableLayer = this.querySelector(this.config.selectors.cableLayer);
+    if (this._cableLayer) return this._cableLayer;
+    const layer = document.createElement('div');
+    layer.className = this.config.classes.cables;
+    layer.hidden = true;
+    this.append(layer);
+    this._cableLayer = layer;
+    return layer;
   }
 
   _drawGhost() {
@@ -577,7 +631,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._view.panY = (rect.height - bounds.height * zoom) / 2 - bounds.minY * zoom;
     this._reflectView();
     this.render();
-    this._emit('fox-pan-zoom', this._viewDetail());
+    this._emit(this.config.events.panZoom, this._viewDetail());
   }
 
   _graphBounds() {
@@ -629,7 +683,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     this._probeEdgesMeetPortDots(pass, fail);
 
     this._lastProbeResults = results;
-    this.dispatchEvent(new CustomEvent('gizmo-probe-results', {
+    this.dispatchEvent(new CustomEvent(this.config.events.probeResults, {
       bubbles: true,
       detail: { reason, results, failed: results.filter(item => !item.pass).length }
     }));
@@ -640,9 +694,9 @@ export class FoxVeNodeGraph extends HTMLElement {
     const tolerance = 2;
     let checked = 0;
     let failed = false;
-    for (const card of this._nodeLayer.querySelectorAll('{{node-card-tag}}')) {
-      const title = card.querySelector('.{{css-prefix}}-node-card-title');
-      const button = card.querySelector('.{{css-prefix}}-node-card-expand');
+    for (const card of this._nodeLayer.querySelectorAll(this.config.tags.card)) {
+      const title = card.querySelector(this.config.selectors.cardTitle);
+      const button = card.querySelector(this.config.selectors.cardExpand);
       if (!title || !button) continue;
       checked++;
       const titleY = centerY(title);
@@ -687,7 +741,7 @@ export class FoxVeNodeGraph extends HTMLElement {
     let checked = 0;
     let failed = false;
     for (const edge of this._edges) {
-      const path = this._edgeLayer.querySelector(`.{{css-prefix}}-node-graph-edge[data-edge-id="${cssEscape(edge.id)}"]`);
+      const path = this._edgeLayer.querySelector(`${this.config.selectors.edge}[data-edge-id="${cssEscape(edge.id)}"]`);
       if (!path) continue;
       const parsed = parseEdgePath(path.getAttribute('d'));
       if (!parsed) continue;
@@ -778,3 +832,45 @@ export class FoxVeNodeGraph extends HTMLElement {
   }
 }
 
+export function createNodeEditorGraphRuntime(host, config) {
+  return new NodeEditorGraphRuntime(host, config);
+}
+
+function normalizeGraphConfig(config = {}) {
+  return {
+    html: config.html || '',
+    tags: {
+      card: config.tags?.card || 'go-node-card',
+      cable: config.tags?.cable || 'go-node-cable'
+    },
+    classes: {
+      root: config.classes?.root || 'go-node-graph-root',
+      cables: config.classes?.cables || 'go-node-graph-cables'
+    },
+    selectors: {
+      viewport: config.selectors?.viewport || '.go-node-graph-viewport',
+      svg: config.selectors?.svg || '.go-node-graph-edges',
+      edgeLayer: config.selectors?.edgeLayer || '.go-node-graph-edge-layer',
+      ghost: config.selectors?.ghost || '.go-node-graph-ghost-edge',
+      cableLayer: config.selectors?.cableLayer || '.go-node-graph-cables',
+      nodeLayer: config.selectors?.nodeLayer || '.go-node-graph-nodes',
+      empty: config.selectors?.empty || '.go-node-graph-empty',
+      cardPortDot: config.selectors?.cardPortDot || '.go-node-card-port-dot',
+      cardTitle: config.selectors?.cardTitle || '.go-node-card-title',
+      cardExpand: config.selectors?.cardExpand || '.go-node-card-expand',
+      edge: config.selectors?.edge || '.go-node-graph-edge',
+      nodeDragIgnore: config.selectors?.nodeDragIgnore || '.go-node-card-port, button, input, textarea, select, [contenteditable]'
+    },
+    events: {
+      portDown: config.events?.portDown || 'gizmo-node-port-down',
+      portUp: config.events?.portUp || 'gizmo-node-port-up',
+      nodeSelect: config.events?.nodeSelect || 'gizmo-node-select',
+      nodeMove: config.events?.nodeMove || 'gizmo-node-move',
+      edgeConnect: config.events?.edgeConnect || 'gizmo-edge-connect',
+      edgeDisconnect: config.events?.edgeDisconnect || 'gizmo-edge-disconnect',
+      nodeAdd: config.events?.nodeAdd || 'gizmo-node-add',
+      panZoom: config.events?.panZoom || 'gizmo-pan-zoom',
+      probeResults: config.events?.probeResults || 'gizmo-probe-results'
+    }
+  };
+}

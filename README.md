@@ -10,9 +10,9 @@ This project deliberately begins with a Visual Programming Language node editor 
 
 The node editor example is split into real Web Components:
 
-- `example/node-editor/src/node-card.xml` → `fox-ve-node-card`
-- `example/node-editor/src/node-cable.xml` → `fox-ve-node-cable`
-- `example/node-editor/src/node-graph.xml` → `fox-ve-node-graph`
+- `example/node-editor/src/node-card.xml` → `go-node-card`
+- `example/node-editor/src/node-cable.xml` → `go-node-cable`
+- `example/node-editor/src/node-graph.xml` → `go-node-graph`
 
 `example/node-editor/index.html` and `example/node-editor/styles.css` are only the demo harness. Web Components are not web applications.
 
@@ -73,7 +73,7 @@ src/                         reusable Gizmosis package code
 example/node-editor/         complete example application
   index.html                 example page
   src/app/                   demo harness source
-  src/library/               selector-free node-editor support library
+  src/library/               selector-configured node-editor support library
   src/node-graph.xml          canonical single XML source of truth
   dist/                      standalone ESM distribution: generated files, copied library, copied app, CSS, XML copy
 
@@ -104,7 +104,20 @@ http://localhost:8080/example/node-editor/
 npm run compile
 ```
 
-This reads:
+The example build is declared in:
+
+```text
+example/node-editor/gizmosis.xml
+```
+
+From the example directory, the default project target can also be run with no arguments:
+
+```bash
+cd example/node-editor
+giz
+```
+
+The project file reads:
 
 ```text
 example/node-editor/src/node-graph.xml
@@ -121,12 +134,22 @@ example/node-editor/dist/node-graph.generated.d.ts
 Direct CLI usage:
 
 ```bash
+giz project --file example/node-editor/gizmosis.xml
+giz hello.gizmo.xml -o hello.wc.js
+giz --prefix gizmo hello.gizmo.xml -o hello.wc.js
+giz --warn all extra error hello.gizmo.xml -o hello.wc.js
+```
+
+Equivalent direct Node usage:
+
+```bash
 node src/compiler/cli.js compile example/node-editor/src/node-graph.xml \
   --out example/node-editor/dist/node-graph.generated.js \
   --manifest example/node-editor/dist/node-graph.manifest.json \
   --dts example/node-editor/dist/node-graph.generated.d.ts \
   --package-generator gizmo/node-editor=./example/node-editor/src/library/compiler/index.js \
-  --package-import gizmo/node-editor=gizmo/node-editor
+  --package-import gizmo/node-editor=gizmo/node-editor \
+  --prefix go
 ```
 
 ## Check and Test
@@ -136,11 +159,11 @@ npm run check
 npm test
 ```
 
-`npm run check` syntax-checks the package, the example, generated files, and canonical XML. `npm test` recompiles the node graph, validates the manifest, and verifies the `gizmo/node-editor` boundary.
+`npm run check` syntax-checks the package, the example, generated files, and canonical XML. `npm test` recompiles the node graph, validates the manifest, verifies the `gizmo/node-editor` boundary, and scans project `src/` JavaScript for XML-bypassing Web Component implementations.
 
 ## Compiler Status
 
-The compiler parses XML, builds IR, validates it, lowers `<view/>` markup through generic compiler infrastructure, and emits JS, manifest JSON, and `.d.ts`. Package-specific behavior lowering and package interaction validation are supplied through explicit package generators, such as `gizmo/node-editor=./example/node-editor/src/library/compiler/index.js`. For `<use library="gizmo/node-editor"/>`, generated output imports the `gizmo/node-editor` runtime support package for generic geometry, stylesheet, and browser-resource helpers. The generated file owns the concrete graph Web Component, element names, refs, selectors, and interaction wiring. The example page maps `gizmo/node-editor` to `./dist/library/index.js`, so the browser distribution is self-contained.
+The compiler parses XML, builds IR, validates it, lowers `<view/>` markup through generic compiler infrastructure, and emits JS, manifest JSON, and `.d.ts`. Standalone components mount lowered view HTML once and patch cached DOM binding targets for text, attributes, boolean attributes, and repeat anchors. Package-specific shell generation and package interaction validation are supplied through explicit package generators, such as `gizmo/node-editor=./example/node-editor/src/library/compiler/index.js`. For `<use library="gizmo/node-editor"/>`, generated output imports the `gizmo/node-editor` runtime support package for generic geometry, stylesheet, and descriptor-driven VPL mechanics. The generated file owns the concrete graph Web Component, element names, refs, selectors, events, and runtime config. The example page maps `gizmo/node-editor` to `./dist/library/index.js`, so the browser distribution is self-contained.
 
 ## v0.5 Highlight: Development Probes
 
@@ -166,8 +189,8 @@ import { createFrameScheduler } from 'gizmosis/runtime';
 
 In Gizmosis, “lowering” means turning a high-level XML construct into executable JavaScript.
 
-- View lowering turns `<view>`, `{bindings}`, `each`, `key`, `class.*`, `style.*`, `svg.*`, `bind.*`, and `on.*` into generated static markup, repeat fragments, and binding metadata. Live DOM update plans are the next expansion of this lowerer.
+- View lowering turns `<view>`, `{bindings}`, `each`, `key`, `class.*`, `style.*`, `svg.*`, `bind.*`, and `on.*` into generated static markup, repeat fragments, and binding metadata. Standalone output now mounts the lowered view once and patches cached targets; keyed repeat diffing, event listener plans, and reusable DOM patch helpers are the next expansion of this lowerer.
 - Interaction lowering turns `<drag>`, `<pan>`, `<zoom>`, `<resize>`, and package tags such as `<connect/>` into generated listener wiring plus calls to generic support helpers.
-- Runtime support libraries must not contain component-specific graph wiring. Package compiler generators may live beside an example package under `src/library/compiler/`; they are build-time source for that package, not browser runtime escape hatches.
+- Runtime support libraries must not contain concrete component definitions or hardcoded project selectors. Package compiler generators may live beside an example package under `src/library/compiler/`; they are build-time source for thin generated shells and package validation, not browser runtime escape hatches.
 
 This keeps the XML as the source of truth and prevents `src/library/` from becoming an escape hatch.

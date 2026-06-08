@@ -1,4 +1,4 @@
-<gizmo name="Node Cable" tag="fox-ve-node-cable" css="./node-graph.css">
+<gizmo name="Node Cable" tag="go-node-cable" css="./node-graph.css">
   <about>
     <summary>
       Cable Web Component for node editors. It receives graph-space endpoints and a selector for a shared SVG edge layer, then draws its own SVG group into that layer.

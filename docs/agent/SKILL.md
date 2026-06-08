@@ -22,9 +22,9 @@ Use this skill when creating, converting, compiling, or reviewing `<gizmo/>` Web
 
 The node editor example is intentionally split into Web Components:
 
-- `example/node-editor/src/node-card.xml` → `fox-ve-node-card`
-- `example/node-editor/src/node-cable.xml` → `fox-ve-node-cable`
-- `example/node-editor/src/node-graph.xml` → `fox-ve-node-graph`
+- `example/node-editor/src/node-card.xml` → `go-node-card`
+- `example/node-editor/src/node-cable.xml` → `go-node-cable`
+- `example/node-editor/src/node-graph.xml` → `go-node-graph`
 
 Do not collapse these back into one imperative graph class.
 

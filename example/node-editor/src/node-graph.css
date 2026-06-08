@@ -191,7 +191,7 @@
       display: grid;
     }
 
-    fox-ve-node-graph {
+    {{prefix}}-node-graph {
       display: block;
       width: 100%;
       height: 100%;
@@ -199,8 +199,8 @@
       --node-color: #0d6efd;
     }
 
-    .fox-ve-node-graph-root,
-    .fox-ve-node-graph-viewport {
+    .{{css-prefix}}-node-graph-root,
+    .{{css-prefix}}-node-graph-viewport {
       position: relative;
       width: 100%;
       height: 100%;
@@ -208,7 +208,7 @@
       outline: none;
     }
 
-    .fox-ve-node-graph-viewport {
+    .{{css-prefix}}-node-graph-viewport {
       background-color: #0a0e18;
       background-image:
         linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
@@ -228,12 +228,12 @@
       cursor: crosshair;
     }
 
-    .fox-ve-node-graph-viewport:focus {
+    .{{css-prefix}}-node-graph-viewport:focus {
       box-shadow: 0 0 0 3px rgba(73,250,254,.08) inset;
     }
 
-    .fox-ve-node-graph-edges,
-    .fox-ve-node-graph-nodes {
+    .{{css-prefix}}-node-graph-edges,
+    .{{css-prefix}}-node-graph-nodes {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -241,15 +241,15 @@
       transform-origin: 0 0;
     }
 
-    .fox-ve-node-graph-edges { pointer-events: none; overflow: visible; }
-    .fox-ve-node-graph-edge-group { pointer-events: auto; }
-    .fox-ve-node-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer; }
-    .fox-ve-node-graph-edge { fill: none; stroke: rgba(73,250,254,.78); stroke-width: 3; filter: drop-shadow(0 0 7px rgba(73,250,254,.32)); pointer-events: none; }
-    .fox-ve-node-graph-edge-group:hover .fox-ve-node-graph-edge { stroke-width: 4; stroke: #fff; }
-    .fox-ve-node-graph-ghost-edge { fill: none; stroke: rgba(255,200,87,.92); stroke-width: 3; stroke-dasharray: 8 8; filter: drop-shadow(0 0 8px rgba(255,200,87,.35)); pointer-events: none; }
-    .fox-ve-node-graph-nodes { pointer-events: none; }
+    .{{css-prefix}}-node-graph-edges { pointer-events: none; overflow: visible; }
+    .{{css-prefix}}-node-graph-edge-group { pointer-events: auto; }
+    .{{css-prefix}}-node-graph-edge-hit { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer; }
+    .{{css-prefix}}-node-graph-edge { fill: none; stroke: rgba(73,250,254,.78); stroke-width: 3; filter: drop-shadow(0 0 7px rgba(73,250,254,.32)); pointer-events: none; }
+    .{{css-prefix}}-node-graph-edge-group:hover .{{css-prefix}}-node-graph-edge { stroke-width: 4; stroke: #fff; }
+    .{{css-prefix}}-node-graph-ghost-edge { fill: none; stroke: rgba(255,200,87,.92); stroke-width: 3; stroke-dasharray: 8 8; filter: drop-shadow(0 0 8px rgba(255,200,87,.35)); pointer-events: none; }
+    .{{css-prefix}}-node-graph-nodes { pointer-events: none; }
 
-    .fox-ve-node-graph-empty {
+    .{{css-prefix}}-node-graph-empty {
       position: absolute;
       left: 18px;
       bottom: 18px;
@@ -263,11 +263,11 @@
       pointer-events: none;
     }
 
-    .fox-ve-node-graph-root.is-panning .fox-ve-node-graph-viewport { cursor: grabbing; }
-    .fox-ve-node-graph-root.is-connection-mode .fox-ve-node-graph-viewport { cursor: crosshair; }
-    .fox-ve-node-graph-root.is-readonly .fox-ve-node-graph-viewport { cursor: not-allowed; }
+    .{{css-prefix}}-node-graph-root.is-panning .{{css-prefix}}-node-graph-viewport { cursor: grabbing; }
+    .{{css-prefix}}-node-graph-root.is-connection-mode .{{css-prefix}}-node-graph-viewport { cursor: crosshair; }
+    .{{css-prefix}}-node-graph-root.is-readonly .{{css-prefix}}-node-graph-viewport { cursor: not-allowed; }
 
-    fox-ve-node-card {
+    {{prefix}}-node-card {
       position: absolute;
       width: 208px;
       display: block;
@@ -284,17 +284,17 @@
       transform: translateZ(0);
     }
 
-    fox-ve-node-card[selected] {
+    {{prefix}}-node-card[selected] {
       border-color: rgba(73,250,254,.8);
       box-shadow: 0 0 0 2px rgba(73,250,254,.16), 0 20px 38px rgba(0,0,0,.42), 0 0 32px rgba(73,250,254,.08);
     }
 
-    fox-ve-node-card[status="warning"] { --node-status: var(--warn); }
-    fox-ve-node-card[status="error"] { --node-status: var(--error); }
-    fox-ve-node-card[status="disabled"] { opacity: .58; filter: saturate(.4); }
-    fox-ve-node-card:not([status]), fox-ve-node-card[status="ok"] { --node-status: var(--ok); }
+    {{prefix}}-node-card[status="warning"] { --node-status: var(--warn); }
+    {{prefix}}-node-card[status="error"] { --node-status: var(--error); }
+    {{prefix}}-node-card[status="disabled"] { opacity: .58; filter: saturate(.4); }
+    {{prefix}}-node-card:not([status]), {{prefix}}-node-card[status="ok"] { --node-status: var(--ok); }
 
-    .fox-ve-node-card-header {
+    .{{css-prefix}}-node-card-header {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: center;
@@ -305,7 +305,7 @@
       cursor: grab;
     }
 
-    .fox-ve-node-card-status {
+    .{{css-prefix}}-node-card-status {
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -313,7 +313,7 @@
       box-shadow: 0 0 12px color-mix(in srgb, var(--node-status, var(--ok)) 70%, transparent);
     }
 
-    .fox-ve-node-card-title {
+    .{{css-prefix}}-node-card-title {
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -322,7 +322,7 @@
       letter-spacing: .01em;
     }
 
-    .fox-ve-node-card-expand {
+    .{{css-prefix}}-node-card-expand {
       width: 26px;
       height: 26px;
       display: grid;
@@ -334,27 +334,27 @@
       cursor: pointer;
     }
 
-    .fox-ve-node-card-expand i {
+    .{{css-prefix}}-node-card-expand i {
       display: inline-block;
       transition: transform .16s ease;
       font-style: normal;
     }
 
-    fox-ve-node-card[expanded] .fox-ve-node-card-expand i { transform: rotate(180deg); }
+    {{prefix}}-node-card[expanded] .{{css-prefix}}-node-card-expand i { transform: rotate(180deg); }
 
-    .fox-ve-node-card-port-grid {
+    .{{css-prefix}}-node-card-port-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       padding: 9px 8px;
     }
 
-    .fox-ve-node-card-ports {
+    .{{css-prefix}}-node-card-ports {
       display: grid;
       gap: 4px;
     }
 
-    .fox-ve-node-card-port {
+    .{{css-prefix}}-node-card-port {
       min-width: 0;
       height: 23px;
       display: flex;
@@ -369,14 +369,14 @@
       font-size: 12px;
     }
 
-    .fox-ve-node-card-port:hover {
+    .{{css-prefix}}-node-card-port:hover {
       background: rgba(255,255,255,.06);
       color: #fff;
     }
 
-    .fox-ve-node-card-outputs .fox-ve-node-card-port { justify-content: flex-end; text-align: right; }
-    .fox-ve-node-card-port-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .fox-ve-node-card-port-dot {
+    .{{css-prefix}}-node-card-outputs .{{css-prefix}}-node-card-port { justify-content: flex-end; text-align: right; }
+    .{{css-prefix}}-node-card-port-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .{{css-prefix}}-node-card-port-dot {
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -386,7 +386,7 @@
       box-shadow: 0 0 12px color-mix(in srgb, var(--node-color, #0d6efd) 70%, transparent);
     }
 
-    .fox-ve-node-card-details {
+    .{{css-prefix}}-node-card-details {
       padding: 8px 10px 10px;
       border-top: 1px solid rgba(255,255,255,.08);
       color: var(--muted);
@@ -474,13 +474,13 @@
     .test-list li.fail, .probe-list li.fail { border-color: rgba(255,93,115,.38); background: rgba(255,93,115,.08); }
     .probe-list li.warn { border-color: rgba(255,200,87,.4); background: rgba(255,200,87,.08); }
     .probe-detail { display: block; margin-top: 4px; color: rgba(233,238,248,.68); font-size: .78rem; white-space: pre-wrap; }
-    fox-ve-node-graph[data-probe-bugs] .fox-ve-node-card-expand { transform: translateY(7px); }
+    {{prefix}}-node-graph[data-probe-bugs] .{{css-prefix}}-node-card-expand { transform: translateY(7px); }
 
     @media (max-width: 980px) {
       .main { grid-template-columns: 1fr; }
       .bottombar { grid-template-columns: 1fr; }
       .log-panel, .test-panel { border-right: 0; border-bottom: 1px solid var(--line); }
-      fox-ve-node-graph { min-height: 520px; }
+      {{prefix}}-node-graph { min-height: 520px; }
       .topbar { grid-template-columns: 1fr; }
       .toolbar { justify-content: flex-start; }
     }

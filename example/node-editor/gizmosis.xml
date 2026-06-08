@@ -1,0 +1,55 @@
+<project name="NodeEditor" basedir="." default="main">
+  <property name="repo.dir" value="../.."/>
+  <property name="src.dir" value="src"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="prefix" value="go"/>
+  <property name="node.editor.library" value="gizmo/node-editor"/>
+  <property name="node.editor.generator" value="./src/library/compiler/index.js"/>
+
+  <target name="clean">
+    <delete path="{{dist.dir}}"/>
+  </target>
+
+  <target name="prepare" depends="clean">
+    <mkdir dir="{{dist.dir}}"/>
+    <copy src="{{repo.dir}}/src/core" dest="{{dist.dir}}/core"/>
+    <copy src="{{src.dir}}/library" dest="{{dist.dir}}/library" exclude="compiler"/>
+    <copy src="{{src.dir}}/app" dest="{{dist.dir}}/app"/>
+    <render-prefix src="{{src.dir}}/node-graph.css" out="{{dist.dir}}/node-graph.css"/>
+  </target>
+
+  <target name="run" depends="prepare">
+    <copy src="{{src.dir}}/node-card.xml" dest="{{dist.dir}}/node-card.xml"/>
+    <copy src="{{src.dir}}/node-cable.xml" dest="{{dist.dir}}/node-cable.xml"/>
+    <copy src="{{src.dir}}/node-graph.xml" dest="{{dist.dir}}/node-graph.xml"/>
+
+    <giz src="{{src.dir}}/node-card.xml"
+         out="{{dist.dir}}/node-card.generated.js"
+         manifest="{{dist.dir}}/node-card.manifest.json"
+         dts="{{dist.dir}}/node-card.generated.d.ts"
+         prefix="{{prefix}}"
+         package-generator="{{node.editor.library}}={{node.editor.generator}}"
+         package-import="{{node.editor.library}}={{node.editor.library}}"
+         source-label="example/node-editor/src/node-card.xml"/>
+
+    <giz src="{{src.dir}}/node-cable.xml"
+         out="{{dist.dir}}/node-cable.generated.js"
+         manifest="{{dist.dir}}/node-cable.manifest.json"
+         dts="{{dist.dir}}/node-cable.generated.d.ts"
+         prefix="{{prefix}}"
+         package-generator="{{node.editor.library}}={{node.editor.generator}}"
+         package-import="{{node.editor.library}}={{node.editor.library}}"
+         source-label="example/node-editor/src/node-cable.xml"/>
+
+    <giz src="{{src.dir}}/node-graph.xml"
+         out="{{dist.dir}}/node-graph.generated.js"
+         manifest="{{dist.dir}}/node-graph.manifest.json"
+         dts="{{dist.dir}}/node-graph.generated.d.ts"
+         prefix="{{prefix}}"
+         package-generator="{{node.editor.library}}={{node.editor.generator}}"
+         package-import="{{node.editor.library}}={{node.editor.library}}"
+         source-label="example/node-editor/src/node-graph.xml"/>
+  </target>
+
+  <target name="main" depends="run"/>
+</project>

@@ -42,8 +42,8 @@ If behavior requires three or more browser events, repeated cleanup, coordinate 
 ```xml
 <drag name="node-drag"
       from="nodeLayer"
-      handle="fox-ve-node-card"
-      ignore=".fox-ve-node-card-port, button, input, textarea, select, [contenteditable]"
+      handle="go-node-card"
+      ignore=".go-node-card-port, button, input, textarea, select, [contenteditable]"
       button="primary"
       capture="true"
       threshold="1"

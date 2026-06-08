@@ -1,4 +1,4 @@
-<gizmo name="Node Graph" tag="fox-ve-node-graph" css="./node-graph.css">
+<gizmo name="Node Graph" tag="go-node-graph" css="./node-graph.css">
   <about>
     <summary>
       SVG-backed pan/zoom node editor for effects graphs. Nodes are stored in graph/world coordinates.
@@ -11,7 +11,7 @@
     <term name="world">Persistent graph coordinate space. Node x/y values are stored here.</term>
     <term name="viewport">Visible component coordinate space after pan and zoom.</term>
     <term name="client">Browser PointerEvent client coordinate space.</term>
-    <term name="node card">Generated fox-ve-node-card Web Component representing one NodeGraphNode.</term>
+    <term name="node card">Generated go-node-card Web Component representing one NodeGraphNode.</term>
     <term name="port dot">The visible circular input/output connector inside a node card port row.</term>
     <term name="ghost edge">Temporary SVG path shown during port connection. It is visual feedback only.</term>
   </terms>
@@ -94,8 +94,8 @@
   </model>
   <requires>
     <style src="./node-graph.css"/>
-    <component tag="fox-ve-node-card" src="./node-card.generated.js"/>
-    <component tag="fox-ve-node-cable" src="./node-cable.generated.js"/>
+    <component tag="go-node-card" src="./node-card.generated.js"/>
+    <component tag="go-node-cable" src="./node-cable.generated.js"/>
     <capability name="resize.observe" as="resizeObserver"/>
     <capability name="animation.frame" as="frame"/>
     <capability name="dom.pointer.capture" as="pointerCapture" optional="true"/>
@@ -178,7 +178,7 @@
       </svg>
 
       <div ref="cableLayer" class="{{css-prefix}}-node-graph-cables" hidden="true">
-        <fox-ve-node-cable each="edges as edge"
+        <go-node-cable each="edges as edge"
                             key="{edge.id}"
                             edge-id="{edge.id}"
                             svg-selector=".{{css-prefix}}-node-graph-edge-layer"
@@ -187,7 +187,7 @@
       </div>
 
       <div ref="nodeLayer" class="{{css-prefix}}-node-graph-nodes" style.transform="translate({view.panX}px, {view.panY}px) scale({view.zoom})" on.fox-node-port-down="port-connect" on.fox-node-port-up="port-connect">
-        <fox-ve-node-card each="nodes as node" key="{node.id}" data-id="{node.id}" data-type="{node.type}" node-label="{node.label}" color="{node.color}" status="{node.status}" selected="{selected includes node.id}" expanded="{node.expanded}" style.left="{node.x}px" style.top="{node.y}px" bind.inputs="{node.inputs}" bind.outputs="{node.outputs}"/>
+        <go-node-card each="nodes as node" key="{node.id}" data-id="{node.id}" data-type="{node.type}" node-label="{node.label}" color="{node.color}" status="{node.status}" selected="{selected includes node.id}" expanded="{node.expanded}" style.left="{node.x}px" style.top="{node.y}px" bind.inputs="{node.inputs}" bind.outputs="{node.outputs}"/>
       </div>
 
       <div class="{{css-prefix}}-node-graph-empty" hidden="{nodes.length !== 0}">Double-click empty space to add a node.</div>
@@ -281,7 +281,7 @@
         <note priority="critical">Do not mutate edges during node dragging.</note>
         <note priority="high">Keep direct card positioning during drag for responsiveness.</note>
       </agent-notes>
-      <drag name="node-drag" from="nodeLayer" handle="fox-ve-node-card" ignore=".{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]" button="primary" capture="true" threshold="1" space="world" when="!readonly">
+      <drag name="node-drag" from="nodeLayer" handle="go-node-card" ignore=".{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]" button="primary" capture="true" threshold="1" space="world" when="!readonly">
         <start action="node-drag-start"/>
         <move action="node-drag-move"/>
         <end action="node-drag-end"/>
@@ -341,7 +341,7 @@
         Collapse button must be vertically centered with the node title.
       </layout-probe>
 
-      <probe name="ghost-edge-clears" select="fox-ve-node-graph" when="after-interaction" severity="error"><![CDATA[
+      <probe name="ghost-edge-clears" select="go-node-graph" when="after-interaction" severity="error"><![CDATA[
         const ghost = one(".{{css-prefix}}-node-graph-ghost-edge");
         if (!state.connection) {
           expect(

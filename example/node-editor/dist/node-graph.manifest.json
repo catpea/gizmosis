@@ -3,7 +3,10 @@
   "version": "0.5",
   "source": "example/node-editor/src/node-graph.xml",
   "name": "Node Graph",
-  "tag": "fox-ve-node-graph",
+  "tag": "go-node-graph",
+  "project": {
+    "prefix": "go"
+  },
   "css": "./node-graph.css",
   "build": [
     {
@@ -65,7 +68,7 @@
     },
     {
       "name": "node card",
-      "text": "Generated fox-ve-node-card Web Component representing one NodeGraphNode.",
+      "text": "Generated go-node-card Web Component representing one NodeGraphNode.",
       "attrs": {
         "name": "node card"
       }
@@ -721,18 +724,18 @@
     "components": [
       {
         "kind": "component",
-        "name": "fox-ve-node-card",
+        "name": "go-node-card",
         "attrs": {
-          "tag": "fox-ve-node-card",
+          "tag": "go-node-card",
           "src": "./node-card.generated.js"
         },
         "text": ""
       },
       {
         "kind": "component",
-        "name": "fox-ve-node-cable",
+        "name": "go-node-cable",
         "attrs": {
-          "tag": "fox-ve-node-cable",
+          "tag": "go-node-cable",
           "src": "./node-cable.generated.js"
         },
         "text": ""
@@ -2259,7 +2262,7 @@
         "value": "viewport",
         "attrs": {
           "ref": "viewport",
-          "class": "{{css-prefix}}-node-graph-viewport",
+          "class": "go-node-graph-viewport",
           "tabindex": "0",
           "role": "application",
           "aria-label": "Node graph"
@@ -2270,7 +2273,7 @@
         "value": "svg",
         "attrs": {
           "ref": "svg",
-          "class": "{{css-prefix}}-node-graph-edges",
+          "class": "go-node-graph-edges",
           "aria-hidden": "true"
         }
       },
@@ -2279,7 +2282,7 @@
         "value": "edgeLayer",
         "attrs": {
           "ref": "edgeLayer",
-          "class": "{{css-prefix}}-node-graph-edge-layer",
+          "class": "go-node-graph-edge-layer",
           "svg.transform": "translate({view.panX} {view.panY}) scale({view.zoom})"
         }
       },
@@ -2288,7 +2291,7 @@
         "value": "ghost",
         "attrs": {
           "ref": "ghost",
-          "class": "{{css-prefix}}-node-graph-ghost-edge",
+          "class": "go-node-graph-ghost-edge",
           "hidden": "{!connection}",
           "svg.d": "{ghostEdgePath(connection)}"
         }
@@ -2298,7 +2301,7 @@
         "value": "cableLayer",
         "attrs": {
           "ref": "cableLayer",
-          "class": "{{css-prefix}}-node-graph-cables",
+          "class": "go-node-graph-cables",
           "hidden": "true"
         }
       },
@@ -2307,7 +2310,7 @@
         "value": "nodeLayer",
         "attrs": {
           "ref": "nodeLayer",
-          "class": "{{css-prefix}}-node-graph-nodes",
+          "class": "go-node-graph-nodes",
           "style.transform": "translate({view.panX}px, {view.panY}px) scale({view.zoom})",
           "on.fox-node-port-down": "port-connect",
           "on.fox-node-port-up": "port-connect"
@@ -2316,19 +2319,19 @@
     ],
     "repeated": [
       {
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "value": "edges as edge",
         "attrs": {
           "each": "edges as edge",
           "key": "{edge.id}",
           "edge-id": "{edge.id}",
-          "svg-selector": ".{{css-prefix}}-node-graph-edge-layer",
+          "svg-selector": ".go-node-graph-edge-layer",
           "bind.from": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}",
           "bind.to": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
         }
       },
       {
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "value": "nodes as node",
         "attrs": {
           "each": "nodes as node",
@@ -2349,19 +2352,19 @@
     ],
     "keys": [
       {
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "value": "{edge.id}",
         "attrs": {
           "each": "edges as edge",
           "key": "{edge.id}",
           "edge-id": "{edge.id}",
-          "svg-selector": ".{{css-prefix}}-node-graph-edge-layer",
+          "svg-selector": ".go-node-graph-edge-layer",
           "bind.from": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}",
           "bind.to": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
         }
       },
       {
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "value": "{node.id}",
         "attrs": {
           "each": "nodes as node",
@@ -2382,12 +2385,6 @@
     ],
     "bindings": [
       {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-viewport"
-      },
-      {
         "kind": "text",
         "value": "zoom {view.zoom}"
       },
@@ -2397,27 +2394,9 @@
       },
       {
         "kind": "attribute",
-        "element": "svg",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-edges"
-      },
-      {
-        "kind": "attribute",
-        "element": "g",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-edge-layer"
-      },
-      {
-        "kind": "attribute",
         "element": "g",
         "name": "svg.transform",
         "value": "translate({view.panX} {view.panY}) scale({view.zoom})"
-      },
-      {
-        "kind": "attribute",
-        "element": "path",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-ghost-edge"
       },
       {
         "kind": "attribute",
@@ -2434,56 +2413,38 @@
       {
         "kind": "attribute",
         "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-cables"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
         "name": "hidden",
         "value": "true"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "name": "each",
         "value": "edges as edge"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "name": "key",
         "value": "{edge.id}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "name": "edge-id",
         "value": "{edge.id}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-cable",
-        "name": "svg-selector",
-        "value": ".{{css-prefix}}-node-graph-edge-layer"
-      },
-      {
-        "kind": "attribute",
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "name": "bind.from",
         "value": "{portWorld(edge.from.nodeId, edge.from.portId, 'output')}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-cable",
+        "element": "go-node-cable",
         "name": "bind.to",
         "value": "{portWorld(edge.to.nodeId, edge.to.portId, 'input')}"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-nodes"
       },
       {
         "kind": "attribute",
@@ -2505,87 +2466,81 @@
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "each",
         "value": "nodes as node"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "key",
         "value": "{node.id}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "data-id",
         "value": "{node.id}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "data-type",
         "value": "{node.type}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "node-label",
         "value": "{node.label}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "color",
         "value": "{node.color}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "status",
         "value": "{node.status}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "selected",
         "value": "{selected includes node.id}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "expanded",
         "value": "{node.expanded}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "style.left",
         "value": "{node.x}px"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "style.top",
         "value": "{node.y}px"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "bind.inputs",
         "value": "{node.inputs}"
       },
       {
         "kind": "attribute",
-        "element": "fox-ve-node-card",
+        "element": "go-node-card",
         "name": "bind.outputs",
         "value": "{node.outputs}"
-      },
-      {
-        "kind": "attribute",
-        "element": "div",
-        "name": "class",
-        "value": "{{css-prefix}}-node-graph-empty"
       },
       {
         "kind": "attribute",
@@ -2594,7 +2549,7 @@
         "value": "{nodes.length !== 0}"
       }
     ],
-    "source": "<view>\n\n    \n  <div ref=\"viewport\" class=\"{{css-prefix}}-node-graph-viewport\" tabindex=\"0\" role=\"application\" aria-label=\"Node graph\">\n\n      \n    <div class=\"status-strip\">\n\n        \n      <span class=\"pill\">\n        <span class=\"dot\"/>\n        <span data-readout=\"zoom\">zoom {view.zoom}</span>\n      </span>\n\n        \n      <span class=\"pill\">\n        <span data-readout=\"mode\">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span>\n      </span>\n\n      \n    </div>\n\n\n      \n    <svg ref=\"svg\" class=\"{{css-prefix}}-node-graph-edges\" aria-hidden=\"true\">\n\n        \n      <g ref=\"edgeLayer\" class=\"{{css-prefix}}-node-graph-edge-layer\" svg.transform=\"translate({view.panX} {view.panY}) scale({view.zoom})\"/>\n\n        \n      <path ref=\"ghost\" class=\"{{css-prefix}}-node-graph-ghost-edge\" hidden=\"{!connection}\" svg.d=\"{ghostEdgePath(connection)}\"/>\n\n      \n    </svg>\n\n\n      \n    <div ref=\"cableLayer\" class=\"{{css-prefix}}-node-graph-cables\" hidden=\"true\">\n\n        \n      <fox-ve-node-cable each=\"edges as edge\" key=\"{edge.id}\" edge-id=\"{edge.id}\" svg-selector=\".{{css-prefix}}-node-graph-edge-layer\" bind.from=\"{portWorld(edge.from.nodeId, edge.from.portId, 'output')}\" bind.to=\"{portWorld(edge.to.nodeId, edge.to.portId, 'input')}\"/>\n\n      \n    </div>\n\n\n      \n    <div ref=\"nodeLayer\" class=\"{{css-prefix}}-node-graph-nodes\" style.transform=\"translate({view.panX}px, {view.panY}px) scale({view.zoom})\" on.fox-node-port-down=\"port-connect\" on.fox-node-port-up=\"port-connect\">\n\n        \n      <fox-ve-node-card each=\"nodes as node\" key=\"{node.id}\" data-id=\"{node.id}\" data-type=\"{node.type}\" node-label=\"{node.label}\" color=\"{node.color}\" status=\"{node.status}\" selected=\"{selected includes node.id}\" expanded=\"{node.expanded}\" style.left=\"{node.x}px\" style.top=\"{node.y}px\" bind.inputs=\"{node.inputs}\" bind.outputs=\"{node.outputs}\"/>\n\n      \n    </div>\n\n\n      \n    <div class=\"{{css-prefix}}-node-graph-empty\" hidden=\"{nodes.length !== 0}\">Double-click empty space to add a node.</div>\n\n    \n  </div>\n\n  \n</view>"
+    "source": "<view>\n\n    \n  <div ref=\"viewport\" class=\"go-node-graph-viewport\" tabindex=\"0\" role=\"application\" aria-label=\"Node graph\">\n\n      \n    <div class=\"status-strip\">\n\n        \n      <span class=\"pill\">\n        <span class=\"dot\"/>\n        <span data-readout=\"zoom\">zoom {view.zoom}</span>\n      </span>\n\n        \n      <span class=\"pill\">\n        <span data-readout=\"mode\">{readonly ? 'readonly' : connection ? 'connecting' : nodeDrag ? 'dragging' : 'ready'}</span>\n      </span>\n\n      \n    </div>\n\n\n      \n    <svg ref=\"svg\" class=\"go-node-graph-edges\" aria-hidden=\"true\">\n\n        \n      <g ref=\"edgeLayer\" class=\"go-node-graph-edge-layer\" svg.transform=\"translate({view.panX} {view.panY}) scale({view.zoom})\"/>\n\n        \n      <path ref=\"ghost\" class=\"go-node-graph-ghost-edge\" hidden=\"{!connection}\" svg.d=\"{ghostEdgePath(connection)}\"/>\n\n      \n    </svg>\n\n\n      \n    <div ref=\"cableLayer\" class=\"go-node-graph-cables\" hidden=\"true\">\n\n        \n      <go-node-cable each=\"edges as edge\" key=\"{edge.id}\" edge-id=\"{edge.id}\" svg-selector=\".go-node-graph-edge-layer\" bind.from=\"{portWorld(edge.from.nodeId, edge.from.portId, 'output')}\" bind.to=\"{portWorld(edge.to.nodeId, edge.to.portId, 'input')}\"/>\n\n      \n    </div>\n\n\n      \n    <div ref=\"nodeLayer\" class=\"go-node-graph-nodes\" style.transform=\"translate({view.panX}px, {view.panY}px) scale({view.zoom})\" on.fox-node-port-down=\"port-connect\" on.fox-node-port-up=\"port-connect\">\n\n        \n      <go-node-card each=\"nodes as node\" key=\"{node.id}\" data-id=\"{node.id}\" data-type=\"{node.type}\" node-label=\"{node.label}\" color=\"{node.color}\" status=\"{node.status}\" selected=\"{selected includes node.id}\" expanded=\"{node.expanded}\" style.left=\"{node.x}px\" style.top=\"{node.y}px\" bind.inputs=\"{node.inputs}\" bind.outputs=\"{node.outputs}\"/>\n\n      \n    </div>\n\n\n      \n    <div class=\"go-node-graph-empty\" hidden=\"{nodes.length !== 0}\">Double-click empty space to add a node.</div>\n\n    \n  </div>\n\n  \n</view>"
   },
   "geometry": {
     "spaces": [
@@ -3328,8 +3283,8 @@
           "attrs": {
             "name": "node-drag",
             "from": "nodeLayer",
-            "handle": "fox-ve-node-card",
-            "ignore": ".{{css-prefix}}-node-card-port, button, input, textarea, select, [contenteditable]",
+            "handle": "go-node-card",
+            "ignore": ".go-node-card-port, button, input, textarea, select, [contenteditable]",
             "button": "primary",
             "capture": "true",
             "threshold": "1",
@@ -3568,7 +3523,7 @@
           "attrs": {
             "name": "port-connect",
             "from": "nodeLayer",
-            "handle": ".{{css-prefix}}-node-card-port",
+            "handle": ".go-node-card-port",
             "start-event": "fox-node-port-down",
             "end-event": "fox-node-port-up",
             "mode-prop": "connection-mode",
@@ -3846,9 +3801,9 @@
         "name": "collapse-button-alignment",
         "attrs": {
           "name": "collapse-button-alignment",
-          "subject": ".{{css-prefix}}-node-card-expand",
+          "subject": ".go-node-card-expand",
           "relation": "center-y",
-          "target": ".{{css-prefix}}-node-card-title",
+          "target": ".go-node-card-title",
           "tolerance": "2",
           "severity": "error"
         },
@@ -3861,13 +3816,13 @@
         "name": "ghost-edge-clears",
         "attrs": {
           "name": "ghost-edge-clears",
-          "select": "fox-ve-node-graph",
+          "select": "go-node-graph",
           "when": "after-interaction",
           "severity": "error"
         },
-        "message": "const ghost = one(\".{{css-prefix}}-node-graph-ghost-edge\"); if (!state.connection) { expect( ghost.hidden && !ghost.getAttribute(\"d\"), \"Ghost edge must be hidden and have no path when no connection is active.\", { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") } ); }",
+        "message": "const ghost = one(\".go-node-graph-ghost-edge\"); if (!state.connection) { expect( ghost.hidden && !ghost.getAttribute(\"d\"), \"Ghost edge must be hidden and have no path when no connection is active.\", { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") } ); }",
         "hints": [],
-        "body": "const ghost = one(\".{{css-prefix}}-node-graph-ghost-edge\");\n        if (!state.connection) {\n          expect(\n            ghost.hidden && !ghost.getAttribute(\"d\"),\n            \"Ghost edge must be hidden and have no path when no connection is active.\",\n            { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") }\n          );\n        }"
+        "body": "const ghost = one(\".go-node-graph-ghost-edge\");\n        if (!state.connection) {\n          expect(\n            ghost.hidden && !ghost.getAttribute(\"d\"),\n            \"Ghost edge must be hidden and have no path when no connection is active.\",\n            { hidden: ghost.hidden, d: ghost.getAttribute(\"d\") }\n          );\n        }"
       },
       {
         "kind": "layout-probe",
@@ -3996,7 +3951,7 @@
         "<gizmo/> creates Web Components from declarative XML.",
         "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
         "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-        "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
+        "Runtime support libraries provide reusable, descriptor-configured mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
         "Agents must read features.json and process-library before changing components or compiler behavior."
       ],
       "canonicalRoot": [
@@ -4033,6 +3988,18 @@
           "tag",
           "css",
           "shadow"
+        ]
+      },
+      "projectFiles": {
+        "file": "gizmosis.xml",
+        "purpose": "lightweight XML project runner for multi-file Gizmosis builds",
+        "targetTasks": [
+          "giz",
+          "mkdir",
+          "delete",
+          "copy",
+          "render-prefix",
+          "property"
         ]
       },
       "sections": {

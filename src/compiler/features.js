@@ -6,7 +6,7 @@ export const GIZMO_FEATURES = {
     "<gizmo/> creates Web Components from declarative XML.",
     "Humans write contracts, model, view, behavior, effects, resources, diagnostics, stories, tests, and probes; the compiler washes away XML into ESM Web Components.",
     "Prefer grouped canonical grammar while supporting earlier flat sections for migration.",
-    "Runtime support libraries provide reusable mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
+    "Runtime support libraries provide reusable, descriptor-configured mechanics only; package-specific compiler generators live with the package that owns them and must not live in the general compiler.",
     "Agents must read features.json and process-library before changing components or compiler behavior."
   ],
   "canonicalRoot": [
@@ -43,6 +43,23 @@ export const GIZMO_FEATURES = {
       "tag",
       "css",
       "shadow"
+    ]
+  },
+  "projectFiles": {
+    "file": "gizmosis.xml",
+    "root": "project",
+    "purpose": "lightweight XML project runner for multi-file Gizmosis builds",
+    "children": [
+      "property",
+      "target"
+    ],
+    "targetTasks": [
+      "giz",
+      "mkdir",
+      "delete",
+      "copy",
+      "render-prefix",
+      "property"
     ]
   },
   "sections": {

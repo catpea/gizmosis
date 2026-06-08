@@ -1,5 +1,6 @@
 import { serializeXml } from './xml-parser.js';
 import { lowerView } from './view-lowerer.js';
+import { resolveProjectPrefix } from './prefix.js';
 
 export function generateManifest(ir, diagnostics = []) {
   return sanitize({
@@ -8,6 +9,7 @@ export function generateManifest(ir, diagnostics = []) {
     source: ir.source,
     name: ir.name,
     tag: ir.tag,
+    project: ir.project,
     css: ir.css,
     build: ir.build,
     diagnosticsPolicy: ir.diagnosticsPolicy,
@@ -59,6 +61,7 @@ function generateStandaloneSkeleton(ir, diagnostics = [], { manifestImport = nul
   const className = toClassName(ir.tag || ir.name || 'gizmo-element');
   const observed = ir.props.filter(prop => prop.reflect || isAttributeProp(prop)).map(prop => prop.name);
   const propDefs = ir.props;
+  const loweredView = lowerView(ir.view?.ast, { repeatMode: 'placeholder', booleanMode: 'marker' });
   const viewSource = ir.view ? serializeXml(ir.view.ast, { indent: '  ' }) : '<view/>';
   const diagnosticsLiteral = JSON.stringify(diagnostics, null, 2);
   const manifestExpr = manifestImport ? `manifest` : JSON.stringify(generateManifest(ir, diagnostics), null, 2);
@@ -69,6 +72,10 @@ ${importManifest}
 
 export const gizmoManifest = ${manifestExpr};
 export const gizmoDiagnostics = ${diagnosticsLiteral};
+const GIZMO_VIEW_HTML = ${JSON.stringify(loweredView.html)};
+const GIZMO_VIEW_HOST = ${JSON.stringify(loweredView.host, null, 2)};
+const GIZMO_VIEW_BINDINGS = ${JSON.stringify(loweredView.bindings, null, 2)};
+const GIZMO_VIEW_REPEATS = ${JSON.stringify(loweredView.repeats, null, 2)};
 
 export class ${className} extends HTMLElement {
   static observedAttributes = ${JSON.stringify(observed)};
@@ -93,23 +100,12 @@ ${propDefs.map(prop => `    this.__gizmoProps[${JSON.stringify(prop.field)}] = $
 ${propDefs.map(prop => propertyAccessor(prop)).join('\n\n')}
 
   render() {
-    if (this.__gizmoRendered) return;
-    this.__gizmoRendered = true;
+    if (!this.isConnected) return;
     this.dataset.gizmoCompiled = 'true';
     this.dataset.gizmoTag = ${JSON.stringify(ir.tag)};
-    const pre = document.createElement('pre');
-    pre.className = 'gizmo-compiled-placeholder';
-    this.replaceChildren(pre);
-    pre.textContent = [
-      ${JSON.stringify(ir.name || ir.tag)},
-      'compiled from Gizmosis v0.5',
-      '',
-      'Standalone skeleton generated:',
-      '- prop/attribute contract',
-      '- manifest IR',
-      '- diagnostics',
-      '- view/interactions metadata'
-    ].join('\\n');
+    this.__applyGizmoHost();
+    if (!this.__gizmoMounted) this.__mountGizmoView();
+    this.__updateGizmoView();
   }
 
   __upgradeProperties() {
@@ -132,6 +128,195 @@ ${propDefs.map(prop => attributeSync(prop)).join('\n')}
 
   __emit(name, detail = {}) {
     return this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail }));
+  }
+
+  __applyGizmoHost() {
+    for (const [name, value] of Object.entries(GIZMO_VIEW_HOST.attrs || {})) {
+      if (!this.hasAttribute(name)) this.setAttribute(name, String(value));
+    }
+    for (const className of GIZMO_VIEW_HOST.staticClasses || []) this.classList.add(className);
+    for (const binding of GIZMO_VIEW_HOST.classBindings || []) {
+      this.classList.toggle(binding.className, Boolean(this.__gizmoValue(binding.expression, {})));
+    }
+    for (const binding of GIZMO_VIEW_HOST.styleBindings || []) {
+      const value = this.__gizmoValue(binding.expression, {});
+      if (value == null || value === false) this.style.removeProperty(binding.property);
+      else this.style.setProperty(binding.property, String(value));
+    }
+  }
+
+  __gizmoRenderValues(scope) {
+    const values = this.__gizmoBindingValues(scope);
+    for (const repeat of GIZMO_VIEW_REPEATS) values[repeat.key] = '';
+    return values;
+  }
+
+  __gizmoBindingValues(scope) {
+    const values = Object.create(null);
+    for (const binding of GIZMO_VIEW_BINDINGS) {
+      const value = this.__gizmoValue(binding.expression, scope);
+      if (binding.kind === 'boolean-attribute') values[binding.key] = value ? binding.name : '';
+      else if (binding.kind === 'attribute') values[binding.key] = this.__escapeGizmoAttr(value);
+      else values[binding.key] = this.__escapeGizmoHtml(value);
+    }
+    return values;
+  }
+
+  __gizmoRepeatHtml(repeat) {
+    const items = this.__gizmoValue(repeat.collection, {});
+    if (!Array.isArray(items)) return '';
+    return items.map((item, index) => {
+      const scope = { [repeat.item]: item, index };
+      return this.__renderGizmoBooleanMarkers(this.__renderGizmoTemplate(repeat.html, this.__gizmoBindingValues(scope)), scope);
+    }).join('');
+  }
+
+  __renderGizmoTemplate(template, values) {
+    return String(template || '').replace(/\\{\\{([a-z0-9-]+)\\}\\}/g, (match, key) => (
+      Object.prototype.hasOwnProperty.call(values, key) ? values[key] : ''
+    ));
+  }
+
+  __mountGizmoView() {
+    const template = document.createElement('template');
+    template.innerHTML = GIZMO_VIEW_HTML;
+    this.replaceChildren(template.content.cloneNode(true));
+    this.__gizmoBindingMap = new Map(GIZMO_VIEW_BINDINGS.map(binding => [binding.key, binding]));
+    this.__gizmoRepeatMap = new Map(GIZMO_VIEW_REPEATS.map(repeat => [repeat.key, repeat]));
+    this.__gizmoTextTargets = [];
+    this.__gizmoAttrTargets = [];
+    this.__gizmoBoolTargets = [];
+    this.__gizmoRepeatTargets = [];
+    this.__collectGizmoTargets(this);
+    this.__gizmoMounted = true;
+  }
+
+  __collectGizmoTargets(root) {
+    for (const node of Array.from(root.childNodes || [])) this.__visitGizmoNode(node);
+  }
+
+  __visitGizmoNode(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const template = node.nodeValue || '';
+      const repeatKey = this.__wholeGizmoPlaceholder(template);
+      if (repeatKey && this.__gizmoRepeatMap.has(repeatKey)) {
+        const anchor = document.createComment('gizmo-repeat:' + repeatKey);
+        node.replaceWith(anchor);
+        this.__gizmoRepeatTargets.push({ key: repeatKey, anchor, nodes: [] });
+        return;
+      }
+      if (this.__hasGizmoPlaceholders(template)) this.__gizmoTextTargets.push({ node, template });
+      return;
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    for (const attr of Array.from(node.attributes)) {
+      if (attr.name.startsWith('data-gizmo-bool-')) {
+        this.__gizmoBoolTargets.push({ element: node, key: attr.name.slice('data-gizmo-bool-'.length), name: attr.value });
+        node.removeAttribute(attr.name);
+      } else if (this.__hasGizmoPlaceholders(attr.value)) {
+        this.__gizmoAttrTargets.push({ element: node, name: attr.name, template: attr.value });
+      }
+    }
+    for (const child of Array.from(node.childNodes)) this.__visitGizmoNode(child);
+  }
+
+  __updateGizmoView() {
+    for (const target of this.__gizmoTextTargets || []) {
+      target.node.nodeValue = this.__renderGizmoRawTemplate(target.template, {});
+    }
+    for (const target of this.__gizmoAttrTargets || []) {
+      const value = this.__renderGizmoRawTemplate(target.template, {});
+      if (value == null || value === false) target.element.removeAttribute(target.name);
+      else target.element.setAttribute(target.name, String(value));
+    }
+    for (const target of this.__gizmoBoolTargets || []) {
+      target.element.toggleAttribute(target.name, Boolean(this.__gizmoValueForKey(target.key, {})));
+    }
+    for (const target of this.__gizmoRepeatTargets || []) this.__updateGizmoRepeat(target);
+  }
+
+  __updateGizmoRepeat(target) {
+    for (const node of target.nodes) node.remove();
+    target.nodes = [];
+    const repeat = this.__gizmoRepeatMap.get(target.key);
+    if (!repeat) return;
+    const html = this.__gizmoRepeatHtml(repeat);
+    if (!html) return;
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    target.nodes = Array.from(template.content.childNodes);
+    target.anchor.after(...target.nodes);
+  }
+
+  __renderGizmoRawTemplate(template, scope) {
+    return String(template || '').replace(/\\{\\{([a-z0-9-]+)\\}\\}/g, (match, key) => {
+      const value = this.__gizmoValueForKey(key, scope);
+      return value == null || value === false ? '' : String(value);
+    });
+  }
+
+  __renderGizmoBooleanMarkers(html, scope) {
+    return String(html || '').replace(/\\sdata-gizmo-bool-([a-z0-9-]+)="([^"]+)"/g, (match, key, name) => (
+      this.__gizmoValueForKey(key, scope) ? ' ' + name : ''
+    ));
+  }
+
+  __gizmoValueForKey(key, scope) {
+    const binding = this.__gizmoBindingMap?.get(key) || GIZMO_VIEW_BINDINGS.find(item => item.key === key);
+    return binding ? this.__gizmoValue(binding.expression, scope) : '';
+  }
+
+  __hasGizmoPlaceholders(value) {
+    return /\\{\\{[a-z0-9-]+\\}\\}/.test(String(value || ''));
+  }
+
+  __wholeGizmoPlaceholder(value) {
+    const match = String(value || '').trim().match(/^\\{\\{([a-z0-9-]+)\\}\\}$/);
+    return match?.[1] || '';
+  }
+
+  __gizmoValue(expression, scope) {
+    const raw = String(expression || '').trim();
+    if (!raw) return '';
+    if (raw === 'true') return true;
+    if (raw === 'false') return false;
+    if (raw === 'null') return null;
+    if (/^-?\\d+(?:\\.\\d+)?$/.test(raw)) return Number(raw);
+    const quoted = raw.match(/^(['"])(.*)\\1$/);
+    if (quoted) return quoted[2];
+    const includes = raw.match(/^(.+?)\\s+includes\\s+(.+)$/);
+    if (includes) {
+      const list = this.__gizmoValue(includes[1], scope);
+      return Array.isArray(list) && list.includes(this.__gizmoValue(includes[2], scope));
+    }
+    const comparison = raw.match(/^(.+?)\\s*(===|!==)\\s*(.+)$/);
+    if (comparison) {
+      const left = this.__gizmoValue(comparison[1], scope);
+      const right = this.__gizmoValue(comparison[3], scope);
+      return comparison[2] === '===' ? left === right : left !== right;
+    }
+    if (raw.startsWith('!')) return !this.__gizmoValue(raw.slice(1), scope);
+    return this.__gizmoPath(raw, scope);
+  }
+
+  __gizmoPath(path, scope) {
+    const parts = String(path || '').split('.').filter(Boolean);
+    if (!parts.length) return '';
+    let value;
+    if (Object.prototype.hasOwnProperty.call(scope, parts[0])) value = scope[parts.shift()];
+    else if (Object.prototype.hasOwnProperty.call(this.__gizmoProps, parts[0])) value = this.__gizmoProps[parts.shift()];
+    else value = this[parts.shift()];
+    for (const part of parts) value = value?.[part];
+    return value ?? '';
+  }
+
+  __escapeGizmoHtml(value) {
+    return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  __escapeGizmoAttr(value) {
+    return this.__escapeGizmoHtml(value).replace(/"/g, '&quot;');
   }
 }
 
@@ -183,10 +368,13 @@ function findPackageGenerator(ir, options) {
 function generationContext(options) {
   return {
     options,
+    projectPrefix: resolveProjectPrefix(options),
+    resolveProjectPrefix,
     banner,
     generateManifest,
     lowerView,
-    serializeXml
+    serializeXml,
+    toClassName
   };
 }
 

@@ -11,7 +11,7 @@ const NODE_CARD_HTML = {{node-card-html}};
 const NODE_CARD_INPUT_PORT_HTML = {{node-card-input-port-html}};
 const NODE_CARD_OUTPUT_PORT_HTML = {{node-card-output-port-html}};
 
-export class FoxVeNodeCard extends HTMLElement {
+export class {{class-name}} extends HTMLElement {
   static observedAttributes = ['node-label', 'color', 'status', 'expanded', 'selected'];
 
   constructor() {
@@ -96,14 +96,14 @@ function renderNodeTemplate(template, values) {
   return template.replace(/\{\{([a-z0-9-]+)\}\}/g, (match, key) => Object.prototype.hasOwnProperty.call(values, key) ? values[key] : match);
 }
 
-FoxVeNodeCard.gizmoManifest = gizmoManifest;
-FoxVeNodeCard.gizmoDiagnostics = gizmoDiagnostics;
+{{class-name}}.gizmoManifest = gizmoManifest;
+{{class-name}}.gizmoDiagnostics = gizmoDiagnostics;
 
-export function defineFoxVeNodeCard(tag = {{tag}}) {
+export function {{define-name}}(tag = {{tag}}) {
   installNodeEditorStyles();
-  if (!customElements.get(tag)) customElements.define(tag, FoxVeNodeCard);
+  if (!customElements.get(tag)) customElements.define(tag, {{class-name}});
   return customElements.get(tag);
 }
 
-if (typeof customElements !== 'undefined') defineFoxVeNodeCard();
-export default FoxVeNodeCard;
+if (typeof customElements !== 'undefined') {{define-name}}();
+export default {{class-name}};

@@ -7,7 +7,7 @@ import { SVG_NS, edgePath, installNodeEditorStyles } from {{implementation-impor
 export const gizmoManifest = {{manifest}};
 export const gizmoDiagnostics = {{diagnostics}};
 
-export class FoxVeNodeCable extends HTMLElement {
+export class {{class-name}} extends HTMLElement {
   static observedAttributes = ['edge-id', 'svg-selector', 'missing'];
 
   constructor() {
@@ -78,14 +78,14 @@ function pointOrNull(value) {
   return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
 }
 
-FoxVeNodeCable.gizmoManifest = gizmoManifest;
-FoxVeNodeCable.gizmoDiagnostics = gizmoDiagnostics;
+{{class-name}}.gizmoManifest = gizmoManifest;
+{{class-name}}.gizmoDiagnostics = gizmoDiagnostics;
 
-export function defineFoxVeNodeCable(tag = {{tag}}) {
+export function {{define-name}}(tag = {{tag}}) {
   installNodeEditorStyles();
-  if (!customElements.get(tag)) customElements.define(tag, FoxVeNodeCable);
+  if (!customElements.get(tag)) customElements.define(tag, {{class-name}});
   return customElements.get(tag);
 }
 
-if (typeof customElements !== 'undefined') defineFoxVeNodeCable();
-export default FoxVeNodeCable;
+if (typeof customElements !== 'undefined') {{define-name}}();
+export default {{class-name}};

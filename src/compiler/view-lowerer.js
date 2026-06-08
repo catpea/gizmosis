@@ -185,6 +185,7 @@ function lowerAttribute(name, value, state, context) {
     const key = bindingKey(state, expression, preferredKey(expression, name, context.scope), context.scope);
     const binding = { kind: 'boolean-attribute', name, expression, key, element: context.element || '', target: context.target };
     state.bindings.push(binding);
+    if (state.options.booleanMode === 'marker') return { html: ` data-gizmo-bool-${key}="${escapeHtmlAttr(name)}"`, bindings: [binding] };
     return { html: ` ${placeholder(key)}`, bindings: [binding] };
   }
 

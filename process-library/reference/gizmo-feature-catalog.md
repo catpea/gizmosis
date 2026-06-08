@@ -7,7 +7,7 @@ This guide presents Gizmo features in the context of translating JavaScript, bec
 Use when JavaScript contains `class Something extends HTMLElement` and `customElements.define(...)`.
 
 ```xml
-<gizmo name="Node Card" tag="fox-ve-node-card" css="./node-graph.css">
+<gizmo name="Node Card" tag="go-node-card" css="./node-graph.css">
 </gizmo>
 ```
 
@@ -80,10 +80,10 @@ Use for simple event handlers that mutate local state, toggle attributes, or emi
 Use when JavaScript has a behavior spanning multiple native events.
 
 ```xml
-<drag name="node-drag" from="nodeLayer" handle="fox-ve-node-card" space="world"/>
+<drag name="node-drag" from="nodeLayer" handle="go-node-card" space="world"/>
 <pan name="viewport-pan" from="viewport" button="middle or space-primary" target="view"/>
 <zoom name="wheel-zoom" from="viewport" gesture="wheel" around="pointer"/>
-<connect name="port-connect" from="nodeLayer" handle=".fox-ve-node-card-port"/>
+<connect name="port-connect" from="nodeLayer" handle=".go-node-card-port"/>
 ```
 
 ## `<geometry/>`
